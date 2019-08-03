@@ -137,41 +137,57 @@ namespace CompactEC
             return (x % Modulo + Modulo) % Modulo; // to prevent negative results
         }
 
+        public BigInteger Multiplex(BigInteger selection, BigInteger left, BigInteger right)
+        {
+            Debug.Assert(selection.IsOne || selection.IsZero);
+            return right + selection * (left - right);
+        }
+
+        public BigInteger Multiplex(bool selection, BigInteger left, BigInteger right)
+        {
+            var sel = new BigInteger(Convert.ToByte(selection));
+            return Multiplex(sel, left, right);
+        }
+
+        public RawPoint Multiplex(BigInteger selection, RawPoint left, RawPoint right)
+        {
+            Debug.Assert(selection.IsOne || selection.IsZero);
+            return new RawPoint(
+                Multiplex(selection, left.X, right.X),
+                Multiplex(selection, left.Y, right.Y)
+            );
+        }
+
+        public RawPoint Multiplex(bool selection, RawPoint left, RawPoint right)
+        {
+            var sel = new BigInteger(Convert.ToByte(selection));
+            return Multiplex(selection, left, right);
+        }
+
         public RawPoint Multiply(RawPoint x, BigInteger k)
         {
-            // note(lumip): montgomery ladder implementation that issues
-            //  the same amount of adds no matter the value of k and is thus
-            //  safe against timing/power side channel attacks (provided Add
-            //  is constant time for all EC add cases).
+            // note(lumip): double-and-add implementation that issues
+            //  the same amount of adds no matter the value of k and 
+            //  has no conditional control flow. It is thus
+            //  safe(r) against timing/power/cache/branch prediction(?)
+            //  side channel attacks (provided Add is constant time for
+            //  all EC add cases).
             RawPoint r0 = RawPoint.PointAtInfinity;
             RawPoint r1 = x.Clone();
 
-
-            for (BigInteger mask = BigInteger.One << (OrderSize - 1); !mask.IsZero; mask = mask >> 1)
+            int i = OrderSize - 1;
+            for (BigInteger mask = BigInteger.One << (OrderSize - 1); !mask.IsZero; mask = mask >> 1, --i)
             {
-                bool bitI = !((k & mask).IsZero);
-                if (!bitI)
-                {
-                    r1 = Add(r0, r1);
-                    r0 = Add(r0, r0);
-                }
-                else
-                {
-                    r0 = Add(r0, r1);
-                    r1 = Add(r1, r1);
-                }
+                BigInteger bitI = (k & mask) >> i;
+                r0 = Add(r0, r0);
+                r1 = Add(r0, x);
+
+                var temp = r0;
+                r0 = Multiplex(bitI, r1, r0);
+                r1 = Multiplex(bitI, r0, r1);
             }
+            Debug.Assert(i == -1);
             return r0;
-        }
-
-        public RawPoint MultiplyNaive(RawPoint x, BigInteger k)
-        {
-            RawPoint r = new RawPoint();
-            for (BigInteger i = BigInteger.Zero; i <= k; i++)
-            {
-                r = Add(r, x);
-            }
-            return r;
         }
 
         public BigInteger Square(BigInteger x)
@@ -181,7 +197,7 @@ namespace CompactEC
 
         public BigInteger InvertMult(BigInteger x)
         {
-            // note(lummip): timing sidechannel would only leak p-2, but p is public anyways
+            // note(lummip): sidechannels would leak p-2, but p is public anyways
             return BigInteger.ModPow(x, Modulo - 2, Modulo);
         }
 
