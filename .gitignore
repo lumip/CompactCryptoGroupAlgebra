@@ -1,0 +1,6 @@
+*/bin/*
+*/obj/*
+*.suo
+/packages/*
+.vs
+project.lock.json
