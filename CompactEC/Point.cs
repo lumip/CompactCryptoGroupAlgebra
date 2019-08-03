@@ -146,13 +146,10 @@ namespace CompactEC
             RawPoint r0 = RawPoint.PointAtInfinity;
             RawPoint r1 = x.Clone();
 
-            // todo(lumip): replace with simpler stuff!
-            var kBits = BitArray.FromBytes(k.ToByteArray(), OrderSize);
 
-            for (int i = OrderSize - 1; i >= 0; --i)
+            for (BigInteger mask = BigInteger.One << (OrderSize - 1); !mask.IsZero; mask = mask >> 1)
             {
-                bool bitI = kBits[i].Value;
-                //bool g = ((k & 1) == 1); // todo(lumip): use something like this to avoid BitArray?
+                bool bitI = !((k & mask).IsZero);
                 if (!bitI)
                 {
                     r1 = Add(r0, r1);
