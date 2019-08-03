@@ -149,19 +149,20 @@ namespace CompactEC
             return Multiplex(sel, left, right);
         }
 
+        public bool Multiplex(bool selection, bool left, bool right)
+        {
+            return right ^ (selection & (left ^ right));
+        }
+
         public RawPoint Multiplex(BigInteger selection, RawPoint left, RawPoint right)
         {
             Debug.Assert(selection.IsOne || selection.IsZero);
+            var sel = !selection.IsZero;
             return new RawPoint(
                 Multiplex(selection, left.X, right.X),
-                Multiplex(selection, left.Y, right.Y)
+                Multiplex(selection, left.Y, right.Y),
+                Multiplex(sel, left.IsAtInfinity, right.IsAtInfinity)
             );
-        }
-
-        public RawPoint Multiplex(bool selection, RawPoint left, RawPoint right)
-        {
-            var sel = new BigInteger(Convert.ToByte(selection));
-            return Multiplex(selection, left, right);
         }
 
         public RawPoint Multiply(RawPoint x, BigInteger k)
@@ -173,18 +174,15 @@ namespace CompactEC
             //  side channel attacks (provided Add is constant time for
             //  all EC add cases).
             RawPoint r0 = RawPoint.PointAtInfinity;
-            RawPoint r1 = x.Clone();
 
             int i = OrderSize - 1;
             for (BigInteger mask = BigInteger.One << (OrderSize - 1); !mask.IsZero; mask = mask >> 1, --i)
             {
                 BigInteger bitI = (k & mask) >> i;
                 r0 = Add(r0, r0);
-                r1 = Add(r0, x);
-
-                var temp = r0;
+                RawPoint r1 = Add(r0, x);
+                
                 r0 = Multiplex(bitI, r1, r0);
-                r1 = Multiplex(bitI, r0, r1);
             }
             Debug.Assert(i == -1);
             return r0;
