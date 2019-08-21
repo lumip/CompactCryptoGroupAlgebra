@@ -6,6 +6,10 @@ using System.Diagnostics;
 
 namespace CompactEC.CryptoAlgebra
 {
+    /// <summary>
+    /// No argument checks in member functions! This class assumes that all arguments are sane.
+    /// </summary>
+    /// <typeparam name="E"></typeparam>
     public abstract class CryptoGroupAlgebra<E>
     {
         public BigInteger Order { get; }
@@ -39,17 +43,16 @@ namespace CompactEC.CryptoAlgebra
 
         public virtual E Negate(E e)
         {
+            Debug.Assert(e != null);
             return MultiplyScalar(e, Order - 1, OrderSize);
         }
 
         protected abstract E Multiplex(BigInteger selection, E left, E right);
-        //{
-        //    Debug.Assert(selection.IsOne || selection.IsZero);
-        //    return right + selection * (left - right);
-        //}
 
         protected virtual E Multiplex(bool selection, E left, E right)
         {
+            Debug.Assert(left != null);
+            Debug.Assert(right != null);
             var sel = new BigInteger(Convert.ToByte(selection));
             return Multiplex(sel, left, right);
         }
@@ -61,6 +64,7 @@ namespace CompactEC.CryptoAlgebra
             //  the value of k and has no conditional control flow. It is thus
             //  safe(r) against timing/power/cache/branch prediction(?)
             //  side channel attacks.
+            Debug.Assert(e != null);
 
             int factorBitlen = 8 * factorSize;
             BigInteger maxFactor = BigInteger.One << factorBitlen;
@@ -68,7 +72,7 @@ namespace CompactEC.CryptoAlgebra
                 throw new ArgumentException("The given factor is larger than the maximum admittable factor.", nameof(k));
 
             k = k % Order; // k * e is at least periodic in Order
-            E r0 = IdentityElement;
+            E r0 = NeutralElement;
 
             int i = factorBitlen - 1;
             for (BigInteger mask = maxFactor >> 1; !mask.IsZero; mask = mask >> 1, --i)
@@ -77,7 +81,7 @@ namespace CompactEC.CryptoAlgebra
                 r0 = Add(r0, r0);
                 E r1 = Add(r0, e);
 
-                r0 = Multiplex(bitI, r1, r0);
+                r0 = Multiplex(bitI, r0, r1);
             }
             Debug.Assert(i == -1);
             return r0;
@@ -88,8 +92,8 @@ namespace CompactEC.CryptoAlgebra
             return MultiplyScalar(e, k, FactorSize);
         }
 
-        public abstract E IdentityElement { get; }
+        public abstract E NeutralElement { get; }
         public abstract E Add(E left, E right);
-        
+        public abstract bool IsValid(E element);
     }
 }

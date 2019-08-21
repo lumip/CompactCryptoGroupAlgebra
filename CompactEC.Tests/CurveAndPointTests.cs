@@ -2,7 +2,7 @@
 using System.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CompactEC.Tests
+namespace CompactEC.UnitTests
 {
     [TestClass]
     public class CurveAndPointTests
