@@ -10,8 +10,8 @@ namespace CompactEC.CryptoAlgebra
         public MultiplicativeCryptoGroup(MultiplicativeGroupAlgebra algebra) : base(algebra)
         { }
 
-        public MultiplicativeCryptoGroup(BigInteger prime, BigInteger order, BigInteger generator, int groupElementSize, int orderSize)
-          : this(new MultiplicativeGroupAlgebra(prime, order, generator, groupElementSize, orderSize))
+        public MultiplicativeCryptoGroup(BigInteger prime, BigInteger order, BigInteger generator)
+          : this(new MultiplicativeGroupAlgebra(prime, order, generator))
         { }
 
         protected override ICryptoGroupElement CreateGroupElement(BigInteger value)

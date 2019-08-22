@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace CompactEC.CryptoAlgebra
 {
-    public interface ICryptoGroupElement
+    public interface ICryptoGroupElement : IEquatable<ICryptoGroupElement>
     {
         void Add(ICryptoGroupElement other);
         void MultiplyScalar(BigInteger k);

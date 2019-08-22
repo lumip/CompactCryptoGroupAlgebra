@@ -1,59 +1,197 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Numerics;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using CompactEC.CryptoAlgebra;
 
-namespace CompactEC.UnitTests.CryptoAlgebra
+namespace CompactEC.Tests.CryptoAlgebra
 {
     [TestClass]
     public class MultiplicativeGroupAlgebraTest
     {
         [TestMethod]
-        public void TestMultiplyScalarSmall()
+        [DataRow(0, 1)]
+        [DataRow(1, 3)]
+        [DataRow(2, 9)]
+        [DataRow(3, 5)]
+        [DataRow(4, 4)]
+        [DataRow(5, 1)]
+        [DataRow(6, 3)]
+        [DataRow(12, 9)]
+        public void TestMultiplyScalar(int scalarInt, int expectedInt)
         {
-            MultiplicativeGroupAlgebra groupAlgebra = new MultiplicativeGroupAlgebra(11, 5, 3, 1, 1);
+            var k = new BigInteger(scalarInt);
+            var expected = new BigInteger(expectedInt);
+
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
 
             var x = new BigInteger(3);
-
-            var expectedRs = new BigInteger[] { 9, 5, 4, 1 };
-            for (int i = 0; i < expectedRs.Length; ++i)
-            {
-                var actualR = groupAlgebra.MultiplyScalar(x, 2 + i);
-                Assert.AreEqual(expectedRs[i], actualR);
-            }
-
-            groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2, 1, 1);
-
-            x = new BigInteger(2);
-
-            expectedRs = new BigInteger[] { 2, 4, 8, 5, 10, 9, 7, 3, 6, 1 };
-            for (int i = 0; i < expectedRs.Length; ++i)
-            {
-                var actualR = groupAlgebra.MultiplyScalar(x, 1 + i);
-                Assert.AreEqual(expectedRs[i], actualR);
-            }
+            var result = groupAlgebra.MultiplyScalar(x, k);
+            Assert.AreEqual(expected, result);
         }
 
-        //[TestMethod]
-        //public void TestMultiplyScalarLarge()
-        //{
-        //    using (var cryptoContext = CryptoContext.CreateDefault())
-        //    {
-        //        MultiplicativeGroupAlgebra groupAlgebra = new MultiplicativeGroupAlgebra(SecurityParameters.CreateDefault768Bit());
+        [TestMethod]
+        public void TestMultiplyScalarRejectsNegativeScalars()
+        {
+            var k = new BigInteger(-1);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var x = new BigInteger(3);
+            
+            Assert.ThrowsException<ArgumentOutOfRangeException>(
+                () => groupAlgebra.MultiplyScalar(x, k)
+            );
+        }
 
-        //        var x = groupAlgebra.GenerateElement(cryptoContext.RandomNumberGenerator.GetBigInteger(groupAlgebra.FactorSize));
-        //        var k = cryptoContext.RandomNumberGenerator.GetBigInteger(groupAlgebra.FactorSize);
+        [TestMethod]
+        [DataRow(0)]
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(6)]
+        [DataRow(9)]
+        [DataRow(10)]
+        [DataRow(11)]
+        [DataRow(232)]
+        public void TestGenerateIsGeneratorMultiplied(int idInt)
+        {
+            var id = new BigInteger(idInt);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
 
-        //        var expectedR = groupAlgebra.MultiplyScalarUnsafe(x, k);
-        //        var actualR = groupAlgebra.MultiplyScalar(x, k);
-        //        Assert.AreEqual(expectedR, actualR);
-        //    }
-        //}
+            Assert.AreEqual(groupAlgebra.MultiplyScalar(groupAlgebra.Generator, id), groupAlgebra.GenerateElement(id));
+        }
+
+        [TestMethod]
+        public void TestGenerateRejectsNegativeIds()
+        {
+            var id = new BigInteger(-1);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(
+                () => groupAlgebra.GenerateElement(id)
+            );
+        }
+
+        [TestMethod]
+        [DataRow(2)]
+        [DataRow(3)]
+        [DataRow(7)]
+        public void TestGeneratorIsAsSet(int generatorInt)
+        {
+            var generator = new BigInteger(generatorInt);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, generator);
+            Assert.AreEqual(generator, groupAlgebra.Generator);
+        }
+
+        [TestMethod]
+        [DataRow(0)]
+        [DataRow(-3)]
+        [DataRow(11)]
+        [DataRow(136)]
+        public void TestInvalidElementRejectedAsGenerator(int generatorInt)
+        {
+            var generator = new BigInteger(generatorInt);
+            Assert.ThrowsException<ArgumentException>(
+                () => new MultiplicativeGroupAlgebra(11, 10, generator)
+            );
+        }
+
+        [TestMethod]
+        [DataRow(1)]
+        [DataRow(5)]
+        [DataRow(10)]
+        public void TestIsValidAcceptsValidElements(int elementInt)
+        {
+            var element = new BigInteger(elementInt);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            Assert.IsTrue(groupAlgebra.IsValid(element));
+        }
+
+        [TestMethod]
+        [DataRow(0)]
+        [DataRow(-3)]
+        [DataRow(11)]
+        [DataRow(136)]
+        public void TestIsValidRejectsInvalidElements(int elementInt)
+        {
+            var element = new BigInteger(elementInt);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            Assert.IsFalse(groupAlgebra.IsValid(element));
+        }
+
+        [TestMethod]
+        public void TestGroupElementBitlength()
+        {
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            Assert.AreEqual(4, groupAlgebra.GroupElementBitlength);
+        }
+
+        [TestMethod]
+        public void TestOrderBitlength()
+        {
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 5, 3);
+            Assert.AreEqual(3, groupAlgebra.OrderBitlength);
+        }
+
+        [TestMethod]
+        [DataRow(0)]
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(4)]
+        [DataRow(7)]
+        public void TestMultiplyScalarWithSmallFactorSizeEqualToOrderFactorSize(int factorInt)
+        {
+            int factorBitlength = 3;
+            var k = new BigInteger(factorInt);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var x = new BigInteger(6);
+            Assert.AreEqual(groupAlgebra.MultiplyScalar(x, k), groupAlgebra.MultiplyScalar(x, k, factorBitlength));
+        }
+
+        [TestMethod]
+        public void TestMultiplyScalarWithSmallFactorSizeRejectsNegativeScalars()
+        {
+            int factorBitLength = 3;
+            var k = new BigInteger(-1);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var x = new BigInteger(6);
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(
+                () => groupAlgebra.MultiplyScalar(x, k, factorBitLength)
+            );
+        }
+
+        [TestMethod]
+        [DataRow(8)]
+        [DataRow(9)]
+        [DataRow(123)]
+        public void TestMultiplyScalarWithSmallFactorSizeRejectsLargerFactors(int factorInt)
+        {
+            int factorBitlength = 3;
+            var k = new BigInteger(factorInt);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var x = new BigInteger(6);
+            Assert.ThrowsException<ArgumentOutOfRangeException>(
+                () => groupAlgebra.MultiplyScalar(x, k, factorBitlength)
+            );
+        }
+
+        [TestMethod]
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(5)]
+        [DataRow(10)]
+        public void TestNegate(int elementInt)
+        {
+            var x = new BigInteger(elementInt);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            Assert.AreEqual(groupAlgebra.MultiplyScalar(x, groupAlgebra.Order - 1), groupAlgebra.Negate(x));
+        }
+
+        [TestMethod]
+        public void TestNeutralElement()
+        {
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            Assert.AreEqual(BigInteger.One, groupAlgebra.NeutralElement);
+        }
     }
 }

@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace CompactEC.CryptoAlgebra
 {
-    public abstract class CryptoGroup<E> : ICryptoGroup
+    public abstract class CryptoGroup<E> : ICryptoGroup where E : struct
     {
         protected CryptoGroupAlgebra<E> Algebra { get; }
 
