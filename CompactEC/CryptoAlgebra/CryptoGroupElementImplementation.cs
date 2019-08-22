@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace CompactEC.CryptoAlgebra
 {
-    public abstract class CryptoGroupElementImplementation<E> : ICryptoGroupElement
+    public abstract class CryptoGroupElementImplementation<E> : ICryptoGroupElement where E : struct
     {
         protected CryptoGroupAlgebra<E> Algebra { get; }
         public E Value { get; private set; }
@@ -13,9 +13,7 @@ namespace CompactEC.CryptoAlgebra
             if (groupAlgebra == null)
                 throw new ArgumentNullException(nameof(groupAlgebra));
             Algebra = groupAlgebra;
-
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            
             if (!Algebra.IsValid(value))
                 throw new ArgumentException("The provided value is not a valid element of the group.", nameof(value));
             Value = value;
@@ -53,6 +51,12 @@ namespace CompactEC.CryptoAlgebra
 
         public abstract byte[] ToBytes();
         public abstract ICryptoGroupElement Clone();
+
+        public bool Equals(ICryptoGroupElement other)
+        {
+            var o = other as CryptoGroupElementImplementation<E>;
+            return o != null && Value.Equals(o.Value);
+        }
 
         public static CryptoGroupElementImplementation<E> operator +(CryptoGroupElementImplementation<E> left, ICryptoGroupElement right)
         {

@@ -7,34 +7,21 @@ using System.Diagnostics;
 namespace CompactEC.CryptoAlgebra
 {
     /// <summary>
-    /// No argument checks in member functions! This class assumes that all arguments are sane.
+    /// Assumption: group element values incoming to algebraic operations are valid values. this is not checked.
     /// </summary>
     /// <typeparam name="E"></typeparam>
-    public abstract class CryptoGroupAlgebra<E>
+    public abstract class CryptoGroupAlgebra<E> : ICryptoGroupAlgebra<E> where E : struct
     {
-        public BigInteger Order { get; }
-        public E Generator { get; }
-        public int GroupElementSize { get; }
-        public int OrderSize { get; }
-        public int FactorSize { get; }
+        public abstract BigInteger Order { get; }
+        public abstract E Generator { get; }
 
-        public CryptoGroupAlgebra(E generator, BigInteger order, int groupElementSize, int orderSize, int factorSize)
+        public abstract int GroupElementBitlength { get; }
+        public int OrderBitlength { get { return GetBitLength(Order); } }
+
+        protected int GetBitLength(BigInteger x)
         {
-            if (generator == null)
-                throw new ArgumentNullException(nameof(generator));
-            Generator = generator;
-
-            if (order == null)
-                throw new ArgumentNullException(nameof(order));
-            Order = order;
-
-            GroupElementSize = groupElementSize;
-            OrderSize = orderSize;
-            FactorSize = factorSize;
+            return (int)Math.Floor(BigInteger.Log(x, 2) + 1);
         }
-
-        public CryptoGroupAlgebra(E generator, BigInteger order, int groupElementSize, int orderSize)
-            : this(generator, order, groupElementSize, orderSize, orderSize) { }
 
         public E GenerateElement(BigInteger index)
         {
@@ -43,38 +30,29 @@ namespace CompactEC.CryptoAlgebra
 
         public virtual E Negate(E e)
         {
-            Debug.Assert(e != null);
-            return MultiplyScalar(e, Order - 1, OrderSize);
+            return MultiplyScalar(e, Order - 1, OrderBitlength);
         }
 
         protected abstract E Multiplex(BigInteger selection, E left, E right);
 
         protected virtual E Multiplex(bool selection, E left, E right)
         {
-            Debug.Assert(left != null);
-            Debug.Assert(right != null);
             var sel = new BigInteger(Convert.ToByte(selection));
             return Multiplex(sel, left, right);
         }
 
-        protected virtual E MultiplyScalar(E e, BigInteger k, int factorSize)
+        protected virtual E MultiplyScalarUnsafe(E e, BigInteger k, int factorBitlength)
         {
             // note(lumip): double-and-add (in this case: square-and-multiply)
             //  implementation that issues the same amount of adds no matter
             //  the value of k and has no conditional control flow. It is thus
             //  safe(r) against timing/power/cache/branch prediction(?)
             //  side channel attacks.
-            Debug.Assert(e != null);
 
-            int factorBitlen = 8 * factorSize;
-            BigInteger maxFactor = BigInteger.One << factorBitlen;
-            if (k >= maxFactor)
-                throw new ArgumentException("The given factor is larger than the maximum admittable factor.", nameof(k));
+            BigInteger maxFactor = BigInteger.One << factorBitlength;
+            int i = factorBitlength - 1;
 
-            k = k % Order; // k * e is at least periodic in Order
             E r0 = NeutralElement;
-
-            int i = factorBitlen - 1;
             for (BigInteger mask = maxFactor >> 1; !mask.IsZero; mask = mask >> 1, --i)
             {
                 BigInteger bitI = (k & mask) >> i;
@@ -87,9 +65,23 @@ namespace CompactEC.CryptoAlgebra
             return r0;
         }
 
+        public E MultiplyScalar(E e, BigInteger k, int factorBitlength)
+        {
+            if (k < BigInteger.Zero)
+                throw new ArgumentOutOfRangeException("The given factor must be non-negative.", nameof(k));
+            
+            if (GetBitLength(k) > factorBitlength)
+                throw new ArgumentOutOfRangeException("The given factor must not exceed the admittable factor bitlength.", nameof(k));
+
+            return MultiplyScalarUnsafe(e, k, factorBitlength);
+        }
+
         public E MultiplyScalar(E e, BigInteger k)
         {
-            return MultiplyScalar(e, k, FactorSize);
+            if (k < BigInteger.Zero)
+                throw new ArgumentOutOfRangeException("The given factor must be non-negative.", nameof(k));
+            k = k % Order; // k * e is at least periodic in Order
+            return MultiplyScalarUnsafe(e, k, OrderBitlength);
         }
 
         public abstract E NeutralElement { get; }
