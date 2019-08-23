@@ -18,8 +18,10 @@ namespace CompactEC.CryptoAlgebra
         public abstract int GroupElementBitlength { get; }
         public int OrderBitlength { get { return GetBitLength(Order); } }
 
-        protected int GetBitLength(BigInteger x)
+        public static int GetBitLength(BigInteger x)
         {
+            if (x.IsZero)
+                return 0;
             return (int)Math.Floor(BigInteger.Log(x, 2) + 1);
         }
 
@@ -31,14 +33,6 @@ namespace CompactEC.CryptoAlgebra
         public virtual E Negate(E e)
         {
             return MultiplyScalar(e, Order - 1, OrderBitlength);
-        }
-
-        protected abstract E Multiplex(BigInteger selection, E left, E right);
-
-        protected virtual E Multiplex(bool selection, E left, E right)
-        {
-            var sel = new BigInteger(Convert.ToByte(selection));
-            return Multiplex(sel, left, right);
         }
 
         protected virtual E MultiplyScalarUnsafe(E e, BigInteger k, int factorBitlength)
@@ -84,6 +78,7 @@ namespace CompactEC.CryptoAlgebra
             return MultiplyScalarUnsafe(e, k, OrderBitlength);
         }
 
+        protected abstract E Multiplex(BigInteger selection, E left, E right);
         public abstract E NeutralElement { get; }
         public abstract E Add(E left, E right);
         public abstract bool IsValid(E element);

@@ -23,16 +23,6 @@ namespace CompactEC.CryptoAlgebra
         protected abstract ICryptoGroupElement CreateGroupElement(E value);
         protected abstract ICryptoGroupElement CreateGroupElement(byte[] buffer);
 
-        //private ICryptoGroupElement CreateGroupElementWithOperators(E value)
-        //{
-        //    return new CryptoGroupElementOperatorDecorator(CreateGroupElement(value));
-        //}
-
-        //private ICryptoGroupElement CreateGroupElementWithOperators(byte[] buffer)
-        //{
-        //    return new CryptoGroupElementOperatorDecorator(CreateGroupElement(buffer));
-        //}
-
         public ICryptoGroupElement Add(CryptoGroupElementImplementation<E> left, CryptoGroupElementImplementation<E> right)
         {
             return CreateGroupElement(Algebra.Add(left.Value, right.Value));

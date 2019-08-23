@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using CompactEC.CryptoAlgebra;
 
+// Best Practices: https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices
 namespace CompactEC.Tests.CryptoAlgebra
 {
     [TestClass]
