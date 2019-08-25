@@ -16,12 +16,12 @@ namespace CompactEC.CryptoAlgebra
 
         protected override ICryptoGroupElement CreateGroupElement(BigInteger value)
         {
-            return new MultiplicativeGroupElementImplementation(value, (MultiplicativeGroupAlgebra)Algebra);
+            return new MultiplicativeGroupElement(value, (MultiplicativeGroupAlgebra)Algebra);
         }
 
         protected override ICryptoGroupElement CreateGroupElement(byte[] buffer)
         {
-            return new MultiplicativeGroupElementImplementation(buffer, (MultiplicativeGroupAlgebra)Algebra);
+            return new MultiplicativeGroupElement(buffer, (MultiplicativeGroupAlgebra)Algebra);
         }
     }
 }
