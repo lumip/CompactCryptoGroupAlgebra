@@ -26,9 +26,9 @@ namespace CompactEC.Tests.CryptoAlgebra
 
             var groupMock = new Mock<CryptoGroup<int>>(MockBehavior.Loose, algMock.Object) { CallBase = true };
 
-            var leftStub = new Mock<CryptoGroupElementImplementation<int>>(MockBehavior.Strict, 2, algMock.Object) { CallBase = true };
-            var rightStub = new Mock<CryptoGroupElementImplementation<int>>(MockBehavior.Strict, 6, algMock.Object) { CallBase = true };
-            var resultStub = new Mock<CryptoGroupElementImplementation<int>>(MockBehavior.Strict, 8, algMock.Object) { CallBase = true };
+            var leftStub = new Mock<CryptoGroupElement<int>>(MockBehavior.Strict, 2, algMock.Object) { CallBase = true };
+            var rightStub = new Mock<CryptoGroupElement<int>>(MockBehavior.Strict, 6, algMock.Object) { CallBase = true };
+            var resultStub = new Mock<CryptoGroupElement<int>>(MockBehavior.Strict, 8, algMock.Object) { CallBase = true };
 
             groupMock.Protected().As<CryptoGroupProtectedMembers>().Setup(group => group.CreateGroupElement(It.Is<int>(i => i == 8))).Returns(resultStub.Object);
 
@@ -44,7 +44,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             algMock.Setup(algebra => algebra.IsValid(It.IsAny<int>())).Returns(true);
 
             byte[] inputBuffer = new byte[0];
-            var resultStub = new Mock<CryptoGroupElementImplementation<int>>(MockBehavior.Strict, 0, algMock.Object);
+            var resultStub = new Mock<CryptoGroupElement<int>>(MockBehavior.Strict, 0, algMock.Object);
             var groupMock = new Mock<CryptoGroup<int>>(MockBehavior.Strict, algMock.Object) { CallBase = true };
             groupMock.Protected().As<CryptoGroupProtectedMembers>().Setup(group => group.CreateGroupElement(It.Is<byte[]>(b => b == inputBuffer))).Returns(resultStub.Object);
 

@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="CrptoGroupTests.cs" />
     <Compile Include="CryptoGroupAlgebraTests.cs" />
+    <Compile Include="CryptoGroupElementTests.cs" />
     <Compile Include="CurveAndPointTests.cs" />
     <Compile Include="MultiplicativeGroupAlgebraTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
