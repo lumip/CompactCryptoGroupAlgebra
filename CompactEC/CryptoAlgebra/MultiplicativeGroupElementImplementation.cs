@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace CompactEC.CryptoAlgebra
 {
-    public class MultiplicativeGroupElementImplementation : CryptoGroupElementImplementation<BigInteger>
+    public class MultiplicativeGroupElementImplementation : CryptoGroupElement<BigInteger>
     {
         public MultiplicativeGroupElementImplementation(BigInteger value, MultiplicativeGroupAlgebra groupAlgebra)
             : base(value, groupAlgebra)

@@ -23,7 +23,7 @@ namespace CompactEC.CryptoAlgebra
         protected abstract ICryptoGroupElement CreateGroupElement(E value);
         protected abstract ICryptoGroupElement CreateGroupElement(byte[] buffer);
 
-        public ICryptoGroupElement Add(CryptoGroupElementImplementation<E> left, CryptoGroupElementImplementation<E> right)
+        public ICryptoGroupElement Add(CryptoGroupElement<E> left, CryptoGroupElement<E> right)
         {
             return CreateGroupElement(Algebra.Add(left.Value, right.Value));
         }
@@ -38,7 +38,7 @@ namespace CompactEC.CryptoAlgebra
             return CreateGroupElement(Algebra.GenerateElement(index));
         }
 
-        public ICryptoGroupElement MultiplyScalar(CryptoGroupElementImplementation<E> element, BigInteger k)
+        public ICryptoGroupElement MultiplyScalar(CryptoGroupElement<E> element, BigInteger k)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -46,7 +46,7 @@ namespace CompactEC.CryptoAlgebra
             return CreateGroupElement(Algebra.MultiplyScalar(element.Value, k));
         }
 
-        public ICryptoGroupElement Negate(CryptoGroupElementImplementation<E> element)
+        public ICryptoGroupElement Negate(CryptoGroupElement<E> element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -60,8 +60,8 @@ namespace CompactEC.CryptoAlgebra
                 throw new ArgumentNullException(nameof(left));
             if (right == null)
                 throw new ArgumentNullException(nameof(right));
-            CryptoGroupElementImplementation<E> lhs = left as CryptoGroupElementImplementation<E>;
-            CryptoGroupElementImplementation<E> rhs = right as CryptoGroupElementImplementation<E>;
+            CryptoGroupElement<E> lhs = left as CryptoGroupElement<E>;
+            CryptoGroupElement<E> rhs = right as CryptoGroupElement<E>;
             if (lhs == null)
                 throw new ArgumentException("The left summand is not an element of the group.", nameof(left));
             if (rhs == null)
@@ -74,7 +74,7 @@ namespace CompactEC.CryptoAlgebra
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            CryptoGroupElementImplementation<E> e = element as CryptoGroupElementImplementation<E>;
+            CryptoGroupElement<E> e = element as CryptoGroupElement<E>;
             if (e == null)
                 throw new ArgumentException("The provided value is not an element of the group.", nameof(element));
 
@@ -85,7 +85,7 @@ namespace CompactEC.CryptoAlgebra
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            CryptoGroupElementImplementation<E> e = element as CryptoGroupElementImplementation<E>;
+            CryptoGroupElement<E> e = element as CryptoGroupElement<E>;
             if (e == null)
                 throw new ArgumentException("The provided value is not an element of the group.", nameof(element));
 

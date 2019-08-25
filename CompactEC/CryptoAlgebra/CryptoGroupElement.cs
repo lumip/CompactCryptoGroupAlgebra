@@ -3,12 +3,12 @@ using System.Numerics;
 
 namespace CompactEC.CryptoAlgebra
 {
-    public abstract class CryptoGroupElementImplementation<E> : ICryptoGroupElement where E : struct
+    public abstract class CryptoGroupElement<E> : ICryptoGroupElement where E : struct
     {
         protected CryptoGroupAlgebra<E> Algebra { get; }
         public E Value { get; private set; }
 
-        public CryptoGroupElementImplementation(E value, CryptoGroupAlgebra<E> groupAlgebra)
+        public CryptoGroupElement(E value, CryptoGroupAlgebra<E> groupAlgebra)
         {
             if (groupAlgebra == null)
                 throw new ArgumentNullException(nameof(groupAlgebra));
@@ -23,14 +23,14 @@ namespace CompactEC.CryptoAlgebra
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
-            CryptoGroupElementImplementation<E> e = element as CryptoGroupElementImplementation<E>;
+            CryptoGroupElement<E> e = element as CryptoGroupElement<E>;
             if (e == null)
                 throw new ArgumentException("The provided value is not a valid element of the group.", nameof(Value));
 
             Add(e);
         }
 
-        public void Add(CryptoGroupElementImplementation<E> element)
+        public void Add(CryptoGroupElement<E> element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -54,50 +54,40 @@ namespace CompactEC.CryptoAlgebra
 
         public bool Equals(ICryptoGroupElement other)
         {
-            var o = other as CryptoGroupElementImplementation<E>;
-            return o != null && Value.Equals(o.Value);
+            var o = other as CryptoGroupElement<E>;
+            return o != null && Algebra == o.Algebra && Value.Equals(o.Value);
         }
 
-        public static CryptoGroupElementImplementation<E> operator +(CryptoGroupElementImplementation<E> left, ICryptoGroupElement right)
+        public static CryptoGroupElement<E> operator +(CryptoGroupElement<E> left, ICryptoGroupElement right)
         {
-            var result = (CryptoGroupElementImplementation<E>)left.Clone();
+            var result = (CryptoGroupElement<E>)left.Clone();
             result.Add(right);
             return result;
         }
 
-        public static CryptoGroupElementImplementation<E> operator +(ICryptoGroupElement left, CryptoGroupElementImplementation<E> right)
+        public static CryptoGroupElement<E> operator -(CryptoGroupElement<E> e)
         {
-            return right + left;
-        }
-
-        public static CryptoGroupElementImplementation<E> operator -(CryptoGroupElementImplementation<E> e)
-        {
-            var result = (CryptoGroupElementImplementation<E>)e.Clone();
+            var result = (CryptoGroupElement<E>)e.Clone();
             result.Negate();
             return result;
         }
 
-        public static CryptoGroupElementImplementation<E> operator -(ICryptoGroupElement left, CryptoGroupElementImplementation<E> right)
+        public static CryptoGroupElement<E> operator -(ICryptoGroupElement left, CryptoGroupElement<E> right)
         {
-            var result = (CryptoGroupElementImplementation<E>)right.Clone();
+            var result = (CryptoGroupElement<E>)right.Clone();
             result.Negate();
             result.Add(left);
             return result;
         }
 
-        public static CryptoGroupElementImplementation<E> operator -(CryptoGroupElementImplementation<E> left, ICryptoGroupElement right)
+        public static CryptoGroupElement<E> operator *(CryptoGroupElement<E> e, BigInteger k)
         {
-            return right - left;
-        }
-
-        public static CryptoGroupElementImplementation<E> operator *(CryptoGroupElementImplementation<E> e, BigInteger k)
-        {
-            var result = (CryptoGroupElementImplementation<E>)e.Clone();
+            var result = (CryptoGroupElement<E>)e.Clone();
             result.MultiplyScalar(k);
             return result;
         }
 
-        public static CryptoGroupElementImplementation<E> operator *(BigInteger k, CryptoGroupElementImplementation<E> e)
+        public static CryptoGroupElement<E> operator *(BigInteger k, CryptoGroupElement<E> e)
         {
             return e * k;
         }
