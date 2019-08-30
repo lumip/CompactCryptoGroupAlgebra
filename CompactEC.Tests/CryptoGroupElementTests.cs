@@ -9,25 +9,26 @@ using CompactEC.CryptoAlgebra;
 
 namespace CompactEC.Tests.CryptoAlgebra
 {
+    public class CryptoGroupElementFake : CryptoGroupElement<int>
+    {
+        public CryptoGroupElementFake(int value, CryptoGroupAlgebra<int> algebra)
+            : base(value, algebra)
+        { }
+
+        public override ICryptoGroupElement Clone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override byte[] ToBytes()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     [TestClass]
     public class CryptoGroupElementTests
     {
-        public class CryptoGroupElementFake : CryptoGroupElement<int>
-        {
-            public CryptoGroupElementFake(int value, CryptoGroupAlgebra<int> algebra)
-                : base(value, algebra)
-            { }
-
-            public override ICryptoGroupElement Clone()
-            {
-                throw new NotImplementedException();
-            }
-
-            public override byte[] ToBytes()
-            {
-                throw new NotImplementedException();
-            }
-        }
 
         [TestMethod]
         public void TestConstructorRejectsInvalidValue()
