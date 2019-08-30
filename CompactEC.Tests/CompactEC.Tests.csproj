@@ -63,7 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CrptoGroupTests.cs" />
+    <Compile Include="CryptoGroupTests.cs" />
     <Compile Include="CryptoGroupAlgebraTests.cs" />
     <Compile Include="CryptoGroupElementTests.cs" />
     <Compile Include="CurveAndPointTests.cs" />

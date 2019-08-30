@@ -30,7 +30,17 @@ namespace CompactEC.Tests.CryptoAlgebra
             throw new NotImplementedException();
         }
 
+        public override int FromBytes(byte[] buffer)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool IsValid(int element)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override byte[] ToBytes(int element)
         {
             throw new NotImplementedException();
         }

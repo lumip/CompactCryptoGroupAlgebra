@@ -49,5 +49,15 @@ namespace CompactEC.CryptoAlgebra
         {
             return element > BigInteger.Zero && element < Prime;
         }
+
+        public override BigInteger FromBytes(byte[] buffer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override byte[] ToBytes(BigInteger element)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

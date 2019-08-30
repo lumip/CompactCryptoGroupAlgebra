@@ -9,23 +9,6 @@ using CompactEC.CryptoAlgebra;
 
 namespace CompactEC.Tests.CryptoAlgebra
 {
-    public class CryptoGroupElementFake : CryptoGroupElement<int>
-    {
-        public CryptoGroupElementFake(int value, CryptoGroupAlgebra<int> algebra)
-            : base(value, algebra)
-        { }
-
-        public override ICryptoGroupElement Clone()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override byte[] ToBytes()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     [TestClass]
     public class CryptoGroupElementTests
     {
@@ -39,7 +22,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             algebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(false);
             
             Assert.ThrowsException<ArgumentException>(
-                () => new CryptoGroupElementFake(element, algebraMock.Object)
+                () => new CryptoGroupElement<int>(element, algebraMock.Object)
             );
             algebraMock.Verify(alg => alg.IsValid(It.Is<int>(x => x == element)), Times.Once());
         }
@@ -50,22 +33,62 @@ namespace CompactEC.Tests.CryptoAlgebra
             int element = -3;
 
             Assert.ThrowsException<ArgumentNullException>(
-                () => new CryptoGroupElementFake(element, null)
+                () => new CryptoGroupElement<int>(element, null)
             );
         }
 
         [TestMethod]
         public void TestConstructorSetsValueCorrectly()
         {
-            int element = -3;
+            int elementRaw = -3;
 
             var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
 
-            var elementStub = new CryptoGroupElementFake(element, algebraMock.Object);
+            var element = new CryptoGroupElement<int>(elementRaw, algebraMock.Object);
 
-            Assert.AreEqual(element, elementStub.Value);
-            algebraMock.Verify(alg => alg.IsValid(It.Is<int>(x => x == element)), Times.Once());
+            Assert.AreEqual(elementRaw, element.Value);
+            algebraMock.Verify(alg => alg.IsValid(It.Is<int>(x => x == elementRaw)), Times.Once());
+        }
+
+        [TestMethod]
+        public void TestConstructorFromBytesCorrect()
+        {
+            byte[] buffer = new byte[0];
+            int expectedValue = 9;
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
+            algebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
+            algebraMock.Setup(alg => alg.FromBytes(It.IsAny<byte[]>())).Returns(expectedValue);
+
+            var element = new CryptoGroupElement<int>(buffer, algebraMock.Object);
+
+            Assert.AreEqual(expectedValue, element.Value);
+            algebraMock.Verify(alg => alg.FromBytes(It.Is<byte[]>(x => x == buffer)));
+        }
+
+        [TestMethod]
+        public void TestConstructorFromBytesRejectsNullAlgebra()
+        {
+            byte[] buffer = new byte[0];
+
+            Assert.ThrowsException<ArgumentNullException>(
+                () => new CryptoGroupElement<int>(buffer, null)
+            );
+        }
+
+        [TestMethod]
+        public void TestConstructorFromBytesRejectsInvalidValue()
+        {
+            byte[] buffer = new byte[0];
+
+            var algebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
+            algebraStub.Setup(alg => alg.FromBytes(It.IsAny<byte[]>())).Returns(0);
+            algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(false);
+
+            Assert.ThrowsException<ArgumentException>(
+                () => new CryptoGroupElement<int>(buffer, algebraStub.Object)
+            );
         }
 
         [TestMethod]
@@ -76,10 +99,10 @@ namespace CompactEC.Tests.CryptoAlgebra
             var algebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
 
-            var elementStub = new CryptoGroupElementFake(0, algebraStub.Object);
+            var element = new CryptoGroupElement<int>(0, algebraStub.Object);
 
             Assert.ThrowsException<ArgumentException>(
-                () => elementStub.Add(otherElementStub.Object)
+                () => element.Add(otherElementStub.Object)
             );
         }
 
@@ -91,10 +114,10 @@ namespace CompactEC.Tests.CryptoAlgebra
             var algebraStub = new Mock<CryptoGroupAlgebra<int>>();
             algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
 
-            var elementStub = new CryptoGroupElementFake(0, algebraStub.Object);
+            var element = new CryptoGroupElement<int>(0, algebraStub.Object);
 
             Assert.ThrowsException<ArgumentNullException>(
-                () => elementStub.Add(otherElement)
+                () => element.Add(otherElement)
             );
         }
 
@@ -103,15 +126,15 @@ namespace CompactEC.Tests.CryptoAlgebra
         {
             var otherAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
             otherAlgebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
-            var otherElementStub = new CryptoGroupElementFake(0, otherAlgebraStub.Object);
+            var otherElement = new CryptoGroupElement<int>(0, otherAlgebraStub.Object);
 
             var algebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
 
-            var elementStub = new CryptoGroupElementFake(0, algebraStub.Object);
+            var element = new CryptoGroupElement<int>(0, algebraStub.Object);
 
             Assert.ThrowsException<ArgumentException>(
-                () => elementStub.Add(otherElementStub)
+                () => element.Add(otherElement)
             );
         }
 
@@ -126,13 +149,13 @@ namespace CompactEC.Tests.CryptoAlgebra
             algebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
             algebraMock.Setup(alg => alg.Add(It.IsAny<int>(), It.IsAny<int>())).Returns(expected);
 
-            var elementStub = new CryptoGroupElementFake(value, algebraMock.Object);
-            var otherElementStub = new CryptoGroupElementFake(otherValue, algebraMock.Object);
+            var element = new CryptoGroupElement<int>(value, algebraMock.Object);
+            var otherElement = new CryptoGroupElement<int>(otherValue, algebraMock.Object);
 
-            elementStub.Add(otherElementStub);
+            element.Add(otherElement);
 
-            Assert.AreEqual(expected, elementStub.Value);
-            Assert.AreEqual(otherValue, otherElementStub.Value);
+            Assert.AreEqual(expected, element.Value);
+            Assert.AreEqual(otherValue, otherElement.Value);
             algebraMock.Verify(alg => alg.Add(It.Is<int>(x => x == value), It.Is<int>(x => x == otherValue)), Times.Once());
         }
 
@@ -150,11 +173,11 @@ namespace CompactEC.Tests.CryptoAlgebra
             algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>().
                 Setup(alg => alg.MultiplyScalarUnsafe(It.Is<int>(x => x == value), It.Is<BigInteger>(x => x == scalar), It.IsAny<int>())).Returns(expected);
 
-            var elementStub = new CryptoGroupElementFake(value, algebraMock.Object);
+            var element = new CryptoGroupElement<int>(value, algebraMock.Object);
 
-            elementStub.MultiplyScalar(scalar);
+            element.MultiplyScalar(scalar);
 
-            Assert.AreEqual(expected, elementStub.Value);
+            Assert.AreEqual(expected, element.Value);
             algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
                 .Verify(alg => alg.MultiplyScalarUnsafe(It.Is<int>(x => x == value), It.Is<BigInteger>(x => x == scalar), It.IsAny<int>()), Times.Once());
         }
@@ -169,11 +192,11 @@ namespace CompactEC.Tests.CryptoAlgebra
             algebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
             algebraMock.Setup(alg => alg.Negate(It.IsAny<int>())).Returns((int x) => -x);
 
-            var elementStub = new CryptoGroupElementFake(value, algebraMock.Object);
+            var element = new CryptoGroupElement<int>(value, algebraMock.Object);
 
-            elementStub.Negate();
+            element.Negate();
 
-            Assert.AreEqual(expected, elementStub.Value);
+            Assert.AreEqual(expected, element.Value);
             algebraMock.Verify(alg => alg.Negate(It.Is<int>(x => x == value)), Times.Once());
         }
 
@@ -185,8 +208,8 @@ namespace CompactEC.Tests.CryptoAlgebra
             var algebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
 
-            var elementStub = new CryptoGroupElementFake(0, algebraStub.Object);
-            bool result = elementStub.Equals(otherElementStub.Object);
+            var element = new CryptoGroupElement<int>(0, algebraStub.Object);
+            bool result = element.Equals(otherElementStub.Object);
             
             Assert.IsFalse(result);
         }
@@ -197,8 +220,8 @@ namespace CompactEC.Tests.CryptoAlgebra
             var algebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
 
-            var elementStub = new CryptoGroupElementFake(0, algebraStub.Object);
-            bool result = elementStub.Equals(null);
+            var element = new CryptoGroupElement<int>(0, algebraStub.Object);
+            bool result = element.Equals(null);
 
             Assert.IsFalse(result);
         }
@@ -209,10 +232,10 @@ namespace CompactEC.Tests.CryptoAlgebra
             var algebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
 
-            var otherElementStub = new CryptoGroupElementFake(3, algebraStub.Object);
-            var elementStub = new CryptoGroupElementFake(8, algebraStub.Object);
+            var otherElement = new CryptoGroupElement<int>(3, algebraStub.Object);
+            var element = new CryptoGroupElement<int>(8, algebraStub.Object);
 
-            bool result = elementStub.Equals(otherElementStub);
+            bool result = element.Equals(otherElement);
 
             Assert.IsFalse(result);
         }
@@ -222,14 +245,14 @@ namespace CompactEC.Tests.CryptoAlgebra
         {
             var otherAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
             otherAlgebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
-            var otherElementStub = new CryptoGroupElementFake(0, otherAlgebraStub.Object);
+            var otherElement = new CryptoGroupElement<int>(0, otherAlgebraStub.Object);
 
             var algebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
 
-            var elementStub = new CryptoGroupElementFake(0, algebraStub.Object);
+            var element = new CryptoGroupElement<int>(0, algebraStub.Object);
 
-            bool result = elementStub.Equals(otherElementStub);
+            bool result = element.Equals(otherElement);
 
             Assert.IsFalse(result);
         }
@@ -240,10 +263,10 @@ namespace CompactEC.Tests.CryptoAlgebra
             var algebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
 
-            var otherElementStub = new CryptoGroupElementFake(5, algebraStub.Object);
-            var elementStub = new CryptoGroupElementFake(5, algebraStub.Object);
+            var otherElement = new CryptoGroupElement<int>(5, algebraStub.Object);
+            var element = new CryptoGroupElement<int>(5, algebraStub.Object);
 
-            bool result = elementStub.Equals(otherElementStub);
+            bool result = element.Equals(otherElement);
 
             Assert.IsTrue(result);
         }
@@ -259,14 +282,13 @@ namespace CompactEC.Tests.CryptoAlgebra
             algebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
             algebraMock.Setup(alg => alg.Add(It.IsAny<int>(), It.IsAny<int>())).Returns(expected);
 
-            var otherElementStub = new CryptoGroupElementFake(otherValue, algebraMock.Object);
-            var elementStub = new Mock<CryptoGroupElementFake>(MockBehavior.Strict, value, algebraMock.Object);
-            elementStub.Setup(element => element.Clone()).Returns(new CryptoGroupElementFake(value, algebraMock.Object));
+            var otherElement = new CryptoGroupElement<int>(otherValue, algebraMock.Object);
+            var element = new CryptoGroupElement<int>(value, algebraMock.Object);
 
-            var result = elementStub.Object + otherElementStub;
+            var result = element + otherElement;
 
-            Assert.AreEqual(otherValue, otherElementStub.Value);
-            Assert.AreEqual(value, elementStub.Object.Value);
+            Assert.AreEqual(otherValue, otherElement.Value);
+            Assert.AreEqual(value, element.Value);
             Assert.AreEqual(expected, result.Value);
             algebraMock.Verify(alg => alg.Add(It.Is<int>(x => x == value), It.Is<int>(x => x == otherValue)), Times.Once());
         }
@@ -281,12 +303,11 @@ namespace CompactEC.Tests.CryptoAlgebra
             algebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
             algebraMock.Setup(alg => alg.Negate(It.IsAny<int>())).Returns((int x) => -x);
 
-            var elementStub = new Mock<CryptoGroupElementFake>(MockBehavior.Strict, value, algebraMock.Object);
-            elementStub.Setup(element => element.Clone()).Returns(new CryptoGroupElementFake(value, algebraMock.Object));
+            var element = new CryptoGroupElement<int>(value, algebraMock.Object);
 
-            var result = -elementStub.Object;
+            var result = -element;
 
-            Assert.AreEqual(value, elementStub.Object.Value);
+            Assert.AreEqual(value, element.Value);
             Assert.AreEqual(expected, result.Value);
             algebraMock.Verify(alg => alg.Negate(It.Is<int>(x => x == value)), Times.Once());
         }
@@ -303,14 +324,13 @@ namespace CompactEC.Tests.CryptoAlgebra
             algebraMock.Setup(alg => alg.Add(It.IsAny<int>(), It.IsAny<int>())).Returns(expected);
             algebraMock.Setup(alg => alg.Negate(It.IsAny<int>())).Returns((int x) => -x);
 
-            var otherElementStub = new CryptoGroupElementFake(otherValue, algebraMock.Object);
-            var elementStub = new Mock<CryptoGroupElementFake>(MockBehavior.Strict, value, algebraMock.Object);
-            elementStub.Setup(element => element.Clone()).Returns(new CryptoGroupElementFake(value, algebraMock.Object));
+            var otherElement = new CryptoGroupElement<int>(otherValue, algebraMock.Object);
+            var element = new CryptoGroupElement<int>(value, algebraMock.Object);
 
-            var result = otherElementStub - elementStub.Object;
+            var result = otherElement - element;
 
-            Assert.AreEqual(otherValue, otherElementStub.Value);
-            Assert.AreEqual(value, elementStub.Object.Value);
+            Assert.AreEqual(otherValue, otherElement.Value);
+            Assert.AreEqual(value, element.Value);
             Assert.AreEqual(expected, result.Value);
             algebraMock.Verify(alg => alg.Negate(It.Is<int>(x => x == value)), Times.Once());
             algebraMock.Verify(alg => alg.Add(It.Is<int>(x => x == -value), It.Is<int>(x => x == otherValue)), Times.Once());
@@ -330,12 +350,11 @@ namespace CompactEC.Tests.CryptoAlgebra
             algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>().
                 Setup(alg => alg.MultiplyScalarUnsafe(It.Is<int>(x => x == value), It.Is<BigInteger>(x => x == scalar), It.IsAny<int>())).Returns(expected);
 
-            var elementStub = new Mock<CryptoGroupElementFake>(MockBehavior.Strict, value, algebraMock.Object);
-            elementStub.Setup(element => element.Clone()).Returns(new CryptoGroupElementFake(value, algebraMock.Object));
+            var element = new CryptoGroupElement<int>(value, algebraMock.Object);
 
-            var result = elementStub.Object * scalar;
+            var result = element * scalar;
 
-            Assert.AreEqual(value, elementStub.Object.Value);
+            Assert.AreEqual(value, element.Value);
             Assert.AreEqual(expected, result.Value);
             algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
                 .Verify(alg => alg.MultiplyScalarUnsafe(It.Is<int>(x => x == value), It.Is<BigInteger>(x => x == scalar), It.IsAny<int>()), Times.Once());
@@ -355,15 +374,45 @@ namespace CompactEC.Tests.CryptoAlgebra
             algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>().
                 Setup(alg => alg.MultiplyScalarUnsafe(It.Is<int>(x => x == value), It.Is<BigInteger>(x => x == scalar), It.IsAny<int>())).Returns(expected);
 
-            var elementStub = new Mock<CryptoGroupElementFake>(MockBehavior.Strict, value, algebraMock.Object);
-            elementStub.Setup(element => element.Clone()).Returns(new CryptoGroupElementFake(value, algebraMock.Object));
+            var element = new CryptoGroupElement<int>(value, algebraMock.Object);
 
-            var result = scalar * elementStub.Object;
+            var result = scalar * element;
 
-            Assert.AreEqual(value, elementStub.Object.Value);
+            Assert.AreEqual(value, element.Value);
             Assert.AreEqual(expected, result.Value);
             algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
                 .Verify(alg => alg.MultiplyScalarUnsafe(It.Is<int>(x => x == value), It.Is<BigInteger>(x => x == scalar), It.IsAny<int>()), Times.Once());
+        }
+
+        [TestMethod]
+        public void TestCloneResultsInEqualButNotSameElement()
+        {
+            int value = 3;
+
+            var algebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
+            algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
+
+            var element = new CryptoGroupElement<int>(value, algebraStub.Object);
+            var clone = element.Clone();
+
+            Assert.AreEqual(element, clone);
+            Assert.AreNotSame(element, clone);
+        }
+
+        [TestMethod]
+        public void TestToBytesCallsAlgebra()
+        {
+            var value = 3;
+            var expected = new byte[0];
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
+            algebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
+            algebraMock.Setup(alg => alg.ToBytes(It.IsAny<int>())).Returns(expected);
+
+            var element = new CryptoGroupElement<int>(value, algebraMock.Object);
+            var result = element.ToBytes();
+
+            algebraMock.Verify(alg => alg.ToBytes(It.Is<int>(x => x == value)), Times.Once());
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace CompactEC.CryptoAlgebra
 {
-    public abstract class CryptoGroupElement<E> : ICryptoGroupElement where E : struct
+    public class CryptoGroupElement<E> : ICryptoGroupElement where E : struct
     {
         protected CryptoGroupAlgebra<E> Algebra { get; }
         public E Value { get; private set; }
@@ -14,6 +15,18 @@ namespace CompactEC.CryptoAlgebra
                 throw new ArgumentNullException(nameof(groupAlgebra));
             Algebra = groupAlgebra;
             
+            if (!Algebra.IsValid(value))
+                throw new ArgumentException("The provided value is not a valid element of the group.", nameof(value));
+            Value = value;
+        }
+
+        public CryptoGroupElement(byte[] valueBuffer, CryptoGroupAlgebra<E> groupAlgebra)
+        {
+            if (groupAlgebra == null)
+                throw new ArgumentNullException(nameof(groupAlgebra));
+            Algebra = groupAlgebra;
+
+            E value = Algebra.FromBytes(valueBuffer);
             if (!Algebra.IsValid(value))
                 throw new ArgumentException("The provided value is not a valid element of the group.", nameof(value));
             Value = value;
@@ -49,32 +62,61 @@ namespace CompactEC.CryptoAlgebra
             Value = Algebra.Negate(Value);
         }
 
-        public abstract byte[] ToBytes();
-        public abstract ICryptoGroupElement Clone();
+        public byte[] ToBytes()
+        {
+            return Algebra.ToBytes(Value);
+        }
+
+        protected CryptoGroupElement<E> CloneInternal()
+        {
+            return new CryptoGroupElement<E>(Value, Algebra);
+        }
+
+        public ICryptoGroupElement Clone()
+        {
+            return CloneInternal();
+        }
+
+        public bool Equals(CryptoGroupElement<E> other)
+        {
+            return other != null && Algebra == other.Algebra && Value.Equals(other.Value);
+        }
 
         public bool Equals(ICryptoGroupElement other)
         {
-            var o = other as CryptoGroupElement<E>;
-            return o != null && Algebra == o.Algebra && Value.Equals(o.Value);
+            return Equals(other as CryptoGroupElement<E>);
+        }
+
+        public override bool Equals(object other)
+        {
+            return Equals(other as CryptoGroupElement<E>);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = -1217399511;
+            hashCode = hashCode * -1521134295 + EqualityComparer<CryptoGroupAlgebra<E>>.Default.GetHashCode(Algebra);
+            hashCode = hashCode * -1521134295 + EqualityComparer<E>.Default.GetHashCode(Value);
+            return hashCode;
         }
 
         public static CryptoGroupElement<E> operator +(CryptoGroupElement<E> left, ICryptoGroupElement right)
         {
-            var result = (CryptoGroupElement<E>)left.Clone();
+            var result = left.CloneInternal();
             result.Add(right);
             return result;
         }
 
         public static CryptoGroupElement<E> operator -(CryptoGroupElement<E> e)
         {
-            var result = (CryptoGroupElement<E>)e.Clone();
+            var result = e.CloneInternal();
             result.Negate();
             return result;
         }
 
         public static CryptoGroupElement<E> operator -(ICryptoGroupElement left, CryptoGroupElement<E> right)
         {
-            var result = (CryptoGroupElement<E>)right.Clone();
+            var result = right.CloneInternal();
             result.Negate();
             result.Add(left);
             return result;
@@ -82,7 +124,7 @@ namespace CompactEC.CryptoAlgebra
 
         public static CryptoGroupElement<E> operator *(CryptoGroupElement<E> e, BigInteger k)
         {
-            var result = (CryptoGroupElement<E>)e.Clone();
+            var result = e.CloneInternal();
             result.MultiplyScalar(k);
             return result;
         }
