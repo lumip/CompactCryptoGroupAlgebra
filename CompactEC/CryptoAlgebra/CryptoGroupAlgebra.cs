@@ -82,5 +82,7 @@ namespace CompactEC.CryptoAlgebra
         public abstract E NeutralElement { get; }
         public abstract E Add(E left, E right);
         public abstract bool IsValid(E element);
+        public abstract E FromBytes(byte[] buffer);
+        public abstract byte[] ToBytes(E element);
     }
 }

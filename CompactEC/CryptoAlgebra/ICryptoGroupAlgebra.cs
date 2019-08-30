@@ -17,5 +17,7 @@ namespace CompactEC.CryptoAlgebra
         E MultiplyScalar(E e, BigInteger k);
         E Add(E left, E right);
         bool IsValid(E element);
+        E FromBytes(byte[] buffer);
+        byte[] ToBytes(E element);
     }
 }
