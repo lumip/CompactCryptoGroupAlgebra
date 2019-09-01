@@ -66,7 +66,8 @@
     <Compile Include="CryptoGroupTests.cs" />
     <Compile Include="CryptoGroupAlgebraTests.cs" />
     <Compile Include="CryptoGroupElementTests.cs" />
-    <Compile Include="CurveAndPointTests.cs" />
+    <Compile Include="ECPoint.cs" />
+    <Compile Include="ECGroupAlgebraTest.cs" />
     <Compile Include="MultiplicativeGroupAlgebraIntegratedTest.cs" />
     <Compile Include="MultiplicativeGroupAlgebraTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

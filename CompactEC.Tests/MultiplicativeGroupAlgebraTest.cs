@@ -33,18 +33,6 @@ namespace CompactEC.Tests.CryptoAlgebra
         }
 
         [TestMethod]
-        public void TestMultiplyScalarRejectsNegativeScalars()
-        {
-            var k = new BigInteger(-1);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
-            var x = new BigInteger(3);
-
-            Assert.ThrowsException<ArgumentOutOfRangeException>(
-                () => groupAlgebra.MultiplyScalar(x, k)
-            );
-        }
-
-        [TestMethod]
         [DataRow(2)]
         [DataRow(3)]
         [DataRow(7)]
