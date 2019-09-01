@@ -90,7 +90,7 @@ namespace CompactEC
         public override ECPoint Negate(ECPoint p)
         {
             AssertPoint(p);
-            return new ECPoint(p.X, p.Y.IsZero ? p.Y : _parameters.P - p.Y, p.IsAtInfinity);
+            return new ECPoint(p.X, _ring.Mod(-p.Y), p.IsAtInfinity);
         }
 
         protected BigInteger Multiplex(BigInteger selection, BigInteger left, BigInteger right)
