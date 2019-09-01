@@ -38,37 +38,9 @@ namespace CompactEC.Tests.CryptoAlgebra
             var k = new BigInteger(-1);
             var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
             var x = new BigInteger(3);
-            
+
             Assert.ThrowsException<ArgumentOutOfRangeException>(
                 () => groupAlgebra.MultiplyScalar(x, k)
-            );
-        }
-
-        [TestMethod]
-        [DataRow(0)]
-        [DataRow(1)]
-        [DataRow(2)]
-        [DataRow(6)]
-        [DataRow(9)]
-        [DataRow(10)]
-        [DataRow(11)]
-        [DataRow(232)]
-        public void TestGenerateIsGeneratorMultiplied(int idInt)
-        {
-            var id = new BigInteger(idInt);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
-
-            Assert.AreEqual(groupAlgebra.MultiplyScalar(groupAlgebra.Generator, id), groupAlgebra.GenerateElement(id));
-        }
-
-        [TestMethod]
-        public void TestGenerateRejectsNegativeIds()
-        {
-            var id = new BigInteger(-1);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
-
-            Assert.ThrowsException<ArgumentOutOfRangeException>(
-                () => groupAlgebra.GenerateElement(id)
             );
         }
 
@@ -134,49 +106,6 @@ namespace CompactEC.Tests.CryptoAlgebra
         }
 
         [TestMethod]
-        [DataRow(0)]
-        [DataRow(1)]
-        [DataRow(2)]
-        [DataRow(4)]
-        [DataRow(7)]
-        public void TestMultiplyScalarWithSmallFactorSizeEqualToOrderFactorSize(int factorInt)
-        {
-            int factorBitlength = 3;
-            var k = new BigInteger(factorInt);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
-            var x = new BigInteger(6);
-            Assert.AreEqual(groupAlgebra.MultiplyScalar(x, k), groupAlgebra.MultiplyScalar(x, k, factorBitlength));
-        }
-
-        [TestMethod]
-        public void TestMultiplyScalarWithSmallFactorSizeRejectsNegativeScalars()
-        {
-            int factorBitLength = 3;
-            var k = new BigInteger(-1);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
-            var x = new BigInteger(6);
-
-            Assert.ThrowsException<ArgumentOutOfRangeException>(
-                () => groupAlgebra.MultiplyScalar(x, k, factorBitLength)
-            );
-        }
-
-        [TestMethod]
-        [DataRow(8)]
-        [DataRow(9)]
-        [DataRow(123)]
-        public void TestMultiplyScalarWithSmallFactorSizeRejectsLargerFactors(int factorInt)
-        {
-            int factorBitlength = 3;
-            var k = new BigInteger(factorInt);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
-            var x = new BigInteger(6);
-            Assert.ThrowsException<ArgumentOutOfRangeException>(
-                () => groupAlgebra.MultiplyScalar(x, k, factorBitlength)
-            );
-        }
-
-        [TestMethod]
         [DataRow(1)]
         [DataRow(2)]
         [DataRow(5)]
@@ -193,6 +122,38 @@ namespace CompactEC.Tests.CryptoAlgebra
         {
             var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
             Assert.AreEqual(BigInteger.One, groupAlgebra.NeutralElement);
+        }
+
+        [TestMethod]
+        public void TestFromBytes()
+        {
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var expected = new BigInteger(7);
+            var buffer = expected.ToByteArray();
+
+            var result = groupAlgebra.FromBytes(buffer);
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void TestFromBytesRejectsNullArgument()
+        {
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            Assert.ThrowsException<ArgumentNullException>(
+                () => groupAlgebra.FromBytes(null)
+            );
+        }
+
+        [TestMethod]
+        public void TestToBytes()
+        {
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var element = new BigInteger(7);
+            var expected = element.ToByteArray();
+
+            var result = groupAlgebra.ToBytes(element);
+
+            CollectionAssert.AreEqual(expected, result);
         }
     }
 }

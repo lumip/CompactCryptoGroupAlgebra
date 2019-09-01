@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
+using System.Diagnostics;
 
 namespace CompactEC.CryptoAlgebra
 {
@@ -32,16 +33,20 @@ namespace CompactEC.CryptoAlgebra
         
         public override BigInteger Add(BigInteger left, BigInteger right)
         {
+            Debug.Assert(IsValid(left));
+            Debug.Assert(IsValid(right));
             return (left * right) % Prime;
         }
 
         protected override BigInteger Multiplex(BigInteger selection, BigInteger left, BigInteger right)
         {
+            Debug.Assert(selection == BigInteger.Zero || selection == BigInteger.One);
             return left + selection * (right - left);
         }
 
         public override BigInteger Negate(BigInteger e)
         {
+            Debug.Assert(IsValid(e));
             return BigInteger.ModPow(e, Order - 1, Prime);
         }
 
@@ -52,12 +57,12 @@ namespace CompactEC.CryptoAlgebra
 
         public override BigInteger FromBytes(byte[] buffer)
         {
-            throw new NotImplementedException();
+            return new BigInteger(buffer);
         }
 
         public override byte[] ToBytes(BigInteger element)
         {
-            throw new NotImplementedException();
+            return element.ToByteArray();
         }
     }
 }
