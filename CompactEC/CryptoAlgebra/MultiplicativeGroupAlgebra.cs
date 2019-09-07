@@ -19,7 +19,7 @@ namespace CompactEC.CryptoAlgebra
         public override BigInteger Order { get; }
         public override BigInteger NeutralElement { get { return BigInteger.One; } }
         public override BigInteger Generator { get; }
-        public override int GroupElementBitlength { get { return GetBitLength(Prime); } }
+        public override int ElementBitLength { get { return GetBitLength(Prime); } }
 
         public MultiplicativeGroupAlgebra(BigInteger prime, BigInteger order, BigInteger generator)
             : base()

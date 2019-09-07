@@ -80,17 +80,17 @@ namespace CompactEC.Tests.CryptoAlgebra
         }
 
         [TestMethod]
-        public void TestGroupElementBitlength()
+        public void TestGroupElementBitLength()
         {
             var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
-            Assert.AreEqual(4, groupAlgebra.GroupElementBitlength);
+            Assert.AreEqual(4, groupAlgebra.ElementBitLength);
         }
 
         [TestMethod]
-        public void TestOrderBitlength()
+        public void TestOrderBitLength()
         {
             var groupAlgebra = new MultiplicativeGroupAlgebra(11, 5, 3);
-            Assert.AreEqual(3, groupAlgebra.OrderBitlength);
+            Assert.AreEqual(3, groupAlgebra.OrderBitLength);
         }
 
         [TestMethod]

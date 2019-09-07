@@ -236,10 +236,10 @@ namespace CompactEC.Tests
         }
 
         [TestMethod]
-        public void TestGroupElementBitlength()
+        public void TestGroupElementBitLength()
         {
             var curve = new ECGroupAlgebra(ecParams);
-            Assert.AreEqual(2*5, curve.GroupElementBitlength);
+            Assert.AreEqual(2*5, curve.ElementBitLength);
         }
 
         [TestMethod]
@@ -250,10 +250,10 @@ namespace CompactEC.Tests
         }
 
         [TestMethod]
-        public void TestOrderBitlength()
+        public void TestOrderBitLength()
         {
             var curve = new ECGroupAlgebra(ecParams);
-            Assert.AreEqual(5, curve.OrderBitlength);
+            Assert.AreEqual(5, curve.OrderBitLength);
         }
         
         [TestMethod]

@@ -21,7 +21,7 @@ namespace CompactEC
 
         public override ECPoint Generator { get { return _parameters.Generator; } }
 
-        public override int GroupElementBitlength { get { return 2 * GetBitLength(_ring.Modulo); } }
+        public override int ElementBitLength { get { return 2 * GetBitLength(_ring.Modulo); } }
 
         public ECGroupAlgebra(ECParameters parameters)
         {
