@@ -66,6 +66,7 @@
     <Compile Include="CryptoGroupTests.cs" />
     <Compile Include="CryptoGroupAlgebraTests.cs" />
     <Compile Include="CryptoGroupElementTests.cs" />
+    <Compile Include="DefaultECParrameterTest.cs" />
     <Compile Include="ECPoint.cs" />
     <Compile Include="ECGroupAlgebraTest.cs" />
     <Compile Include="MultiplicativeGroupAlgebraIntegratedTest.cs" />
