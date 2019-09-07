@@ -14,5 +14,11 @@ namespace CompactEC.CryptoAlgebra
         ICryptoGroupElement NeutralElement { get; }
         ICryptoGroupElement Generator { get; }
         ICryptoGroupElement FromBytes(byte[] buffer);
+
+        int OrderBitLength { get; }
+        int OrderByteLength { get; }
+        BigInteger Order { get; }
+        int ElementBitLength { get; }
+        int ElementByteLength { get; }
     }
 }
