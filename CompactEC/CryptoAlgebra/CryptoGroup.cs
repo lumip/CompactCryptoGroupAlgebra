@@ -20,6 +20,16 @@ namespace CompactEC.CryptoAlgebra
         public ICryptoGroupElement NeutralElement { get { return CreateGroupElement(Algebra.NeutralElement); } }
         public ICryptoGroupElement Generator { get { return CreateGroupElement(Algebra.Generator); } }
 
+        public int OrderBitLength { get { return Algebra.OrderBitlength; } }
+
+        public int OrderByteLength { get { return (int)Math.Ceiling((double)OrderBitLength / 8); } }
+
+        public BigInteger Order { get { return Algebra.Order; } }
+
+        public int ElementBitLength { get { return Algebra.GroupElementBitlength; } }
+
+        public int ElementByteLength { get { return (int)Math.Ceiling((double)ElementBitLength / 8); } }
+
         protected abstract ICryptoGroupElement CreateGroupElement(E value);
         protected abstract ICryptoGroupElement CreateGroupElement(byte[] buffer);
 
