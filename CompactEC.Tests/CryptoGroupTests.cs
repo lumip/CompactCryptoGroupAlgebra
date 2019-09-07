@@ -116,7 +116,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             int expectedRaw = 3;
             int generator = 2;
             var order = new BigInteger(16);
-            int orderBitlength = 5;
+            int orderBitLength = 5;
 
             var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraMock.Setup(algebra => algebra.Generator).Returns(generator);
@@ -138,7 +138,7 @@ namespace CompactEC.Tests.CryptoAlgebra
 
             algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>().Verify(
                 algebra => algebra.MultiplyScalarUnsafe(
-                    It.Is<int>(x => x == generator), It.Is<BigInteger>(x => x == index), It.Is<int>(x => x == orderBitlength)
+                    It.Is<int>(x => x == generator), It.Is<BigInteger>(x => x == index), It.Is<int>(x => x == orderBitLength)
                 ),
                 Times.Once()
             );
@@ -155,7 +155,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             int expectedRaw = 3;
             int elementRaw = 8;
             var order = new BigInteger(16);
-            int orderBitlength = 5;
+            int orderBitLength = 5;
 
             var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraMock.Setup(algebra => algebra.Order).Returns(order);
@@ -177,7 +177,7 @@ namespace CompactEC.Tests.CryptoAlgebra
 
             algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>().Verify(
                 algebra => algebra.MultiplyScalarUnsafe(
-                    It.Is<int>(x => x == elementRaw), It.Is<BigInteger>(x => x == k), It.Is<int>(x => x == orderBitlength)
+                    It.Is<int>(x => x == elementRaw), It.Is<BigInteger>(x => x == k), It.Is<int>(x => x == orderBitLength)
                 ),
                 Times.Once()
             );
@@ -204,7 +204,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             int expectedRaw = 3;
             int elementRaw = 8;
             var order = new BigInteger(16);
-            int orderBitlength = 5;
+            int orderBitLength = 5;
 
             var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Loose) { CallBase = true };
             algebraMock.Setup(algebra => algebra.Order).Returns(order);
@@ -226,7 +226,7 @@ namespace CompactEC.Tests.CryptoAlgebra
 
             algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>().Verify(
                 algebra => algebra.MultiplyScalarUnsafe(
-                    It.Is<int>(x => x == elementRaw), It.Is<BigInteger>(x => x == order - 1), It.Is<int>(x => x == orderBitlength)
+                    It.Is<int>(x => x == elementRaw), It.Is<BigInteger>(x => x == order - 1), It.Is<int>(x => x == orderBitLength)
                 ),
                 Times.Once()
             );
@@ -325,7 +325,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             var groupMock = new CryptoGroupFake(algebraStub.Object);
 
             int result = groupMock.OrderBitLength;
-            int expected = algebraStub.Object.OrderBitlength;
+            int expected = algebraStub.Object.OrderBitLength;
             Assert.AreEqual(expected, result);
         }
 
@@ -351,14 +351,14 @@ namespace CompactEC.Tests.CryptoAlgebra
             int expected = 11;
 
             var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            algebraMock.Setup(alg => alg.GroupElementBitlength).Returns(expected);
+            algebraMock.Setup(alg => alg.ElementBitLength).Returns(expected);
 
             var groupMock = new CryptoGroupFake(algebraMock.Object);
 
             int result = groupMock.ElementBitLength;
             Assert.AreEqual(expected, result);
 
-            algebraMock.Verify(alg => alg.GroupElementBitlength, Times.Once());
+            algebraMock.Verify(alg => alg.ElementBitLength, Times.Once());
         }
 
         [TestMethod]
@@ -367,14 +367,14 @@ namespace CompactEC.Tests.CryptoAlgebra
         public void TestElementByteLengthCallsAlgebra(int bitLength, int expectedByteLength)
         {
             var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            algebraMock.Setup(alg => alg.GroupElementBitlength).Returns(bitLength);
+            algebraMock.Setup(alg => alg.ElementBitLength).Returns(bitLength);
 
             var groupMock = new CryptoGroupFake(algebraMock.Object);
 
             int result = groupMock.ElementByteLength;
             Assert.AreEqual(expectedByteLength, result);
 
-            algebraMock.Verify(alg => alg.GroupElementBitlength, Times.Once());
+            algebraMock.Verify(alg => alg.ElementBitLength, Times.Once());
         }
 
     }

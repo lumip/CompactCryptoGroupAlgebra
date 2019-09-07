@@ -58,11 +58,11 @@ namespace CompactEC.Tests.CryptoAlgebra
         [DataRow(7)]
         public void TestMultiplyScalarWithSmallFactorSizeEqualToOrderFactorSize(int factorInt)
         {
-            int factorBitlength = 3;
+            int factorBitLength = 3;
             var k = new BigInteger(factorInt);
             var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
             var x = new BigInteger(6);
-            Assert.AreEqual(groupAlgebra.MultiplyScalar(x, k), groupAlgebra.MultiplyScalar(x, k, factorBitlength));
+            Assert.AreEqual(groupAlgebra.MultiplyScalar(x, k), groupAlgebra.MultiplyScalar(x, k, factorBitLength));
         }
 
         [TestMethod]
@@ -84,12 +84,12 @@ namespace CompactEC.Tests.CryptoAlgebra
         [DataRow(123)]
         public void TestMultiplyScalarWithSmallFactorSizeRejectsLargerFactors(int factorInt)
         {
-            int factorBitlength = 3;
+            int factorBitLength = 3;
             var k = new BigInteger(factorInt);
             var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
             var x = new BigInteger(6);
             Assert.ThrowsException<ArgumentOutOfRangeException>(
-                () => groupAlgebra.MultiplyScalar(x, k, factorBitlength)
+                () => groupAlgebra.MultiplyScalar(x, k, factorBitLength)
             );
         }
     }
