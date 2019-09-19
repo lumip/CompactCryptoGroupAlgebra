@@ -5,6 +5,8 @@ using Moq.Protected;
 
 using CompactEC.CryptoAlgebra;
 using System.Numerics;
+using System.Security.Cryptography;
+using System.Linq;
 
 namespace CompactEC.Tests.CryptoAlgebra
 {
@@ -375,6 +377,148 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(expectedByteLength, result);
 
             algebraMock.Verify(alg => alg.ElementBitLength, Times.Once());
+        }
+
+        [TestMethod]
+        public void TestGenerateRandom()
+        {
+            var order = new BigInteger(1021);
+            int orderByteLength = 2;
+
+            var expected = new Mock<ICryptoGroupElement>();
+            var expectedRaw = 7;
+            var generator = 1;
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict) { CallBase = true };
+            algebraMock.Setup(alg => alg.Order).Returns(order);
+            algebraMock.Setup(alg => alg.Generator).Returns(generator);
+            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
+                .Setup(alg => alg.MultiplyScalarUnsafe(It.IsAny<int>(), It.IsAny<BigInteger>(), It.IsAny<int>()))
+                .Returns(expectedRaw);
+
+            var groupMock = new Mock<CryptoGroup<int>>(algebraMock.Object);
+            groupMock.Protected().As<CryptoGroupProtectedMembers>()
+                .Setup(group => group.CreateGroupElement(It.IsAny<int>()))
+                .Returns(expected.Object);
+
+            var index = new BigInteger(301);
+            byte[] rngResponse = index.ToByteArray();
+
+            var rngMock = new Mock<RandomNumberGenerator>();
+            rngMock
+                .Setup(rng => rng.GetBytes(It.IsAny<byte[]>()))
+                .Callback(
+                    new Action<byte[]>(
+                        (buffer) => { Buffer.BlockCopy(rngResponse, 0, buffer, 0, orderByteLength); }
+                    )
+                );
+
+            var result = groupMock.Object.GenerateRandom(rngMock.Object);
+            var resultIndex = result.Item1;
+            var resultElement = result.Item2;
+            Assert.AreEqual(index, resultIndex);
+            Assert.AreSame(expected.Object, resultElement);
+
+            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
+                .Verify(alg => alg.MultiplyScalarUnsafe(It.Is<int>(x => x == generator), 
+                                                        It.Is<BigInteger>(x => x == index),
+                                                        It.IsAny<int>()),
+                        Times.Once());
+
+            groupMock.Protected().As<CryptoGroupProtectedMembers>()
+                .Verify(group => group.CreateGroupElement(It.Is<int>(x => x == expectedRaw)),
+                        Times.Once());
+
+            rngMock.Verify(rng => rng.GetBytes(It.Is<byte[]>(x => x.Length == orderByteLength)), Times.Once());
+        }
+
+        [TestMethod]
+        [DataRow(-3)]
+        [DataRow(0)]
+        [DataRow(1)]
+        [DataRow(1020)]
+        [DataRow(1022)]
+        public void TestGenerateRandomDoesNotSampleInvalidIndices(int invalidIndexRaw)
+        {
+            // tests that invalid indices returned by rng are skipped:
+            // negative, 0, 1, order -1, order +1
+            var order = new BigInteger(1021);
+            int orderByteLength = 2;
+
+            var expected = new Mock<ICryptoGroupElement>();
+            var expectedRaw = 7;
+            var generator = 1;
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict) { CallBase = true };
+            algebraMock.Setup(alg => alg.Order).Returns(order);
+            algebraMock.Setup(alg => alg.Generator).Returns(generator);
+            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
+                .Setup(alg => alg.MultiplyScalarUnsafe(It.IsAny<int>(), It.IsAny<BigInteger>(), It.IsAny<int>()))
+                .Returns(expectedRaw);
+
+            var groupMock = new Mock<CryptoGroup<int>>(algebraMock.Object);
+            groupMock.Protected().As<CryptoGroupProtectedMembers>()
+                .Setup(group => group.CreateGroupElement(It.IsAny<int>()))
+                .Returns(expected.Object);
+
+            var invalidIndex = new BigInteger(invalidIndexRaw);
+            byte[] invalidRngResponse = invalidIndex.ToByteArray();
+            if (invalidRngResponse.Length < orderByteLength)
+            {
+                byte[] buffer = new byte[orderByteLength];
+                Buffer.BlockCopy(invalidRngResponse, 0, buffer, 0, invalidRngResponse.Length);
+                if (invalidIndex < 0)
+                {
+                    buffer[1] = 0xFF;
+                }
+                else
+                {
+                    buffer[1] = 0x00;
+                }
+                invalidRngResponse = buffer;
+            }
+
+            var validIndex = new BigInteger(301);
+            byte[] validRngResponse = validIndex.ToByteArray();
+
+            bool firstTime = true;
+            var rngMock = new Mock<RandomNumberGenerator>();
+            rngMock
+                .Setup(rng => rng.GetBytes(It.IsAny<byte[]>()))
+                .Callback(
+                    new Action<byte[]>(
+                        (buffer) => {
+                            if (firstTime)
+                            {
+                                Buffer.BlockCopy(invalidRngResponse, 0, buffer, 0, orderByteLength);
+                                firstTime = false;
+                            }
+                            else
+                            {
+                                Buffer.BlockCopy(validRngResponse, 0, buffer, 0, orderByteLength);
+                            }
+                        }
+                    )
+                );
+
+            var result = groupMock.Object.GenerateRandom(rngMock.Object);
+            var resultIndex = result.Item1;
+            var resultElement = result.Item2;
+            Assert.AreEqual(validIndex, resultIndex);
+            Assert.AreSame(expected.Object, resultElement);
+
+            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
+                .Verify(alg => alg.MultiplyScalarUnsafe(It.Is<int>(x => x == generator),
+                                                        It.Is<BigInteger>(x => x == validIndex),
+                                                        It.IsAny<int>()),
+                        Times.Once()
+                );
+
+            groupMock.Protected().As<CryptoGroupProtectedMembers>()
+                .Verify(group => group.CreateGroupElement(It.Is<int>(x => x == expectedRaw)),
+                        Times.Once());
+
+            rngMock.Verify(rng => rng.GetBytes(It.Is<byte[]>(x => x.Length == orderByteLength)), Times.Exactly(2));
         }
 
     }

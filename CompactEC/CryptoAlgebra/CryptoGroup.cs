@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
 using System.Diagnostics;
+using System.Security.Cryptography;
 
 namespace CompactEC.CryptoAlgebra
 {
@@ -97,6 +98,21 @@ namespace CompactEC.CryptoAlgebra
                 throw new ArgumentException("The provided value is not an element of the group.", nameof(element));
 
             return Negate(e);
+        }
+
+        public Tuple<BigInteger, ICryptoGroupElement> GenerateRandom(RandomNumberGenerator rng)
+        {
+            BigInteger index;
+            do
+            {
+                byte[] buffer = new byte[OrderByteLength];
+                rng.GetBytes(buffer);
+                index = new BigInteger(buffer);
+            }
+            while (index <= 1 || index >= Order - 1);
+
+            ICryptoGroupElement element = Generate(index);
+            return new Tuple<BigInteger, ICryptoGroupElement>(index, element);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
+using System.Security.Cryptography;
 
 namespace CompactEC.CryptoAlgebra
 {
@@ -14,6 +15,7 @@ namespace CompactEC.CryptoAlgebra
         ICryptoGroupElement NeutralElement { get; }
         ICryptoGroupElement Generator { get; }
         ICryptoGroupElement FromBytes(byte[] buffer);
+        Tuple<BigInteger, ICryptoGroupElement> GenerateRandom(RandomNumberGenerator rng);
 
         int OrderBitLength { get; }
         int OrderByteLength { get; }
