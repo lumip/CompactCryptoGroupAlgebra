@@ -9,6 +9,7 @@ namespace CompactEC.CryptoAlgebra
     {
         BigInteger Order { get; }
         E Generator { get; }
+        E NeutralElement { get; }
         int ElementBitLength { get; }
         int OrderBitLength { get; }
 

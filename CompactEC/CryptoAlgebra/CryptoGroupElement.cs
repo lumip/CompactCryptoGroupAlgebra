@@ -6,10 +6,10 @@ namespace CompactEC.CryptoAlgebra
 {
     public class CryptoGroupElement<E> : ICryptoGroupElement where E : struct
     {
-        protected CryptoGroupAlgebra<E> Algebra { get; }
+        protected ICryptoGroupAlgebra<E> Algebra { get; }
         public E Value { get; private set; }
 
-        public CryptoGroupElement(E value, CryptoGroupAlgebra<E> groupAlgebra)
+        public CryptoGroupElement(E value, ICryptoGroupAlgebra<E> groupAlgebra)
         {
             if (groupAlgebra == null)
                 throw new ArgumentNullException(nameof(groupAlgebra));
@@ -20,7 +20,7 @@ namespace CompactEC.CryptoAlgebra
             Value = value;
         }
 
-        public CryptoGroupElement(byte[] valueBuffer, CryptoGroupAlgebra<E> groupAlgebra)
+        public CryptoGroupElement(byte[] valueBuffer, ICryptoGroupAlgebra<E> groupAlgebra)
         {
             if (groupAlgebra == null)
                 throw new ArgumentNullException(nameof(groupAlgebra));
@@ -95,7 +95,7 @@ namespace CompactEC.CryptoAlgebra
         public override int GetHashCode()
         {
             var hashCode = -1217399511;
-            hashCode = hashCode * -1521134295 + EqualityComparer<CryptoGroupAlgebra<E>>.Default.GetHashCode(Algebra);
+            hashCode = hashCode * -1521134295 + EqualityComparer<ICryptoGroupAlgebra<E>>.Default.GetHashCode(Algebra);
             hashCode = hashCode * -1521134295 + EqualityComparer<E>.Default.GetHashCode(Value);
             return hashCode;
         }
