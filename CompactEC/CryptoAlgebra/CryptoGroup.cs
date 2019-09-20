@@ -9,9 +9,9 @@ namespace CompactEC.CryptoAlgebra
 {
     public abstract class CryptoGroup<E> : ICryptoGroup where E : struct
     {
-        protected CryptoGroupAlgebra<E> Algebra { get; }
+        protected ICryptoGroupAlgebra<E> Algebra { get; }
 
-        public CryptoGroup(CryptoGroupAlgebra<E> algebra)
+        public CryptoGroup(ICryptoGroupAlgebra<E> algebra)
         {
             if (algebra == null)
                 throw new ArgumentNullException(nameof(algebra));
