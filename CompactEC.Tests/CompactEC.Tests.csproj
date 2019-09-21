@@ -69,6 +69,7 @@
     <Compile Include="DefaultECParrameterTests.cs" />
     <Compile Include="ECPointTests.cs" />
     <Compile Include="ECGroupAlgebraTests.cs" />
+    <Compile Include="FixedFactorLengthCryptoGroupAlgebraTests.cs" />
     <Compile Include="MultiplicativeGroupAlgebraIntegratedTests.cs" />
     <Compile Include="MultiplicativeGroupAlgebraTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
