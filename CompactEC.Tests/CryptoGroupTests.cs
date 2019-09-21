@@ -33,7 +33,7 @@ namespace CompactEC.Tests.CryptoAlgebra
     }
 
     [TestClass]
-    public class CrptoGroupTests
+    public class CryptoGroupTests
     {
         [TestMethod]
         public void TestConstructorRejectsNullAlgebra()
