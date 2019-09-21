@@ -5,14 +5,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace CompactEC.Tests
 {
     [TestClass]
-    public class ECGroupAlgebraTest
+    public class ECGroupAlgebraTests
     {
         // reference results from https://trustica.cz/en/2018/04/26/elliptic-curves-prime-order-curves/
         // generator has order 16, i.e., OrderSize = 5 bits
 
         private readonly ECParameters ecParams;
 
-        public ECGroupAlgebraTest()
+        public ECGroupAlgebraTests()
         {
             ecParams = new ECParameters()
             {
