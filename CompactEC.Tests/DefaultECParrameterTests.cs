@@ -7,7 +7,7 @@ using CompactEC;
 namespace CompactEC.Tests
 {
     [TestClass]
-    public class DefaultECParrameterTest
+    public class DefaultECParrameterTests
     {
         [TestMethod]
         public void TestNISTP256()

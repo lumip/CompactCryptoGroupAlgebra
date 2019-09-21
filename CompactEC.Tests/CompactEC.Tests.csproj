@@ -66,11 +66,11 @@
     <Compile Include="CryptoGroupTests.cs" />
     <Compile Include="CryptoGroupAlgebraTests.cs" />
     <Compile Include="CryptoGroupElementTests.cs" />
-    <Compile Include="DefaultECParrameterTest.cs" />
-    <Compile Include="ECPoint.cs" />
-    <Compile Include="ECGroupAlgebraTest.cs" />
-    <Compile Include="MultiplicativeGroupAlgebraIntegratedTest.cs" />
-    <Compile Include="MultiplicativeGroupAlgebraTest.cs" />
+    <Compile Include="DefaultECParrameterTests.cs" />
+    <Compile Include="ECPointTests.cs" />
+    <Compile Include="ECGroupAlgebraTests.cs" />
+    <Compile Include="MultiplicativeGroupAlgebraIntegratedTests.cs" />
+    <Compile Include="MultiplicativeGroupAlgebraTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

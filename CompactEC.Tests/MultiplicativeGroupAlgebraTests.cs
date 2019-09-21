@@ -9,7 +9,7 @@ using CompactEC.CryptoAlgebra;
 namespace CompactEC.Tests.CryptoAlgebra
 {
     [TestClass]
-    public class MultiplicativeGroupAlgebraTest
+    public class MultiplicativeGroupAlgebraTests
     {
         [TestMethod]
         [DataRow(0, 1)]

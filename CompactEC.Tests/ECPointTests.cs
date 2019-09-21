@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace CompactEC.Tests
 {
     [TestClass]
-    public class ECPoint
+    public class ECPointTests
     {
         // reference results from https://trustica.cz/en/2018/04/26/elliptic-curves-prime-order-curves/
         // curve has order 32, i.e., OrderSize = 6 bits
