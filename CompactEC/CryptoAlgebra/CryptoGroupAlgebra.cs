@@ -7,9 +7,16 @@ using System.Diagnostics;
 namespace CompactEC.CryptoAlgebra
 {
     /// <summary>
-    /// Assumption: group element values incoming to algebraic operations are valid values. this is not checked.
+    /// Base implementation of <see cref="ICryptoGroupAlgebra{E}"/>.
+    /// 
+    /// Provides common implementations independent of the actual group details
+    /// based on basic operations. Basic operations are left abstract and must
+    /// be implemented by deriving classes.
+    /// 
+    /// Group elements passed into algebraic operations are assumed to be valid values,
+    /// this is not explicitely checked for and should be done by calling classes.
     /// </summary>
-    /// <typeparam name="E"></typeparam>
+    /// <typeparam name="E">The data type used for raw group elements the algebraic operations operate on.</typeparam>
     public abstract class CryptoGroupAlgebra<E> : ICryptoGroupAlgebra<E> where E : struct
     {
         public abstract BigInteger Order { get; }
@@ -18,6 +25,11 @@ namespace CompactEC.CryptoAlgebra
         public abstract int ElementBitLength { get; }
         public int OrderBitLength { get { return GetBitLength(Order); } }
 
+        /// <summary>
+        /// Returns the bit length of a BigInteger.
+        /// </summary>
+        /// <param name="x">Any BigInteger instance.</param>
+        /// <returns>The bit length of the input.</returns>
         public static int GetBitLength(BigInteger x)
         {
             if (x.IsZero)

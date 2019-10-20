@@ -4,4 +4,8 @@
     <TargetFramework>netstandard1.3</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Development\Projects\CompactEC\CompactEC\CompactEC.xml</DocumentationFile>
+  </PropertyGroup>
+
 </Project>
