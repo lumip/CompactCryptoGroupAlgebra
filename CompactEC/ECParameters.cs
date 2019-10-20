@@ -3,20 +3,44 @@
 namespace CompactEC
 {
     /// <summary>
-    /// An eliptic curve y² = x³ + Ax + B over the finite field defined by P
+    /// A set of parameters of an eliptic curve y² = x³ + Ax + B over the finite field defined by prime P.
     /// </summary>
     public struct ECParameters
     {
+        /// <summary>
+        /// The prime P definining the finite field underlying the eliptic curve.
+        /// </summary>
         public BigInteger P;
+
+        /// <summary>
+        /// The parameter A in the curve equation.
+        /// </summary>
         public BigInteger A;
+
+        /// <summary>
+        /// The parameter B in the curve equation.
+        /// </summary>
         public BigInteger B;
+
+        /// <summary>
+        /// The order of the defined eliptic curve.
+        /// </summary>
         public BigInteger Order;
+
+        /// <summary>
+        /// A generator for the defined eliptic curve.
+        /// </summary>
         public ECPoint Generator;
 
+        /// <summary>
+        /// Creates a parameter set for the NIST P-256 eliptic curve.
+        /// </summary>
+        /// <remarks>
+        /// As defined in https://csrc.nist.gov/csrc/media/publications/fips/186/2/archive/2000-01-27/documents/fips186-2.pdf , p. 34.
+        /// </remarks>
+        /// <returns>An instance of ECParameters for the NIST P-256 curve.</returns>
         public static ECParameters CreateNISTP256()
         {
-            // https://csrc.nist.gov/csrc/media/publications/fips/186/2/archive/2000-01-27/documents/fips186-2.pdf , p. 34
-
             var B = new BigInteger(new byte[] {
                 0x4b, 0x60, 0xd2, 0x27, 0x3e, 0x3c, 0xce, 0x3b,
                 0xf6, 0xb0, 0x53, 0xcc, 0xb0, 0x06, 0x1d, 0x65,

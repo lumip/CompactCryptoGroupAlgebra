@@ -4,3 +4,4 @@
 /packages/*
 .vs
 project.lock.json
+/CompactEC/CompactEC.xml
