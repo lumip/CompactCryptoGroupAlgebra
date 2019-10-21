@@ -12,6 +12,17 @@ namespace CompactEC.CryptoAlgebra
     /// the respective group operations.
     /// </summary>
     /// <typeparam name="E">The data type used for raw group elements the algebraic operations operate on.</typeparam>
+    /// <remarks>
+    /// ICryptoGroupAlgebra should not used directly by productive code. Use <see cref="ICryptoGroup"/>
+    /// instead.
+    /// 
+    /// ICryptoGroupAlgebra is intended to facilitate implementing the <see cref="ICryptoGroup"/>
+    /// interface by allowing an implementer to focus on the actual group operations without
+    /// having to deal with boilerplate constructs. The aim is mostly to avoid code duplication.
+    /// In the same manner, <see cref="CryptoGroupAlgebra{E}"/> implements this interface and
+    /// provides useful default implementations for certain operations. It is the class that
+    /// an implementer should extend to implement this interface.
+    /// </remarks>
     public interface ICryptoGroupAlgebra<E> where E : struct
     {
         /// <summary>
