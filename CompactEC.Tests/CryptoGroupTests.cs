@@ -12,8 +12,8 @@ namespace CompactEC.Tests.CryptoAlgebra
 {
     interface CryptoGroupProtectedMembers
     {
-        ICryptoGroupElement CreateGroupElement(int value);
-        ICryptoGroupElement CreateGroupElement(byte[] buffer);
+        CryptoGroupElement<int> CreateGroupElement(int value);
+        CryptoGroupElement<int> CreateGroupElement(byte[] buffer);
     }
 
     class CryptoGroupFake : CryptoGroup<int>
@@ -21,12 +21,12 @@ namespace CompactEC.Tests.CryptoAlgebra
         public CryptoGroupFake(ICryptoGroupAlgebra<int> algebra) : base(algebra)
         { }
 
-        protected override ICryptoGroupElement CreateGroupElement(int value)
+        protected override CryptoGroupElement<int> CreateGroupElement(int value)
         {
             throw new NotImplementedException();
         }
 
-        protected override ICryptoGroupElement CreateGroupElement(byte[] buffer)
+        protected override CryptoGroupElement<int> CreateGroupElement(byte[] buffer)
         {
             throw new NotImplementedException();
         }
@@ -359,14 +359,16 @@ namespace CompactEC.Tests.CryptoAlgebra
             var order = new BigInteger(1021);
             int orderByteLength = 2;
 
-            var expected = new Mock<ICryptoGroupElement>();
             var expectedRaw = 7;
 
             var algebraMock = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraMock.Setup(alg => alg.Order).Returns(order);
             algebraMock.Setup(alg => alg.OrderBitLength).Returns(orderByteLength * 8);
             algebraMock.Setup(alg => alg.GenerateElement(It.IsAny<BigInteger>())).Returns(expectedRaw);
-            
+            algebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
+
+            var expected = new Mock<CryptoGroupElement<int>>(expectedRaw, algebraMock.Object);
+
             var groupMock = new Mock<CryptoGroup<int>>(algebraMock.Object);
             groupMock.Protected().As<CryptoGroupProtectedMembers>()
                 .Setup(group => group.CreateGroupElement(It.IsAny<int>()))
@@ -415,13 +417,15 @@ namespace CompactEC.Tests.CryptoAlgebra
             var order = new BigInteger(1021);
             int orderByteLength = 2;
 
-            var expected = new Mock<ICryptoGroupElement>();
             var expectedRaw = 7;
 
             var algebraMock = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraMock.Setup(alg => alg.Order).Returns(order);
             algebraMock.Setup(alg => alg.OrderBitLength).Returns(orderByteLength * 8);
             algebraMock.Setup(alg => alg.GenerateElement(It.IsAny<BigInteger>())).Returns(expectedRaw);
+            algebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
+
+            var expected = new Mock<CryptoGroupElement<int>>(expectedRaw, algebraMock.Object);
 
             var groupMock = new Mock<CryptoGroup<int>>(algebraMock.Object);
             groupMock.Protected().As<CryptoGroupProtectedMembers>()
