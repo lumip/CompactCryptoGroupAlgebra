@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace CompactEC.CryptoAlgebra
+namespace CompactEC
 {
     public class FixedFactorLengthCryptoGroupAlgebra<E> : ICryptoGroupAlgebra<E> where E : struct
     {

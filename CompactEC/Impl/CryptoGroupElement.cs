@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace CompactEC.CryptoAlgebra
+namespace CompactEC
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="E"></typeparam>
     public class CryptoGroupElement<E> : ICryptoGroupElement where E : struct
     {
         protected ICryptoGroupAlgebra<E> Algebra { get; }
@@ -132,6 +136,11 @@ namespace CompactEC.CryptoAlgebra
         public static CryptoGroupElement<E> operator *(BigInteger k, CryptoGroupElement<E> e)
         {
             return e * k;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("<CryptoGroupElement: {0}>", Value.ToString());
         }
     }
 }

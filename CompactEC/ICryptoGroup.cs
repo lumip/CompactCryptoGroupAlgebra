@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Security.Cryptography;
 
-namespace CompactEC.CryptoAlgebra
+namespace CompactEC
 {
     /// <summary>
     /// An algebraic group for cryptographic purposes.
