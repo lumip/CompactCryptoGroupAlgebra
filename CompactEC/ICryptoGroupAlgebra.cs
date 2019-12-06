@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
 
-namespace CompactEC.CryptoAlgebra
+namespace CompactEC
 {
     /// <summary>
     /// Algebraic group operations provider.

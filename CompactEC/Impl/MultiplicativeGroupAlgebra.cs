@@ -4,15 +4,8 @@ using System.Text;
 using System.Numerics;
 using System.Diagnostics;
 
-namespace CompactEC.CryptoAlgebra
+namespace CompactEC
 {
-    public struct MultiplicativeGroupParameters
-    {
-        public BigInteger Prime;
-        public BigInteger Generator;
-        public BigInteger Order;
-    }
-
     public class MultiplicativeGroupAlgebra : CryptoGroupAlgebra<BigInteger>
     {
         public BigInteger Prime { get; }

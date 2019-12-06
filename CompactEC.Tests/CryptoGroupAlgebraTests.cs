@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.Protected;
 
-using CompactEC.CryptoAlgebra;
+using CompactEC;
 
 namespace CompactEC.Tests.CryptoAlgebra
 {

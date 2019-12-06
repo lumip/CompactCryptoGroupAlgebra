@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompactEC", "CompactEC\Comp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompactEC.Tests", "CompactEC.Tests\CompactEC.Tests.csproj", "{22FD5C5A-FC60-4F60-B44E-47405CCED477}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "TestApp\Example.csproj", "{43DEFB14-5176-4863-9A51-D141802BA000}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{22FD5C5A-FC60-4F60-B44E-47405CCED477}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22FD5C5A-FC60-4F60-B44E-47405CCED477}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22FD5C5A-FC60-4F60-B44E-47405CCED477}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43DEFB14-5176-4863-9A51-D141802BA000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43DEFB14-5176-4863-9A51-D141802BA000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43DEFB14-5176-4863-9A51-D141802BA000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43DEFB14-5176-4863-9A51-D141802BA000}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

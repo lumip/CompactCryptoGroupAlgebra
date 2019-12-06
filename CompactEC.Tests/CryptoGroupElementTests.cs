@@ -4,7 +4,7 @@ using System.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-using CompactEC.CryptoAlgebra;
+using CompactEC;
 
 namespace CompactEC.Tests.CryptoAlgebra
 {

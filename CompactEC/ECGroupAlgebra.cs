@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 using System.Diagnostics;
-using CompactEC.CryptoAlgebra;
+using CompactEC;
 
 namespace CompactEC
 {

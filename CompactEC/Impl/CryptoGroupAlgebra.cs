@@ -4,7 +4,7 @@ using System.Text;
 using System.Numerics;
 using System.Diagnostics;
 
-namespace CompactEC.CryptoAlgebra
+namespace CompactEC
 {
     /// <summary>
     /// Base implementation of <see cref="ICryptoGroupAlgebra{E}"/>.
