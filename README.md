@@ -2,6 +2,8 @@
 
 A minimalist API and implementation of group algebra commonly used in asymmetric cryptography.
 
+## NOTE: documentation is work in progress and API and code are still subject to changes
+
 These groups are mathematical structures which are characterized by a set of group elements, an addition operation on these elements and multiplication of a group element with a scalar as well as a generator, i.e., an element that allows to uniquely obtain all other group elements by means of scalar multiplication.
 
 The aim of this project is to provide a basis for this kind of cryptographic algebra that is both, simple to use and easy to extend and customise.
