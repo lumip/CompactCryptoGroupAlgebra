@@ -18,7 +18,7 @@ The public API presents the two generic interfaces `ICryptoGroup` and `ICryptoGr
 
 In addition, we currently provide group instantiations based on the multiplicative group of a finite field as well as the NIST-P256 elliptic curve.
 
-Performing a Diffie-Helman Key Exchange on the multiplicative group characterized by prime 11 (where 7 is a generator) might look like
+Performing a Diffie-Helman Key Exchange on a multiplicative group looks like
 
 ```c#
 using CompactEC;
@@ -26,10 +26,11 @@ using System.Numerics;
 using System.Security.Cryptography;
 using System.Diagnostics;
 
-// Choosing parameters for multiplicative group
-BigInteger prime = 11;
-BigInteger order = 10;
-BigInteger generator = 7;
+// Choosing parameters for multiplicative group:
+// order 11 subgroup with generator 4 of characteristic 23 multiplicative group 
+BigInteger prime = 23;
+BigInteger order = 11;
+BigInteger generator = 4;
 
 // Creating the group instance
 ICryptoGroup group = new MultiplicativeCryptoGroup(prime, order, generator);
@@ -52,7 +53,16 @@ ICryptoGroupElement sharedSecretAlice = group.MultiplyScalar(dhPublicBob, dhSecr
 
 // Confirm that it's the same
 Debug.Assert(sharedSecretAlice.Equals(sharedSecretBob));
+
+// Print the results
+Console.WriteLine("Alice - Secret: {0}, Public: {1}", dhSecretAlice, dhPublicAlice);
+Console.WriteLine("Bob   - Secret: {0}, Public: {1}", dhSecretBob, dhPublicBob);
+
+Console.WriteLine("Alice - Result: {0}", sharedSecretAlice);
+Console.WriteLine("Bob   - Result: {0}", sharedSecretBob);
 ```
+
+Note that all operations specific to the DH key exchange only use the abstract interfaces. By instantiating them using `new ECCryptoGroup(...)` we can make replace the multiplicative group with elliptic curves in our key exchange without changing anything about else about the implementation.
 
 ## Organization
 

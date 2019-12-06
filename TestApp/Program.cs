@@ -16,9 +16,10 @@ namespace Example
         static void Main(string[] args)
         {
             // Choosing parameters for multiplicative group
-            BigInteger prime = 11;
-            BigInteger order = 10;
-            BigInteger generator = 7;
+            // order 11 subgroup with generator 4 of characteristic 23 multiplicative group 
+            BigInteger prime = 23;
+            BigInteger order = 11;
+            BigInteger generator = 4;
 
             // Creating the group instance
             ICryptoGroup group = new MultiplicativeCryptoGroup(prime, order, generator);
