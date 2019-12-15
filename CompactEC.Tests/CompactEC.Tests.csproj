@@ -9,8 +9,8 @@
     <ProjectGuid>{FAD092CB-98B1-4206-A8BC-77AFDDA6CEBB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tests</RootNamespace>
-    <AssemblyName>Tests</AssemblyName>
+    <RootNamespace>CompactEC.Tests</RootNamespace>
+    <AssemblyName>CompactEC.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -52,6 +52,8 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.0\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.1\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
@@ -64,6 +66,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CryptoGroupAlgebraTests.cs" />
+    <Compile Include="CryptoGroupElementTests.cs" />
+    <Compile Include="CryptoGroupTests.cs" />
+    <Compile Include="DefaultECParrameterTests.cs" />
+    <Compile Include="ECGroupAlgebraTests.cs" />
+    <Compile Include="ECPointTests.cs" />
+    <Compile Include="FixedFactorLengthCryptoGroupAlgebraTests.cs" />
+    <Compile Include="MultiplicativeGroupAlgebraIntegratedTests.cs" />
+    <Compile Include="MultiplicativeGroupAlgebraTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
