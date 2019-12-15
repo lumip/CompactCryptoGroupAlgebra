@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Numerics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using NUnit.Framework;
 
 namespace CompactEC.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ECGroupAlgebraTests
     {
         // reference results from https://trustica.cz/en/2018/04/26/elliptic-curves-prime-order-curves/
@@ -24,7 +25,7 @@ namespace CompactEC.Tests
             };
         }
 
-        [TestMethod]
+        [Test]
         public void TestAddDoublePoint()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -37,7 +38,7 @@ namespace CompactEC.Tests
             Assert.AreEqual(expectedQ, q);
         }
 
-        [TestMethod]
+        [Test]
         public void TestAddDoublePointAtInfinity()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -50,7 +51,7 @@ namespace CompactEC.Tests
             Assert.AreEqual(expectedQ, q);
         }
 
-        [TestMethod]
+        [Test]
         public void TestAddDifferentPoints()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -63,7 +64,7 @@ namespace CompactEC.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestAddPointAtInfinityLeft()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -76,7 +77,7 @@ namespace CompactEC.Tests
             Assert.AreNotSame(p, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestAddPointAtInfinityRight()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -89,7 +90,7 @@ namespace CompactEC.Tests
             Assert.AreNotSame(p, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestAddNegated()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -102,7 +103,7 @@ namespace CompactEC.Tests
             Assert.AreEqual(expected, result);
         }
         
-        [TestMethod]
+        [Test]
         public void TestAreNegationsFalseForEqualPoint()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -112,7 +113,7 @@ namespace CompactEC.Tests
             Assert.IsFalse(curve.AreNegations(p, other));
         }
 
-        [TestMethod]
+        [Test]
         public void TestAreNegationsTrueForNegation()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -122,7 +123,7 @@ namespace CompactEC.Tests
             Assert.IsTrue(curve.AreNegations(p, other));
         }
 
-        [TestMethod]
+        [Test]
         public void TestAreNegationsTrueForZeroYPoint()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -132,7 +133,7 @@ namespace CompactEC.Tests
             Assert.IsTrue(curve.AreNegations(p, other));
         }
 
-        [TestMethod]
+        [Test]
         public void TestAddAffine()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -143,10 +144,10 @@ namespace CompactEC.Tests
             Assert.AreEqual(CompactEC.ECPoint.PointAtInfinity, q);
         }
         
-        [TestMethod]
-        [DataRow(5, 5)]
-        [DataRow(11, 0)]
-        [DataRow(16, 15)]
+        [Test]
+        [TestCase(5, 5)]
+        [TestCase(11, 0)]
+        [TestCase(16, 15)]
         public void TestPointValidTrueForValidPoint(int xRaw, int yRaw)
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -154,20 +155,20 @@ namespace CompactEC.Tests
             Assert.IsTrue(curve.IsValid(point));
         }
 
-        [TestMethod]
+        [Test]
         public void TestIsValidTrueForPointAtInfinity()
         {
             var curve = new ECGroupAlgebra(ecParams);
             Assert.IsTrue(curve.IsValid(CompactEC.ECPoint.PointAtInfinity));
         }
 
-        [TestMethod]
-        [DataRow(16, 1)]
-        [DataRow(5, 2)]
-        [DataRow(-2, 1)]
-        [DataRow(16, -15)]
-        [DataRow(78, 4)]
-        [DataRow(4, 78)]
+        [Test]
+        [TestCase(16, 1)]
+        [TestCase(5, 2)]
+        [TestCase(-2, 1)]
+        [TestCase(16, -15)]
+        [TestCase(78, 4)]
+        [TestCase(4, 78)]
         public void TestIsvalidFalseForInvalidPoint(int xRaw, int yRaw)
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -175,7 +176,7 @@ namespace CompactEC.Tests
             Assert.IsFalse(curve.IsValid(point));
         }
 
-        [TestMethod]
+        [Test]
         public void TestNegate()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -187,7 +188,7 @@ namespace CompactEC.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestNegateForZeroYPoint()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -198,7 +199,7 @@ namespace CompactEC.Tests
             Assert.AreNotSame(p, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestNegatePointAtInfinity()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -209,11 +210,11 @@ namespace CompactEC.Tests
             Assert.AreNotSame(p, result);
         }
 
-        [TestMethod]
-        [DataRow(2, 15, 14)]
-        [DataRow(5, 16, 8)]
-        [DataRow(7, 5, 18)]
-        [DataRow(9, 5, 5)]
+        [Test]
+        [TestCase(2, 15, 14)]
+        [TestCase(5, 16, 8)]
+        [TestCase(7, 5, 18)]
+        [TestCase(9, 5, 5)]
         public void TestMultiplyScalar(int kRaw, int expectedX, int expectedY)
         {
             var k = new BigInteger(kRaw);
@@ -225,7 +226,7 @@ namespace CompactEC.Tests
             Assert.AreEqual(expectedQ, q);
         }
 
-        [TestMethod]
+        [Test]
         public void TestMultiplyScalarOrderResultsInNeutralElement()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -235,42 +236,42 @@ namespace CompactEC.Tests
             Assert.AreEqual(curve.NeutralElement, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGroupElementBitLength()
         {
             var curve = new ECGroupAlgebra(ecParams);
             Assert.AreEqual(2*5, curve.ElementBitLength);
         }
 
-        [TestMethod]
+        [Test]
         public void TestOrderIsAsSet()
         {
             var curve = new ECGroupAlgebra(ecParams);
             Assert.AreEqual(ecParams.Order, curve.Order);
         }
 
-        [TestMethod]
+        [Test]
         public void TestOrderBitLength()
         {
             var curve = new ECGroupAlgebra(ecParams);
             Assert.AreEqual(5, curve.OrderBitLength);
         }
         
-        [TestMethod]
+        [Test]
         public void TestNeutralElement()
         {
             var curve = new ECGroupAlgebra(ecParams);
             Assert.AreEqual(CompactEC.ECPoint.PointAtInfinity, curve.NeutralElement);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGeneratorIsAsSet()
         {
             var curve = new ECGroupAlgebra(ecParams);
             Assert.AreEqual(ecParams.Generator, curve.Generator);
         }
 
-        [TestMethod]
+        [Test]
         public void TestFromBytes()
         {
             ECParameters largeParams = new ECParameters()
@@ -288,16 +289,16 @@ namespace CompactEC.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestFromBytesRejectsNullArgument()
         {
             var curve = new ECGroupAlgebra(ecParams);
-            Assert.ThrowsException<ArgumentNullException>(
+            Assert.Throws<ArgumentNullException>(
                 () => curve.FromBytes(null)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestFromBytesRejectsTooShortBuffer()
         {
             ECParameters largeParams = new ECParameters()
@@ -308,12 +309,12 @@ namespace CompactEC.Tests
             };
             var curve = new ECGroupAlgebra(largeParams);
             var buffer = new byte[7];
-            Assert.ThrowsException<ArgumentException>(
+            Assert.Throws<ArgumentException>(
                 () => curve.FromBytes(buffer)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestToBytes()
         {
             ECParameters largeParams = new ECParameters()
@@ -331,7 +332,7 @@ namespace CompactEC.Tests
             CollectionAssert.AreEqual(expected, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestFromBytesWithLessThanOneByteLargeElements()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -342,7 +343,7 @@ namespace CompactEC.Tests
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestToBytesWithLessThanOneByteLargeElements()
         {
             var curve = new ECGroupAlgebra(ecParams);
@@ -353,13 +354,13 @@ namespace CompactEC.Tests
             CollectionAssert.AreEqual(expected, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestInvalidElementRejectedAsGenerator()
         {
             var generator = new CompactEC.ECPoint(16, 1);
             var invalidParams = ecParams;
             invalidParams.Generator = generator;
-            Assert.ThrowsException<ArgumentException>(
+            Assert.Throws<ArgumentException>(
                 () => new ECGroupAlgebra(invalidParams)
             );
         }

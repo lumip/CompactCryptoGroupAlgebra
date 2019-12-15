@@ -1,12 +1,13 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Numerics;
+using System.Security.Cryptography;
+using System.Linq;
+
+using NUnit.Framework;
 using Moq;
 using Moq.Protected;
 
 using CompactEC;
-using System.Numerics;
-using System.Security.Cryptography;
-using System.Linq;
 
 namespace CompactEC.Tests.CryptoAlgebra
 {
@@ -32,18 +33,18 @@ namespace CompactEC.Tests.CryptoAlgebra
         }
     }
 
-    [TestClass]
+    [TestFixture]
     public class CryptoGroupTests
     {
-        [TestMethod]
+        [Test]
         public void TestConstructorRejectsNullAlgebra()
         {
-            Assert.ThrowsException<ArgumentNullException>(
+            Assert.Throws<ArgumentNullException>(
                 () => new CryptoGroupFake(null)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestSpecificAddCallsAlgebraAndWrapsAsElement()
         {
             var algebraMock = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
@@ -65,7 +66,7 @@ namespace CompactEC.Tests.CryptoAlgebra
                 .Verify(group => group.CreateGroupElement(It.Is<int>(i => i == 8)), Times.Once());
         }
 
-        [TestMethod]
+        [Test]
         public void TestAddRejectsNullArgumentLeft()
         {
             var algebraStub = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
@@ -73,12 +74,12 @@ namespace CompactEC.Tests.CryptoAlgebra
             var groupMock = new CryptoGroupFake(algebraStub.Object);
             var otherElementStub = new CryptoGroupElement<int>(3, algebraStub.Object);
 
-            Assert.ThrowsException<ArgumentNullException>(
+            Assert.Throws<ArgumentNullException>(
                 () => groupMock.Add(null, otherElementStub)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestAddRejectsNullArgumentRight()
         {
             var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
@@ -86,12 +87,12 @@ namespace CompactEC.Tests.CryptoAlgebra
             var groupMock = new CryptoGroupFake(algebraMock.Object);
             var otherElementStub = new CryptoGroupElement<int>(3, algebraMock.Object);
 
-            Assert.ThrowsException<ArgumentNullException>(
+            Assert.Throws<ArgumentNullException>(
                 () => groupMock.Add(otherElementStub, null)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestFromBytesWrapsAsElement()
         {
             byte[] inputBuffer = new byte[0];
@@ -111,7 +112,7 @@ namespace CompactEC.Tests.CryptoAlgebra
                 .Verify(group => group.CreateGroupElement(It.Is<byte[]>(b => b == inputBuffer)), Times.Once());
         }
 
-        [TestMethod]
+        [Test]
         public void TestGenerateCallsAlgebraAndWrapsElement()
         {
             var index = new BigInteger(7);
@@ -141,7 +142,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestSpecificMultiplyScalarCallsAlgebraAndWrapsElement()
         {
             var k = new BigInteger(7);
@@ -172,18 +173,18 @@ namespace CompactEC.Tests.CryptoAlgebra
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestMultiplyScalarRejectsNullElement()
         {
             var algebraStub = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraStub.Setup(algebra => algebra.IsValid(It.IsAny<int>())).Returns(true);
             var groupMock = new CryptoGroupFake(algebraStub.Object);
-            Assert.ThrowsException<ArgumentNullException>(
+            Assert.Throws<ArgumentNullException>(
                 () => groupMock.MultiplyScalar(null, new BigInteger(1))
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestSpecificNegateCallsAlgebraAndWrapsElement()
         {
             int expectedRaw = 3;
@@ -213,18 +214,18 @@ namespace CompactEC.Tests.CryptoAlgebra
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestNegateRejectsNullElement()
         {
             var algebraStub = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraStub.Setup(algebra => algebra.IsValid(It.IsAny<int>())).Returns(true);
             var groupMock = new CryptoGroupFake(algebraStub.Object);
-            Assert.ThrowsException<ArgumentNullException>(
+            Assert.Throws<ArgumentNullException>(
                 () => groupMock.Negate(null)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestAddRejectsDifferentGroupElementLeft()
         {
             var algebraStub = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
@@ -233,12 +234,12 @@ namespace CompactEC.Tests.CryptoAlgebra
             var elementStub = new Mock<ICryptoGroupElement>(MockBehavior.Strict);
             var otherElementStub = new CryptoGroupElement<int>(3, algebraStub.Object);
 
-            Assert.ThrowsException<ArgumentException>(
+            Assert.Throws<ArgumentException>(
                 () => groupMock.Add(elementStub.Object, otherElementStub)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestAddRejectsDifferentGroupElementRight()
         {
             var algebraStub = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
@@ -247,36 +248,36 @@ namespace CompactEC.Tests.CryptoAlgebra
             var elementStub = new Mock<ICryptoGroupElement>(MockBehavior.Strict);
             var otherElementStub = new CryptoGroupElement<int>(3, algebraStub.Object);
 
-            Assert.ThrowsException<ArgumentException>(
+            Assert.Throws<ArgumentException>(
                 () => groupMock.Add(otherElementStub, elementStub.Object)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestMultiplyScalarRejectsDifferentGroupElement()
         {
             var algebraStub = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
             var groupMock = new CryptoGroupFake(algebraStub.Object);
             var elementStub = new Mock<ICryptoGroupElement>(MockBehavior.Strict);
 
-            Assert.ThrowsException<ArgumentException>(
+            Assert.Throws<ArgumentException>(
                 () => groupMock.MultiplyScalar(elementStub.Object, new BigInteger(8))
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestNegateRejectsDifferentGroupElement()
         {
             var algebraStub = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
             var groupMock = new CryptoGroupFake(algebraStub.Object);
             var elementStub = new Mock<ICryptoGroupElement>(MockBehavior.Strict);
 
-            Assert.ThrowsException<ArgumentException>(
+            Assert.Throws<ArgumentException>(
                 () => groupMock.Negate(elementStub.Object)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestOrderCallsAlgebra()
         {
             var order = new BigInteger(29);
@@ -290,7 +291,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(order, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestOrderBitLengthCallsAlgebra()
         {
             int rawBitLength = 11;
@@ -305,9 +306,9 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod]
-        [DataRow(8, 1)]
-        [DataRow(9, 2)]
+        [Test]
+        [TestCase(8, 1)]
+        [TestCase(9, 2)]
         public void TestOrderByteLengthCallsAlgebra(int bitLength, int expectedByteLength)
         {
             var order = new BigInteger(1 << (bitLength - 1));
@@ -321,7 +322,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(expectedByteLength, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestElementBitLengthCallsAlgebra()
         {
             int expected = 11;
@@ -337,9 +338,9 @@ namespace CompactEC.Tests.CryptoAlgebra
             algebraMock.Verify(alg => alg.ElementBitLength, Times.Once());
         }
 
-        [TestMethod]
-        [DataRow(8, 1)]
-        [DataRow(9, 2)]
+        [Test]
+        [TestCase(8, 1)]
+        [TestCase(9, 2)]
         public void TestElementByteLengthCallsAlgebra(int bitLength, int expectedByteLength)
         {
             var algebraMock = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
@@ -353,7 +354,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             algebraMock.Verify(alg => alg.ElementBitLength, Times.Once());
         }
 
-        [TestMethod]
+        [Test]
         public void TestGenerateRandom()
         {
             var order = new BigInteger(1021);
@@ -404,12 +405,12 @@ namespace CompactEC.Tests.CryptoAlgebra
             rngMock.Verify(rng => rng.GetBytes(It.Is<byte[]>(x => x.Length == orderByteLength)), Times.Once());
         }
 
-        [TestMethod]
-        [DataRow(-3)]
-        [DataRow(0)]
-        [DataRow(1)]
-        [DataRow(1020)]
-        [DataRow(1022)]
+        [Test]
+        [TestCase(-3)]
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(1020)]
+        [TestCase(1022)]
         public void TestGenerateRandomDoesNotSampleInvalidIndices(int invalidIndexRaw)
         {
             // tests that invalid indices returned by rng are skipped:

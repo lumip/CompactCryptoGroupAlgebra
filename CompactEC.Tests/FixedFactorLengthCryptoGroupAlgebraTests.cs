@@ -2,7 +2,7 @@
 using System.Numerics;
 using System.Diagnostics;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Moq;
 using Moq.Protected;
 
@@ -11,13 +11,13 @@ using CompactEC;
 namespace CompactEC.Tests.CryptoAlgebra
 {
 
-    [TestClass]
+    [TestFixture]
     public class FixedFactorLengthGroupAlgebraTests
     {
-        [TestMethod]
-        [DataRow(-1)]
-        [DataRow(0)]
-        [DataRow(5)]
+        [Test]
+        [TestCase(-1)]
+        [TestCase(0)]
+        [TestCase(5)]
         public void TestConstructorRejectsInvalidFactorBitLength(int factorBitLength)
         {
             var order = new BigInteger(8);
@@ -27,20 +27,20 @@ namespace CompactEC.Tests.CryptoAlgebra
             baseAlgebraStub.Setup(alg => alg.Order).Returns(order);
             Debug.Assert(orderBitLength == baseAlgebraStub.Object.OrderBitLength);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => new FixedFactorLengthCryptoGroupAlgebra<int>(baseAlgebraStub.Object, factorBitLength)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestConstructorRejectsNullBaseAlgebra()
         {
-            Assert.ThrowsException<ArgumentNullException>(
+            Assert.Throws<ArgumentNullException>(
                 () => new FixedFactorLengthCryptoGroupAlgebra<int>(null, 2)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestFactorBitLengthCorrect()
         {
             var order = new BigInteger(8);
@@ -55,7 +55,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(factorBitLength, fixedAlgebra.FactorBitLength);
         }
 
-        [TestMethod]
+        [Test]
         public void TestOrderCallsBaseAlgebra()
         {
             var order = new BigInteger(7);
@@ -70,7 +70,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(order, fixedAlgebra.Order);
         }
 
-        [TestMethod]
+        [Test]
         public void TestOrderBitLengthCallsBaseAlgebra()
         {
             var order = new BigInteger(7);
@@ -85,7 +85,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(baseAlgebraStub.Object.OrderBitLength, fixedAlgebra.OrderBitLength);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGeneratorCallsBaseAlgebra()
         {
             int generator = 23;
@@ -102,7 +102,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(generator, fixedAlgebra.Generator);
         }
 
-        [TestMethod]
+        [Test]
         public void TestNeutralElementCallsBaseAlgebra()
         {
             int neutralElement = 3;
@@ -119,7 +119,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(neutralElement, fixedAlgebra.NeutralElement);
         }
 
-        [TestMethod]
+        [Test]
         public void TestElementBitLengthCallsBaseAlgebra()
         {
             int elementBitLength = 3;
@@ -136,7 +136,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(elementBitLength, fixedAlgebra.ElementBitLength);
         }
 
-        [TestMethod]
+        [Test]
         public void TestAddCallsBaseAlgebra()
         {
             int leftElement = 11;
@@ -161,7 +161,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestFromBytesCallsBaseAlgebra()
         {
             byte[] buffer = new byte[0];
@@ -185,9 +185,9 @@ namespace CompactEC.Tests.CryptoAlgebra
             );
         }
 
-        [TestMethod]
-        [DataRow(6)]
-        [DataRow(8)]
+        [Test]
+        [TestCase(6)]
+        [TestCase(8)]
         public void TestGenerateElementRejectsIndexWithDeviatingBitLength(int indexBitLength)
         {
             var order = new BigInteger(1024);
@@ -201,12 +201,12 @@ namespace CompactEC.Tests.CryptoAlgebra
             Debug.Assert(orderBitLength == baseAlgebraStub.Object.OrderBitLength);
 
             var fixedAlgebra = new FixedFactorLengthCryptoGroupAlgebra<int>(baseAlgebraStub.Object, factorBitLength);
-            Assert.ThrowsException<ArgumentException>(
+            Assert.Throws<ArgumentException>(
                 () => fixedAlgebra.GenerateElement(index)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestGenerateElementCallsBaseAlgebra()
         {
             var order = new BigInteger(1024);
@@ -237,7 +237,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestIsValidCallsBaseAlgebra()
         {
             int element = 9;
@@ -260,9 +260,9 @@ namespace CompactEC.Tests.CryptoAlgebra
             );
         }
 
-        [TestMethod]
-        [DataRow(6)]
-        [DataRow(8)]
+        [Test]
+        [TestCase(6)]
+        [TestCase(8)]
         public void TestMultiplyScalarRejectsFactorWithDeviationBitLength(int bitLength)
         {
             var order = new BigInteger(1024);
@@ -277,12 +277,12 @@ namespace CompactEC.Tests.CryptoAlgebra
             Debug.Assert(orderBitLength == baseAlgebraStub.Object.OrderBitLength);
 
             var fixedAlgebra = new FixedFactorLengthCryptoGroupAlgebra<int>(baseAlgebraStub.Object, factorBitLength);
-            Assert.ThrowsException<ArgumentException>(
+            Assert.Throws<ArgumentException>(
                 () => fixedAlgebra.MultiplyScalar(element, k)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestMultiplyScalarCallsBaseAlgebra()
         {
             var order = new BigInteger(1024);
@@ -312,7 +312,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestNegateCallsBaseAlgebra()
         {
             int element = 9;
@@ -338,7 +338,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestToBytesCallsBaseAlgebra()
         {
             int element = 9;

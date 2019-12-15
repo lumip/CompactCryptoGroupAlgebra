@@ -1,15 +1,16 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Numerics;
+
+using NUnit.Framework;
 
 using CompactEC;
 
 namespace CompactEC.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class DefaultECParrameterTests
     {
-        [TestMethod]
+        [Test]
         public void TestNISTP256()
         {
             ECParameters parameters = ECParameters.CreateNISTP256();

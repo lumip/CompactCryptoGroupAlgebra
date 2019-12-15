@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Numerics;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 using CompactEC;
 
 // Best Practices: https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices
 namespace CompactEC.Tests.CryptoAlgebra
 {
-    [TestClass]
+    [TestFixture]
     public class MultiplicativeGroupAlgebraTests
     {
-        [TestMethod]
-        [DataRow(0, 1)]
-        [DataRow(1, 3)]
-        [DataRow(2, 9)]
-        [DataRow(3, 5)]
-        [DataRow(4, 4)]
-        [DataRow(5, 1)]
-        [DataRow(6, 3)]
-        [DataRow(12, 9)]
+        [Test]
+        [TestCase(0, 1)]
+        [TestCase(1, 3)]
+        [TestCase(2, 9)]
+        [TestCase(3, 5)]
+        [TestCase(4, 4)]
+        [TestCase(5, 1)]
+        [TestCase(6, 3)]
+        [TestCase(12, 9)]
         public void TestMultiplyScalar(int scalarInt, int expectedInt)
         {
             var k = new BigInteger(scalarInt);
@@ -32,10 +32,10 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod]
-        [DataRow(2)]
-        [DataRow(3)]
-        [DataRow(7)]
+        [Test]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(7)]
         public void TestGeneratorIsAsSet(int generatorInt)
         {
             var generator = new BigInteger(generatorInt);
@@ -43,23 +43,23 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(generator, groupAlgebra.Generator);
         }
 
-        [TestMethod]
-        [DataRow(0)]
-        [DataRow(-3)]
-        [DataRow(11)]
-        [DataRow(136)]
+        [Test]
+        [TestCase(0)]
+        [TestCase(-3)]
+        [TestCase(11)]
+        [TestCase(136)]
         public void TestInvalidElementRejectedAsGenerator(int generatorInt)
         {
             var generator = new BigInteger(generatorInt);
-            Assert.ThrowsException<ArgumentException>(
+            Assert.Throws<ArgumentException>(
                 () => new MultiplicativeGroupAlgebra(11, 10, generator)
             );
         }
 
-        [TestMethod]
-        [DataRow(1)]
-        [DataRow(5)]
-        [DataRow(10)]
+        [Test]
+        [TestCase(1)]
+        [TestCase(5)]
+        [TestCase(10)]
         public void TestIsValidAcceptsValidElements(int elementInt)
         {
             var element = new BigInteger(elementInt);
@@ -67,11 +67,11 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.IsTrue(groupAlgebra.IsValid(element));
         }
 
-        [TestMethod]
-        [DataRow(0)]
-        [DataRow(-3)]
-        [DataRow(11)]
-        [DataRow(136)]
+        [Test]
+        [TestCase(0)]
+        [TestCase(-3)]
+        [TestCase(11)]
+        [TestCase(136)]
         public void TestIsValidRejectsInvalidElements(int elementInt)
         {
             var element = new BigInteger(elementInt);
@@ -79,25 +79,25 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.IsFalse(groupAlgebra.IsValid(element));
         }
 
-        [TestMethod]
+        [Test]
         public void TestGroupElementBitLength()
         {
             var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
             Assert.AreEqual(4, groupAlgebra.ElementBitLength);
         }
 
-        [TestMethod]
+        [Test]
         public void TestOrderBitLength()
         {
             var groupAlgebra = new MultiplicativeGroupAlgebra(11, 5, 3);
             Assert.AreEqual(3, groupAlgebra.OrderBitLength);
         }
 
-        [TestMethod]
-        [DataRow(1)]
-        [DataRow(2)]
-        [DataRow(5)]
-        [DataRow(10)]
+        [Test]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(5)]
+        [TestCase(10)]
         public void TestNegate(int elementInt)
         {
             var x = new BigInteger(elementInt);
@@ -105,14 +105,14 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(groupAlgebra.MultiplyScalar(x, groupAlgebra.Order - 1), groupAlgebra.Negate(x));
         }
 
-        [TestMethod]
+        [Test]
         public void TestNeutralElement()
         {
             var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
             Assert.AreEqual(BigInteger.One, groupAlgebra.NeutralElement);
         }
 
-        [TestMethod]
+        [Test]
         public void TestFromBytes()
         {
             var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
@@ -123,16 +123,16 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestFromBytesRejectsNullArgument()
         {
             var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
-            Assert.ThrowsException<ArgumentNullException>(
+            Assert.Throws<ArgumentNullException>(
                 () => groupAlgebra.FromBytes(null)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestToBytes()
         {
             var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);

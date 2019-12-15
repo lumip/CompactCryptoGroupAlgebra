@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Numerics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using NUnit.Framework;
 
 namespace CompactEC.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ECPointTests
     {
         // reference results from https://trustica.cz/en/2018/04/26/elliptic-curves-prime-order-curves/
         // curve has order 32, i.e., OrderSize = 6 bits
 
-        [TestMethod]
+        [Test]
         public void TestClone()
         {
             var p = new CompactEC.ECPoint(5, 5);
@@ -19,7 +20,7 @@ namespace CompactEC.Tests
             Assert.AreEqual(p, q);
         }
 
-        [TestMethod]
+        [Test]
         public void TestClonePointAtInfinity()
         {
             var p = CompactEC.ECPoint.PointAtInfinity;
@@ -28,7 +29,7 @@ namespace CompactEC.Tests
             Assert.AreEqual(p, q);
         }
         
-        [TestMethod]
+        [Test]
         public void TestEquals()
         {
             var p = new CompactEC.ECPoint(11, 0);
@@ -42,7 +43,7 @@ namespace CompactEC.Tests
             Assert.AreNotEqual(q, p, "not equal reversed");
         }
         
-        [TestMethod]
+        [Test]
         public void TestPointEquality()
         {
             Assert.AreEqual(CompactEC.ECPoint.PointAtInfinity, CompactEC.ECPoint.PointAtInfinity);

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Moq;
 using Moq.Protected;
 
@@ -15,15 +15,15 @@ namespace CompactEC.Tests.CryptoAlgebra
         int MultiplyScalarUnsafe(int e, BigInteger k, int factorBitLength);
     }
 
-    [TestClass]
+    [TestFixture]
     public class CryptoGroupAlgebraTests
     {
-        [TestMethod]
-        [DataRow(0, 0)]
-        [DataRow(1, 1)]
-        [DataRow(2, 2)]
-        [DataRow(15, 4)]
-        [DataRow(16, 5)]
+        [Test]
+        [TestCase(0, 0)]
+        [TestCase(1, 1)]
+        [TestCase(2, 2)]
+        [TestCase(15, 4)]
+        [TestCase(16, 5)]
         public void TestBitLength(int valueInt, int expectedBitLength)
         {
             var value = new BigInteger(valueInt);
@@ -32,12 +32,12 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(expectedBitLength, result);
         }
 
-        [TestMethod]
-        [DataRow(0, 0)]
-        [DataRow(1, 1)]
-        [DataRow(2, 2)]
-        [DataRow(15, 4)]
-        [DataRow(16, 5)]
+        [Test]
+        [TestCase(0, 0)]
+        [TestCase(1, 1)]
+        [TestCase(2, 2)]
+        [TestCase(15, 4)]
+        [TestCase(16, 5)]
         public void TestOrderBitLength(int orderInt, int expectedBitLength)
         {
             var order = new BigInteger(orderInt);
@@ -50,15 +50,15 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(expectedBitLength, result);
         }
         
-        [TestMethod]
-        [DataRow(0)]
-        [DataRow(1)]
-        [DataRow(2)]
-        [DataRow(3)]
-        [DataRow(4)]
-        [DataRow(5)]
-        [DataRow(6)]
-        [DataRow(12)]
+        [Test]
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
+        [TestCase(6)]
+        [TestCase(12)]
         public void TestMultiplyScalar(int scalarInt)
         {
             // this also tests the implementation in MultiplyScalarUnsafe
@@ -90,7 +90,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestMultiplyScalarRejectsNegativeScalar()
         {
             int element = 5;
@@ -98,17 +98,17 @@ namespace CompactEC.Tests.CryptoAlgebra
 
             var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => algebraMock.Object.MultiplyScalar(element, index)
             );
         }
 
-        [TestMethod]
-        [DataRow(0)]
-        [DataRow(1)]
-        [DataRow(2)]
-        [DataRow(4)]
-        [DataRow(7)]
+        [Test]
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(4)]
+        [TestCase(7)]
         public void TestMultiplyScalarWithSmallFactor(int factorInt)
         {
             int element = 5;
@@ -137,7 +137,7 @@ namespace CompactEC.Tests.CryptoAlgebra
             Assert.AreEqual(expected, result);
         }
 
-        [TestMethod]
+        [Test]
         public void TestMultiplyScalarWithSmallFactorSizeRejectsNegativeScalars()
         {
             int element = 5;
@@ -146,15 +146,15 @@ namespace CompactEC.Tests.CryptoAlgebra
 
             var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => algebraMock.Object.MultiplyScalar(element, index, factorBitLength)
             );
         }
 
-        [TestMethod]
-        [DataRow(8)]
-        [DataRow(9)]
-        [DataRow(123)]
+        [Test]
+        [TestCase(8)]
+        [TestCase(9)]
+        [TestCase(123)]
         public void TestMultiplyScalarWithSmallFactorSizeRejectsLargerFactors(int factorInt)
         {
             var k = new BigInteger(factorInt);
@@ -163,13 +163,13 @@ namespace CompactEC.Tests.CryptoAlgebra
 
             var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => algebraMock.Object.MultiplyScalar(element, k, factorBitLength)
             );
         }
 
 
-        [TestMethod]
+        [Test]
         public void TestGenerateElement()
         {
             var order = new BigInteger(7);
@@ -198,7 +198,7 @@ namespace CompactEC.Tests.CryptoAlgebra
                 );
         }
 
-        [TestMethod]
+        [Test]
         public void TestGenerateElementRejectsNegativeIndex()
         {
             var index = BigInteger.MinusOne;
@@ -206,12 +206,12 @@ namespace CompactEC.Tests.CryptoAlgebra
             var algebraMock = new Mock<CryptoGroupAlgebra<int>>() { CallBase = true };
             algebraMock.Setup(alg => alg.Generator).Returns(1);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(
+            Assert.Throws<ArgumentOutOfRangeException>(
                 () => algebraMock.Object.GenerateElement(index)
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestNegate()
         {
             var order = new BigInteger(17);
