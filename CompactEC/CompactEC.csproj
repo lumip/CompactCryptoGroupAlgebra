@@ -5,7 +5,17 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Development\Projects\CompactEC\CompactEC\CompactEC.xml</DocumentationFile>
+    <DocumentationFile>bin/$(Configuration)/CompactEC.xml</DocumentationFile>
+    <OutputPath>bin/$(Configuration)/</OutputPath>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin/$(Configuration)/CompactEC.xml</DocumentationFile>
+    <OutputPath>bin/$(Configuration)/</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
+  </ItemGroup>
 
 </Project>
