@@ -2,15 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
+    <AssemblyName>CompactCryptoGroupAlgebra</AssemblyName>
+    <RootNamespace>CompactCryptoGroupAlgebra</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin/$(Configuration)/CompactEC.xml</DocumentationFile>
+    <DocumentationFile>bin/$(Configuration)/CompactCryptoGroupAlgebra.xml</DocumentationFile>
     <OutputPath>bin/$(Configuration)/</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin/$(Configuration)/CompactEC.xml</DocumentationFile>
+    <DocumentationFile>bin/$(Configuration)/CompactCryptoGroupAlgebra.xml</DocumentationFile>
     <OutputPath>bin/$(Configuration)/</OutputPath>
   </PropertyGroup>
 

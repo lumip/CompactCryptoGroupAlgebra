@@ -4,7 +4,7 @@ using System.Text;
 using System.Numerics;
 using System.Diagnostics;
 
-namespace CompactEC
+namespace CompactCryptoGroupAlgebra
 {
     /// <summary>
     /// A point on an eliptic curve.

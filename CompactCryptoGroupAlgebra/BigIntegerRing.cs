@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using System.Diagnostics;
 
-namespace CompactEC
+namespace CompactCryptoGroupAlgebra
 {
     /// <summary>
     /// A prime integer ring using BigIntegers.

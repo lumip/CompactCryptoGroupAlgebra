@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using CompactEC;
+using CompactCryptoGroupAlgebra;
 using System.Numerics;
 using System.Security.Cryptography;
 using System.Diagnostics;

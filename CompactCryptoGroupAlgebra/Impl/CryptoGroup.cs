@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Diagnostics;
 using System.Security.Cryptography;
 
-namespace CompactEC
+namespace CompactCryptoGroupAlgebra
 {
     /// <summary>
     /// Base implementation of <see cref="ICryptoGroup"/>.

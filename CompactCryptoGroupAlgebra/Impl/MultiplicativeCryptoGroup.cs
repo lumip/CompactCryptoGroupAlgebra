@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
 
-namespace CompactEC
+namespace CompactCryptoGroupAlgebra
 {
     public class MultiplicativeCryptoGroup : CryptoGroup<BigInteger>
     {

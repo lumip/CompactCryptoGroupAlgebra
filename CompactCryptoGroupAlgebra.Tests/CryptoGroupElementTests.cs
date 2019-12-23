@@ -4,9 +4,9 @@ using System.Numerics;
 using NUnit.Framework;
 using Moq;
 
-using CompactEC;
+using CompactCryptoGroupAlgebra;
 
-namespace CompactEC.Tests.CryptoAlgebra
+namespace CompactCryptoGroupAlgebra.Tests.CryptoAlgebra
 {
     [TestFixture]
     public class CryptoGroupElementTests

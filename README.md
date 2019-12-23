@@ -21,7 +21,7 @@ In addition, we currently provide group instantiations based on the multiplicati
 Performing a Diffie-Helman Key Exchange on a multiplicative group looks like
 
 ```c#
-using CompactEC;
+using CompactCryptoGroupAlgebra;
 using System.Numerics;
 using System.Security.Cryptography;
 using System.Diagnostics;

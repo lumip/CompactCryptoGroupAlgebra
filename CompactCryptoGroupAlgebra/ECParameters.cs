@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace CompactEC
+namespace CompactCryptoGroupAlgebra
 {
     /// <summary>
     /// A set of parameters of an eliptic curve y² = x³ + Ax + B over the finite field defined by prime P.

@@ -3,7 +3,7 @@ using System.Numerics;
 
 using NUnit.Framework;
 
-namespace CompactEC.Tests
+namespace CompactCryptoGroupAlgebra.Tests
 {
     [TestFixture]
     public class ECPointTests
@@ -14,7 +14,7 @@ namespace CompactEC.Tests
         [Test]
         public void TestClone()
         {
-            var p = new CompactEC.ECPoint(5, 5);
+            var p = new CompactCryptoGroupAlgebra.ECPoint(5, 5);
             var q = p.Clone();
             Assert.AreNotSame(p, q);
             Assert.AreEqual(p, q);
@@ -23,7 +23,7 @@ namespace CompactEC.Tests
         [Test]
         public void TestClonePointAtInfinity()
         {
-            var p = CompactEC.ECPoint.PointAtInfinity;
+            var p = CompactCryptoGroupAlgebra.ECPoint.PointAtInfinity;
             var q = p.Clone();
             Assert.AreNotSame(p, q);
             Assert.AreEqual(p, q);
@@ -32,12 +32,12 @@ namespace CompactEC.Tests
         [Test]
         public void TestEquals()
         {
-            var p = new CompactEC.ECPoint(11, 0);
-            var q = new CompactEC.ECPoint(3, 4);
+            var p = new CompactCryptoGroupAlgebra.ECPoint(11, 0);
+            var q = new CompactCryptoGroupAlgebra.ECPoint(3, 4);
 
             Assert.AreEqual(p, p, "same");
             Assert.AreEqual(p, p.Clone(), "equal");
-            Assert.AreEqual(CompactEC.ECPoint.PointAtInfinity, CompactEC.ECPoint.PointAtInfinity, "at inf");
+            Assert.AreEqual(CompactCryptoGroupAlgebra.ECPoint.PointAtInfinity, CompactCryptoGroupAlgebra.ECPoint.PointAtInfinity, "at inf");
 
             Assert.AreNotEqual(p, q, "not equal");
             Assert.AreNotEqual(q, p, "not equal reversed");
@@ -46,10 +46,10 @@ namespace CompactEC.Tests
         [Test]
         public void TestPointEquality()
         {
-            Assert.AreEqual(CompactEC.ECPoint.PointAtInfinity, CompactEC.ECPoint.PointAtInfinity);
+            Assert.AreEqual(CompactCryptoGroupAlgebra.ECPoint.PointAtInfinity, CompactCryptoGroupAlgebra.ECPoint.PointAtInfinity);
 
-            var p = new CompactEC.ECPoint(14, 3);
-            var q = new CompactEC.ECPoint(14, 3);
+            var p = new CompactCryptoGroupAlgebra.ECPoint(14, 3);
+            var q = new CompactCryptoGroupAlgebra.ECPoint(14, 3);
             Assert.AreEqual(p, q);
             Assert.AreEqual(q, p);
         }

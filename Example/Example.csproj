@@ -59,9 +59,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CompactEC\CompactEC.csproj">
+    <ProjectReference Include="..\CompactCryptoGroupAlgebra\CompactCryptoGroupAlgebra.csproj">
       <Project>{5f5cfcf8-677e-4028-b74a-e6ab2975360c}</Project>
-      <Name>CompactEC</Name>
+      <Name>CompactCryptoGroupAlgebra</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

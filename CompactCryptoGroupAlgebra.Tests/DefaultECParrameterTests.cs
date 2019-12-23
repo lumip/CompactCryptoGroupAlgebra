@@ -3,9 +3,9 @@ using System.Numerics;
 
 using NUnit.Framework;
 
-using CompactEC;
+using CompactCryptoGroupAlgebra;
 
-namespace CompactEC.Tests
+namespace CompactCryptoGroupAlgebra.Tests
 {
     [TestFixture]
     public class DefaultECParrameterTests

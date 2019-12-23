@@ -7,9 +7,9 @@ using NUnit.Framework;
 using Moq;
 using Moq.Protected;
 
-using CompactEC;
+using CompactCryptoGroupAlgebra;
 
-namespace CompactEC.Tests.CryptoAlgebra
+namespace CompactCryptoGroupAlgebra.Tests.CryptoAlgebra
 {
     interface CryptoGroupProtectedMembers
     {

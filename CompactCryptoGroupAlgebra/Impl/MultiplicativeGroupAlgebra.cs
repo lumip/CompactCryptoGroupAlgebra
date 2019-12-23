@@ -4,7 +4,7 @@ using System.Text;
 using System.Numerics;
 using System.Diagnostics;
 
-namespace CompactEC
+namespace CompactCryptoGroupAlgebra
 {
     public class MultiplicativeGroupAlgebra : CryptoGroupAlgebra<BigInteger>
     {

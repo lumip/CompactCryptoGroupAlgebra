@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 using System.Diagnostics;
-using CompactEC;
+using CompactCryptoGroupAlgebra;
 
-namespace CompactEC
+namespace CompactCryptoGroupAlgebra
 {
     /// <summary>
     /// An eliptic curve y² = x³ + Ax + B over the finite field defined by P
