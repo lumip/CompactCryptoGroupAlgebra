@@ -1,5 +1,7 @@
 # CompactCryptoGroupAlgebra
 
+[![Build Status](https://travis-ci.com/lumip/CompactCryptoGroupAlgebra.svg?branch=master)](https://travis-ci.com/lumip/CompactCryptoGroupAlgebra)
+
 A minimalist API and implementation of group algebra commonly used in asymmetric cryptography.
 
 ## NOTE: documentation is work in progress and API and code are still subject to changes
