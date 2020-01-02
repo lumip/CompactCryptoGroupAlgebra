@@ -2,6 +2,11 @@
 */obj/*
 *.suo
 /packages/*
+/testPackages/*
 .vs
 project.lock.json
 /CompactEC/CompactEC.xml
+CoverageReport/
+coverage.xml
+__Instrumented/
+TestResult.xml
