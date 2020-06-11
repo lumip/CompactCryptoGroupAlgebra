@@ -8,7 +8,7 @@ namespace CompactCryptoGroupAlgebra
     /// <summary>
     /// An element of a (cryptographic) algebraic group.
     /// 
-    /// Every ICryptoGroupElement instance is associated with a <see cref="CryptoGroup{E}"/>
+    /// Every <see cref="ICryptoGroupElement"/> instance is associated with a <see cref="ICryptoGroup"/>
     /// and exposes algebraic operations to modify the element according to the group definition,
     /// such as addition with other elements from the same group as well as multiplication with a scalar.
     /// </summary>
@@ -19,7 +19,7 @@ namespace CompactCryptoGroupAlgebra
     public interface ICryptoGroupElement : IEquatable<ICryptoGroupElement>
     {
         /// <summary>
-        /// Perform a group addition with another element of the associated group.
+        /// Performs a group addition with another element of the associated group.
         /// 
         /// This is an in-place operation, i.e., this istance is modified.
         /// 
@@ -30,7 +30,7 @@ namespace CompactCryptoGroupAlgebra
         void Add(ICryptoGroupElement other);
 
         /// <summary>
-        /// Perform multiplication with a scalar within the associated group.
+        /// Performs multiplication with a scalar within the associated group.
         /// 
         /// This is an in-place operation, i.e., this instance is modified.
         /// </summary>
@@ -38,18 +38,18 @@ namespace CompactCryptoGroupAlgebra
         void MultiplyScalar(BigInteger k);
 
         /// <summary>
-        /// Perform negation in the associated group.
+        /// Performs negation in the associated group.
         /// </summary>
         void Negate();
 
         /// <summary>
-        /// Convert this group element into a unique byte representation.
+        /// Converts this group element into a unique byte representation.
         /// </summary>
         /// <returns>Byte representation of the element represented by this instance.</returns>
         byte[] ToBytes();
 
         /// <summary>
-        /// Create an exact clone of this instance.
+        /// Creates an exact clone of this instance.
         /// </summary>
         /// <returns>A new ICryptoGroupElement instance that is equal to this one.</returns>
         ICryptoGroupElement Clone();

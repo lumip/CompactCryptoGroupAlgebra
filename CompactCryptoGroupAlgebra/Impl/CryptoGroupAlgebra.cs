@@ -19,30 +19,22 @@ namespace CompactCryptoGroupAlgebra
     /// <typeparam name="E">The data type used for raw group elements the algebraic operations operate on.</typeparam>
     public abstract class CryptoGroupAlgebra<E> : ICryptoGroupAlgebra<E> where E : struct
     {
-        /// <summary>
-        /// <see cref="ICryptoGroupAlgebra{E}.Order"/>
-        /// </summary>
+        /// <inheritdoc/>
         public abstract BigInteger Order { get; }
 
-        /// <summary>
-        /// <see cref="ICryptoGroupAlgebra{E}.Generator"/>
-        /// </summary>
+        /// <inheritdoc/>
         public abstract E Generator { get; }
 
-        /// <summary>
-        /// <see cref="ICryptoGroupAlgebra{E}.ElementBitLength"/>
-        /// </summary>
+        /// <inheritdoc/>
         public abstract int ElementBitLength { get; }
 
-        /// <summary>
-        /// <see cref="ICryptoGroupAlgebra{E}.OrderBitLength"/>
-        /// </summary>
+        /// <inheritdoc/>
         public int OrderBitLength { get { return GetBitLength(Order); } }
 
         /// <summary>
-        /// Returns the bit length of a BigInteger.
+        /// Returns the bit length of a <see cref="BigInteger"/>.
         /// </summary>
-        /// <param name="x">Any BigInteger instance.</param>
+        /// <param name="x">Any <see cref="BigInteger"/>.</param>
         /// <returns>The bit length of the input.</returns>
         public static int GetBitLength(BigInteger x)
         {
@@ -51,20 +43,16 @@ namespace CompactCryptoGroupAlgebra
             return (int)Math.Floor(BigInteger.Log(x, 2) + 1);
         }
 
-        /// <summary>
-        /// <see cref="ICryptoGroupAlgebra{E}.GenerateElement(BigInteger)"/>
-        /// </summary>
+        /// <inheritdoc/>
         public E GenerateElement(BigInteger index)
         {
             return MultiplyScalar(Generator, index);
         }
 
-        /// <summary>
-        /// <see cref="ICryptoGroupAlgebra{E}.Negate(E)"/>
-        /// </summary>
+        /// <inheritdoc/>
         public virtual E Negate(E e)
         {
-            return MultiplyScalarUnsafe(e, Order - 1, OrderBitLength);
+            return MultiplyScalarUnchecked(e, Order - 1, OrderBitLength);
         }
 
         /// <summary>
@@ -95,7 +83,7 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="k">A scalar.</param>
         /// <param name="factorBitLength">Maximum bit length of a scalar.</param>
         /// <returns>The given element multiplied with the given scalar.</returns>
-        protected virtual E MultiplyScalarUnsafe(E e, BigInteger k, int factorBitLength)
+        protected virtual E MultiplyScalarUnchecked(E e, BigInteger k, int factorBitLength)
         {
             // note(lumip): double-and-add (in this case: square-and-multiply)
             //  implementation that issues the same amount of adds no matter
@@ -142,18 +130,16 @@ namespace CompactCryptoGroupAlgebra
             if (GetBitLength(k) > factorBitLength)
                 throw new ArgumentOutOfRangeException("The given factor must not exceed the admittable factor bit length.", nameof(k));
 
-            return MultiplyScalarUnsafe(e, k, factorBitLength);
+            return MultiplyScalarUnchecked(e, k, factorBitLength);
         }
 
-        /// <summary>
-        /// <see cref="ICryptoGroupAlgebra{E}.MultiplyScalar(E, BigInteger)"/>
-        /// </summary>
+        /// <inheritdoc/>
         public E MultiplyScalar(E e, BigInteger k)
         {
             if (k < BigInteger.Zero)
                 throw new ArgumentOutOfRangeException("The given factor must be non-negative.", nameof(k));
             k = k % Order; // k * e is at least periodic in Order
-            return MultiplyScalarUnsafe(e, k, OrderBitLength);
+            return MultiplyScalarUnchecked(e, k, OrderBitLength);
         }
 
         /// <summary>
@@ -166,39 +152,29 @@ namespace CompactCryptoGroupAlgebra
         /// Implementers should take care to provide a data-independent, branch-free
         /// implementation to be resistant to side channel attacks.
         /// </remarks>
-        /// <param name="selection">Selection bit (as BigInteger). Takes values 0 or 1.</param>
+        /// <param name="selection">Selection bit (as <see cref="BigInteger"/>). Takes values 0 or 1.</param>
         /// <param name="left">Element to be returned when the selection bit is 0.</param>
         /// <param name="right">Element to be returned when the selection bit is 1.</param>
         /// <returns>The element determined by the selection bit.</returns>
         protected abstract E Multiplex(BigInteger selection, E left, E right);
 
-        /// <summary>
-        /// <see cref="ICryptoGroupAlgebra{E}.NeutralElement"/>
-        /// </summary>
+        /// <inheritdoc/>
         public abstract E NeutralElement { get; }
 
-        /// <summary>
-        /// <see cref="ICryptoGroupAlgebra{E}.Add(E, E)"/>
-        /// </summary>
+        /// <inheritdoc/>
         /// <remarks>
         /// Implementers should take care to provide a data-independent, branch-free
         /// implementation to be resistant to side channel attacks.
         /// </remarks>
         public abstract E Add(E left, E right);
 
-        /// <summary>
-        /// <see cref="ICryptoGroupAlgebra{E}.IsValid(E)"/>
-        /// </summary>
+        /// <inheritdoc/>
         public abstract bool IsValid(E element);
 
-        /// <summary>
-        /// <see cref="ICryptoGroupAlgebra{E}.FromBytes(byte[])"/>
-        /// </summary>
+        /// <inheritdoc/>
         public abstract E FromBytes(byte[] buffer);
 
-        /// <summary>
-        /// <see cref="ICryptoGroupAlgebra{E}.ToBytes(E)"/>
-        /// </summary>
+        /// <inheritdoc/>
         public abstract byte[] ToBytes(E element);
     }
 }

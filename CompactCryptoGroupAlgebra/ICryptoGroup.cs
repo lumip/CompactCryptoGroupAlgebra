@@ -21,7 +21,7 @@ namespace CompactCryptoGroupAlgebra
     /// <remarks>
     /// Implementers of <see cref="ICryptoGroup"/> should provide an implementation of
     /// <see cref="ICryptoGroupAlgebra{E}"/> (preferrably by extending <see cref="CryptoGroupAlgebra{E}"/>)
-    /// to realize basic algebraic operations and an extension of <see cref="CryptoGroupElement{E}"/> 
+    /// to more easily realize basic algebraic operations and an extension of <see cref="CryptoGroupElement{E}"/> 
     /// which can then be employed in a specialization of <see cref="CryptoGroup{E}"/>.
     /// 
     /// All these classes are designed to have a minimum of fully virtual/abstract methods in need of implementation

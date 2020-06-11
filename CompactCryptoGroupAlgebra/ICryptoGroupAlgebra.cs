@@ -105,7 +105,7 @@ namespace CompactCryptoGroupAlgebra
         /// Checks whether an input of group element type is a valid element of the group.
         /// </summary>
         /// <param name="element">The group element type object to check for validity.</param>
-        /// <returns>True if the given input is a valid group element.</returns>
+        /// <returns><c>true</c> if the given input is a valid group element.</returns>
         bool IsValid(E element);
 
         /// <summary>

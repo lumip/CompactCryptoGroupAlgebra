@@ -16,7 +16,7 @@ namespace CompactCryptoGroupAlgebra
     /// information container and implements no algebraic operations. To perform
     /// eliptic curve operations directly with ECPoint, use the methods of
     /// <see cref="ECGroupAlgebra"/>. If you only need generic cryptographic
-    /// group algebra, use <see cref="CryptoAlgebra.CryptoGroup"/> instead.
+    /// group algebra, use <see cref="CryptoGroup{ECPoint}"/> instead.
     /// </summary>
     public struct ECPoint : IEquatable<ECPoint>
     {
