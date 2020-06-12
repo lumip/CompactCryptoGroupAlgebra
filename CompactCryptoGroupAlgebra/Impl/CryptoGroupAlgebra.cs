@@ -72,12 +72,12 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <remarks>
         /// This method is intended to be overriden with more specific implementations
-        /// if necessary. It is labelled "Unsafe" since it performs no validity checks
+        /// if necessary. It is labelled "Unchecked" since it performs no validity checks
         /// for arguments to keep it simple. These checks are done by the public facing
         /// methods <see cref="MultiplyScalar(E, BigInteger)"/>
         /// and <see cref="MultiplyScalar(E, BigInteger, int)"/>, which then call
-        /// MultiplyScalarUnsafe. Overriding implementations can therefore also benefit
-        /// from the argument checks performed there.
+        /// MultiplyScalarUnchecked. Overriding implementations can therefore also benefit
+        /// from the argument checks performed in these and need not check their arguments.
         /// </remarks>
         /// <param name="e">A group element.</param>
         /// <param name="k">A scalar.</param>
