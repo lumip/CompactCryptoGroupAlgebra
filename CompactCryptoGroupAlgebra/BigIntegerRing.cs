@@ -6,6 +6,9 @@ namespace CompactCryptoGroupAlgebra
     /// <summary>
     /// A prime integer ring using BigIntegers.
     /// </summary>
+    /// <remarks>
+    /// Uses by elliptic curve implementations in <see cref="ECGroupAlgebra"/>.
+    /// </remarks>
     class BigIntegerRing
     {
         /// <summary>
@@ -21,7 +24,7 @@ namespace CompactCryptoGroupAlgebra
         public int ElementByteLength { get; }
 
         /// <summary>
-        /// Instantiated a new BigIntegerRing given a prime modulo.
+        /// Instantiates a new BigIntegerRing given a prime modulo.
         /// </summary>
         /// <param name="primeModulo">The characteristic prime/modulo of the ring.</param>
         public BigIntegerRing(BigInteger primeModulo)
@@ -31,7 +34,7 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <summary>
-        /// Exponentiate an integer within the ring.
+        /// Exponentiates an integer within the ring.
         /// </summary>
         /// <param name="x">Number to exponentiate.</param>
         /// <param name="e">Exponent.</param>
