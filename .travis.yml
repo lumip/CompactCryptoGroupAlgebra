@@ -3,7 +3,12 @@ mono: latest
 solution: CompactCryptoGroupAlgebra.sln
 install:
   - nuget restore CompactCryptoGroupAlgebra.sln
-  - nuget install NUnit.Console -Version 3.9.0 -OutputDirectory testrunner
+  - nuget install AltCover -Version 7.0.773 -OutputDirectory testPackages
+  - nuget install NUnit.Console -Version 3.10.0 -OutputDirectory testPackages
+  - nuget install coveralls.net -Version 0.7.0 -OutputDirectory testPackages
 script:
-  - msbuild /p:Configuration=Release CompactCryptoGroupAlgebra.sln
-  - mono ./testrunner/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe ./CompactCryptoGroupAlgebra.Tests/bin/Release/CompactCryptoGroupAlgebra.Tests.dll
+  - msbuild /p:Configuration=Debug CompactCryptoGroupAlgebra.sln
+  - mono testPackages/altcover.7.0.773/tools/net45/AltCover.exe -i CompactCryptoGroupAlgebra.Tests/bin/Debug/ --localSource -e CompactCryptoGroupAlgebra.Tests
+  - mono testPackages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe CompactCryptoGroupAlgebra.Tests/bin/Debug/__Instrumented/CompactCryptoGroupAlgebra.Tests.dll
+  - mono testPackages/coveralls.net.0.7.0/tools/csmacnz.Coveralls.exe --opencover -i coverage.xml 
+#  - mono testPackages/ReportGenerator.4.6.1/tools/net47/ReportGenerator.exe -reports:coverage.xml -targetdir:CoverageReport  
