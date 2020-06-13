@@ -55,5 +55,21 @@ namespace CompactCryptoGroupAlgebra.Tests
             Assert.AreEqual(p, q);
             Assert.AreEqual(q, p);
         }
+
+        [Test]
+        public void TestToStringRegularPoint()
+        {
+            var p = new ECPoint(1, 2);
+            var expected = "(1, 2)";
+            Assert.AreEqual(expected, p.ToString());
+        }
+
+        [Test]
+        public void TestToStringPointAtInfinity()
+        {
+            var p = ECPoint.PointAtInfinity;
+            var expected = "(atInf)";
+            Assert.AreEqual(expected, p.ToString());
+        }
     }
 }

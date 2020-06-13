@@ -7,7 +7,7 @@ using Moq.Protected;
 
 using CompactCryptoGroupAlgebra;
 
-namespace CompactCryptoGroupAlgebra.Tests.CryptoAlgebra
+namespace CompactCryptoGroupAlgebra.Tests
 {
     interface CryptoGroupAlgebraProtectedMembers
     {
@@ -234,6 +234,22 @@ namespace CompactCryptoGroupAlgebra.Tests.CryptoAlgebra
                     It.IsAny<int>(), It.Is<BigInteger>(i => i == order - 1), It.Is<int>(i => i == 5)),
                     Times.Once()
                 );
+        }
+
+        [Test]
+        public void TestEqualsCallsSpecificEquals()
+        {
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>() { CallBase = true };
+            algebraMock.Setup(alg => alg.Equals(It.IsAny<CryptoGroupAlgebra<int>>())).Returns(true);
+
+            var otherAlgebraMock = new Mock<CryptoGroupAlgebra<int>>();
+
+            Assert.IsTrue(algebraMock.Object.Equals((object)(otherAlgebraMock.Object)));
+
+            algebraMock.Verify(
+                alg => alg.Equals(It.Is<CryptoGroupAlgebra<int>>(x => x == otherAlgebraMock.Object)),
+                Times.Once()
+            );
         }
 
     }

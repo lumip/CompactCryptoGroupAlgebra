@@ -6,7 +6,7 @@ using NUnit.Framework;
 using CompactCryptoGroupAlgebra;
 
 // Best Practices: https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices
-namespace CompactCryptoGroupAlgebra.Tests.CryptoAlgebra
+namespace CompactCryptoGroupAlgebra.Tests
 {
     [TestFixture]
     public class MultiplicativeGroupAlgebraTests
@@ -143,5 +143,76 @@ namespace CompactCryptoGroupAlgebra.Tests.CryptoAlgebra
 
             CollectionAssert.AreEqual(expected, result);
         }
+
+        [Test]
+        public void TestProperties()
+        {
+            var generatorRaw = new BigInteger(2);
+            var neutralElementRaw = BigInteger.One;
+            var moduloRaw = new BigInteger(11);
+            var orderRaw = new BigInteger(10);
+
+            var groupAlgebra = new MultiplicativeGroupAlgebra(moduloRaw, orderRaw, generatorRaw);
+
+            Assert.AreEqual(neutralElementRaw, groupAlgebra.NeutralElement, "verifying neutral element");
+            Assert.AreEqual(generatorRaw, groupAlgebra.Generator, "verifying generator");
+            Assert.AreEqual(orderRaw, groupAlgebra.Order, "verifying order");
+            Assert.AreEqual(moduloRaw, groupAlgebra.Prime, "verifying modulo");
+        }
+
+        [Test]
+        public void TestEqualsTrue()
+        {
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var otherAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+
+            bool result = groupAlgebra.Equals(otherAlgebra);
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void TestEqualsFalseForNull()
+        {
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            MultiplicativeGroupAlgebra otherAlgebra = null;
+
+            bool result = groupAlgebra.Equals(otherAlgebra);
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void TestEqualsFalseForUnrelatedObject()
+        {
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var otherAlgebra = new object { };
+
+            bool result = groupAlgebra.Equals(otherAlgebra);
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void TestEqualsFalseForOtherAlgebra()
+        {
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+
+            var otherAlgebra = new MultiplicativeGroupAlgebra(13, 10, 2);
+            Assert.IsFalse(groupAlgebra.Equals(otherAlgebra));
+
+            otherAlgebra = new MultiplicativeGroupAlgebra(11, 7, 2);
+            Assert.IsFalse(groupAlgebra.Equals(otherAlgebra));
+
+            otherAlgebra = new MultiplicativeGroupAlgebra(11, 10, 4);
+            Assert.IsFalse(groupAlgebra.Equals(otherAlgebra));
+        }
+
+        [Test]
+        public void TestGetHashCodeSameForEqual()
+        {
+            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var otherAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+
+            Assert.AreEqual(groupAlgebra.GetHashCode(), otherAlgebra.GetHashCode());
+        }
+
     }
 }

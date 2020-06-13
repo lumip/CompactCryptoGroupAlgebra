@@ -3,8 +3,6 @@ using System.Numerics;
 
 using NUnit.Framework;
 
-using CompactCryptoGroupAlgebra;
-
 namespace CompactCryptoGroupAlgebra.Tests
 {
     [TestFixture]

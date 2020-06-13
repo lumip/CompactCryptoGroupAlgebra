@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 using CompactCryptoGroupAlgebra;
 
-namespace CompactCryptoGroupAlgebra.Tests.CryptoAlgebra
+namespace CompactCryptoGroupAlgebra.Tests
 {
     [TestFixture]
     public class MultiplicativeGroupAlgebraIntegratedTest

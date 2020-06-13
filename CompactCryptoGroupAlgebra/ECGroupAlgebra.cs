@@ -15,7 +15,7 @@ namespace CompactCryptoGroupAlgebra
     /// </summary>
     public class ECGroupAlgebra : CryptoGroupAlgebra<ECPoint>
     {
-        private ECParameters _parameters;
+        private readonly ECParameters _parameters;
         private BigIntegerRing _ring;
 
         /// <summary>
@@ -268,6 +268,19 @@ namespace CompactCryptoGroupAlgebra
             Buffer.BlockCopy(xBytes, 0, result, 0, xBytes.Length);
             Buffer.BlockCopy(yBytes, 0, result, _ring.ElementByteLength, yBytes.Length);
             return result;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(CryptoGroupAlgebra<ECPoint> other)
+        {
+            var algebra = other as ECGroupAlgebra;
+            return algebra != null && EqualityComparer<ECParameters>.Default.Equals(_parameters, algebra._parameters);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return -1453010210 + EqualityComparer<ECParameters>.Default.GetHashCode(_parameters);
         }
     }
 }

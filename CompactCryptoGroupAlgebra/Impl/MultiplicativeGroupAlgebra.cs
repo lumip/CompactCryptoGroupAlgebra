@@ -89,5 +89,25 @@ namespace CompactCryptoGroupAlgebra
         {
             return element.ToByteArray();
         }
+
+        /// <inheritdoc/>
+        public override bool Equals(CryptoGroupAlgebra<BigInteger> other)
+        {
+            var algebra = other as MultiplicativeGroupAlgebra;
+            return algebra != null &&
+                   Prime.Equals(algebra.Prime) &&
+                   Order.Equals(algebra.Order) &&
+                   Generator.Equals(algebra.Generator);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            var hashCode = 630028201;
+            hashCode = hashCode * -1521134295 + EqualityComparer<BigInteger>.Default.GetHashCode(Prime);
+            hashCode = hashCode * -1521134295 + EqualityComparer<BigInteger>.Default.GetHashCode(Order);
+            hashCode = hashCode * -1521134295 + EqualityComparer<BigInteger>.Default.GetHashCode(Generator);
+            return hashCode;
+        }
     }
 }

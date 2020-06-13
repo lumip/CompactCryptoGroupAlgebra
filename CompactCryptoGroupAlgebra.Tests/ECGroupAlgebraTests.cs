@@ -364,5 +364,71 @@ namespace CompactCryptoGroupAlgebra.Tests
                 () => new ECGroupAlgebra(invalidParams)
             );
         }
+
+        [Test]
+        public void TestProperties()
+        {
+            var groupAlgebra = new ECGroupAlgebra(ecParams);
+
+            Assert.AreEqual(ECPoint.PointAtInfinity, groupAlgebra.NeutralElement, "verifying neutral element");
+            Assert.AreEqual(ecParams.Generator, groupAlgebra.Generator, "verifying generator");
+            Assert.AreEqual(ecParams.Order, groupAlgebra.Order, "verifying order");
+        }
+
+
+        [Test]
+        public void TestEqualsTrue()
+        {
+            var groupAlgebra = new ECGroupAlgebra(ecParams);
+            var otherAlgebra = new ECGroupAlgebra(ecParams);
+
+            bool result = groupAlgebra.Equals(otherAlgebra);
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void TestEqualsFalseForNull()
+        {
+            var groupAlgebra = new ECGroupAlgebra(ecParams);
+            MultiplicativeGroupAlgebra otherAlgebra = null;
+
+            bool result = groupAlgebra.Equals(otherAlgebra);
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void TestEqualsFalseForUnrelatedObject()
+        {
+            var groupAlgebra = new ECGroupAlgebra(ecParams);
+            var otherAlgebra = new object { };
+
+            bool result = groupAlgebra.Equals(otherAlgebra);
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void TestEqualsFalseForOtherAlgebra()
+        {
+            var groupAlgebra = new ECGroupAlgebra(ecParams);
+            ECParameters otherParams = new ECParameters()
+            {
+                P = 134217728, // == 2 ^ 27
+                Generator = CompactCryptoGroupAlgebra.ECPoint.PointAtInfinity,
+                Order = 1
+            };
+            var otherAlgebra = new ECGroupAlgebra(otherParams);
+
+            bool result = groupAlgebra.Equals(otherAlgebra);
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void TestGetHashCodeSameForEqual()
+        {
+            var groupAlgebra = new ECGroupAlgebra(ecParams);
+            var otherAlgebra = new ECGroupAlgebra(ecParams);
+
+            Assert.AreEqual(groupAlgebra.GetHashCode(), otherAlgebra.GetHashCode());
+        }
     }
 }

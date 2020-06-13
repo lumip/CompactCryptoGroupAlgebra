@@ -176,5 +176,23 @@ namespace CompactCryptoGroupAlgebra
 
         /// <inheritdoc/>
         public abstract byte[] ToBytes(E element);
+
+        /// <summary>
+        /// Determines whether the given <see cref="CryptoGroupAlgebra{E}"/> is equal to the current <see cref="CryptoGroupAlgebra{E}"/>
+        /// in the sense that both operate on the same algebraic group.
+        /// </summary>
+        /// <param name="other">The <see cref="CryptoGroupAlgebra{E}"/> to compare with the current <see cref="CryptoGroupAlgebra{E}"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="CryptoGroupAlgebra{E}"/> is equal to the current
+        /// <see cref="CompactCryptoGroupAlgebra.MultiplicativeGroupAlgebra"/>; otherwise, <c>false</c>.</returns>
+        public abstract bool Equals(CryptoGroupAlgebra<E> other);
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as CryptoGroupAlgebra<E>);
+        }
+
+        /// <inheritdoc/>
+        public abstract override int GetHashCode();
     }
 }

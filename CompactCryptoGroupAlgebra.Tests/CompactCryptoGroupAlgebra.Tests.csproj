@@ -81,6 +81,8 @@
     <Compile Include="MultiplicativeGroupAlgebraTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NISTP256Tests.cs" />
+    <Compile Include="MultiplicativeCryptoGroupTests.cs" />
+    <Compile Include="ECCryptoGroupTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

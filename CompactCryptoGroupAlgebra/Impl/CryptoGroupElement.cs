@@ -137,7 +137,7 @@ namespace CompactCryptoGroupAlgebra
         /// <returns><c>true</c> no equality; otherwise, <c>false</c>.</returns>
         public bool Equals(CryptoGroupElement<E> other)
         {
-            return other != null && Algebra == other.Algebra && Value.Equals(other.Value);
+            return other != null && Algebra.Equals(other.Algebra) && Value.Equals(other.Value);
         }
 
         /// <summary>

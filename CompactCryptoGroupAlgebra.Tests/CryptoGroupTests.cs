@@ -9,7 +9,7 @@ using Moq.Protected;
 
 using CompactCryptoGroupAlgebra;
 
-namespace CompactCryptoGroupAlgebra.Tests.CryptoAlgebra
+namespace CompactCryptoGroupAlgebra.Tests
 {
     interface CryptoGroupProtectedMembers
     {
