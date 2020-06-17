@@ -26,6 +26,9 @@ namespace CompactCryptoGroupAlgebra
         public abstract E Generator { get; }
 
         /// <inheritdoc/>
+        public abstract BigInteger Cofactor { get; }
+
+        /// <inheritdoc/>
         public abstract int ElementBitLength { get; }
 
         /// <inheritdoc/>
@@ -85,12 +88,6 @@ namespace CompactCryptoGroupAlgebra
         /// <returns>The given element multiplied with the given scalar.</returns>
         protected virtual E MultiplyScalarUnchecked(E e, BigInteger k, int factorBitLength)
         {
-            // note(lumip): double-and-add (in this case: square-and-multiply)
-            //  implementation that issues the same amount of adds no matter
-            //  the value of k and has no conditional control flow. It is thus
-            //  safe(r) against timing/power/cache/branch prediction(?)
-            //  side channel attacks.
-
             BigInteger maxFactor = BigInteger.One << factorBitLength;
             int i = factorBitLength - 1;
 

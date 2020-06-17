@@ -41,6 +41,9 @@ namespace CompactCryptoGroupAlgebra
         public E Generator => _baseAlgebra.Generator;
 
         /// <inheritdoc/>
+        public BigInteger Cofactor => _baseAlgebra.Cofactor;
+
+        /// <inheritdoc/>
         public E NeutralElement => _baseAlgebra.NeutralElement;
 
         /// <inheritdoc/>

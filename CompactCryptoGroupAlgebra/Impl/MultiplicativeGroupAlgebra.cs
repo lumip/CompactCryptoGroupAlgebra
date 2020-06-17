@@ -31,6 +31,15 @@ namespace CompactCryptoGroupAlgebra
         public override BigInteger Generator { get; }
 
         /// <inheritdoc/>
+        public override BigInteger Cofactor
+        {
+            get
+            {
+                return (Prime - 1) / Order;
+            }
+        }
+
+        /// <inheritdoc/>
         public override int ElementBitLength { get { return GetBitLength(Prime); } }
 
         /// <summary>
@@ -44,17 +53,15 @@ namespace CompactCryptoGroupAlgebra
             : base()
         {
             Prime = prime;
-            if (!IsValid(generator))
-                throw new ArgumentException("The generator must be an element of the group.", nameof(generator));
             Generator = generator;
             Order = order;
+            if (!IsValid(generator))
+                throw new ArgumentException("The generator must be an element of the group.", nameof(generator));
         }
 
         /// <inheritdoc/>
         public override BigInteger Add(BigInteger left, BigInteger right)
         {
-            Debug.Assert(IsValid(left));
-            Debug.Assert(IsValid(right));
             return (left * right) % Prime;
         }
 
@@ -68,14 +75,25 @@ namespace CompactCryptoGroupAlgebra
         /// <inheritdoc/>
         public override BigInteger Negate(BigInteger e)
         {
-            Debug.Assert(IsValid(e));
             return BigInteger.ModPow(e, Order - 1, Prime);
         }
 
         /// <inheritdoc/>
         public override bool IsValid(BigInteger element)
         {
-            return element > BigInteger.Zero && element < Prime;
+
+            if (element <= BigInteger.Zero || element >= Prime)
+                return false;
+
+            // verifying that the point is not from a small subgroup of the whole group (and thus outside
+            // of the safe subgroup over which operations are considered)
+            if (Cofactor > 1)
+            {
+                BigInteger check = MultiplyScalar(element, Cofactor, GetBitLength(Cofactor));
+                if (check.IsOne)
+                    return false;
+            }
+            return true;
         }
 
         /// <inheritdoc/>

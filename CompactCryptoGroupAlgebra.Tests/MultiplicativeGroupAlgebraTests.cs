@@ -72,10 +72,19 @@ namespace CompactCryptoGroupAlgebra.Tests
         [TestCase(-3)]
         [TestCase(11)]
         [TestCase(136)]
-        public void TestIsValidRejectsInvalidElements(int elementInt)
+        public void TestIsValidRejectsInvalidElementsOutOfBounds(int elementInt)
         {
             var element = new BigInteger(elementInt);
             var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            Assert.IsFalse(groupAlgebra.IsValid(element));
+        }
+
+        [Test]
+        [TestCase(22)]
+        public void TestIsValidRejectsInvalidElementsNotGenerated(int elementInt)
+        {
+            var element = new BigInteger(elementInt);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 4);
             Assert.IsFalse(groupAlgebra.IsValid(element));
         }
 
@@ -151,6 +160,7 @@ namespace CompactCryptoGroupAlgebra.Tests
             var neutralElementRaw = BigInteger.One;
             var moduloRaw = new BigInteger(11);
             var orderRaw = new BigInteger(10);
+            var cofactorRaw = new BigInteger(1);
 
             var groupAlgebra = new MultiplicativeGroupAlgebra(moduloRaw, orderRaw, generatorRaw);
 
@@ -158,6 +168,25 @@ namespace CompactCryptoGroupAlgebra.Tests
             Assert.AreEqual(generatorRaw, groupAlgebra.Generator, "verifying generator");
             Assert.AreEqual(orderRaw, groupAlgebra.Order, "verifying order");
             Assert.AreEqual(moduloRaw, groupAlgebra.Prime, "verifying modulo");
+            Assert.AreEqual(cofactorRaw, groupAlgebra.Cofactor, "verifying cofactor");
+        }
+
+        [Test]
+        public void TestPropertiesSubgroup()
+        {
+            var generatorRaw = new BigInteger(4);
+            var neutralElementRaw = BigInteger.One;
+            var moduloRaw = new BigInteger(23);
+            var orderRaw = new BigInteger(11);
+            var cofactorRaw = new BigInteger(2);
+
+            var groupAlgebra = new MultiplicativeGroupAlgebra(moduloRaw, orderRaw, generatorRaw);
+
+            Assert.AreEqual(neutralElementRaw, groupAlgebra.NeutralElement, "verifying neutral element");
+            Assert.AreEqual(generatorRaw, groupAlgebra.Generator, "verifying generator");
+            Assert.AreEqual(orderRaw, groupAlgebra.Order, "verifying order");
+            Assert.AreEqual(moduloRaw, groupAlgebra.Prime, "verifying modulo");
+            Assert.AreEqual(cofactorRaw, groupAlgebra.Cofactor, "verifying cofactor");
         }
 
         [Test]
