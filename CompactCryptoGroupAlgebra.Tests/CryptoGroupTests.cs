@@ -459,7 +459,7 @@ namespace CompactCryptoGroupAlgebra.Tests
                 .Returns(expected.Object);
 
             var index = new BigInteger(301);
-            byte[] rngResponse = index.ToByteArray();
+            byte[] rngResponse = (index - 1).ToByteArray();
 
             var rngMock = new Mock<RandomNumberGenerator>();
             rngMock
@@ -486,92 +486,6 @@ namespace CompactCryptoGroupAlgebra.Tests
                         Times.Once());
 
             rngMock.Verify(rng => rng.GetBytes(It.Is<byte[]>(x => x.Length == orderByteLength)), Times.Once());
-        }
-
-        [Test]
-        [TestCase(-3)]
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(1020)]
-        [TestCase(1022)]
-        public void TestGenerateRandomDoesNotSampleInvalidIndices(int invalidIndexRaw)
-        {
-            // tests that invalid indices returned by rng are skipped:
-            // negative, 0, 1, order -1, order +1
-            var order = new BigInteger(1021);
-            int orderByteLength = 2;
-
-            var expectedRaw = 7;
-
-            var algebraMock = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            algebraMock.Setup(alg => alg.Order).Returns(order);
-            algebraMock.Setup(alg => alg.OrderBitLength).Returns(orderByteLength * 8);
-            algebraMock.Setup(alg => alg.GenerateElement(It.IsAny<BigInteger>())).Returns(expectedRaw);
-            algebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
-
-            var expected = new Mock<CryptoGroupElement<int>>(expectedRaw, algebraMock.Object);
-
-            var groupMock = new Mock<CryptoGroup<int>>(algebraMock.Object);
-            groupMock.Protected().As<CryptoGroupProtectedMembers>()
-                .Setup(group => group.CreateGroupElement(It.IsAny<int>()))
-                .Returns(expected.Object);
-
-            var invalidIndex = new BigInteger(invalidIndexRaw);
-            byte[] invalidRngResponse = invalidIndex.ToByteArray();
-            if (invalidRngResponse.Length < orderByteLength)
-            {
-                byte[] buffer = new byte[orderByteLength];
-                Buffer.BlockCopy(invalidRngResponse, 0, buffer, 0, invalidRngResponse.Length);
-                if (invalidIndex < 0)
-                {
-                    buffer[1] = 0xFF;
-                }
-                else
-                {
-                    buffer[1] = 0x00;
-                }
-                invalidRngResponse = buffer;
-            }
-
-            var validIndex = new BigInteger(301);
-            byte[] validRngResponse = validIndex.ToByteArray();
-
-            bool firstTime = true;
-            var rngMock = new Mock<RandomNumberGenerator>();
-            rngMock
-                .Setup(rng => rng.GetBytes(It.IsAny<byte[]>()))
-                .Callback(
-                    new Action<byte[]>(
-                        (buffer) => {
-                            if (firstTime)
-                            {
-                                Buffer.BlockCopy(invalidRngResponse, 0, buffer, 0, orderByteLength);
-                                firstTime = false;
-                            }
-                            else
-                            {
-                                Buffer.BlockCopy(validRngResponse, 0, buffer, 0, orderByteLength);
-                            }
-                        }
-                    )
-                );
-
-            var result = groupMock.Object.GenerateRandom(rngMock.Object);
-            var resultIndex = result.Item1;
-            var resultElement = result.Item2;
-            Assert.AreEqual(validIndex, resultIndex);
-            Assert.AreSame(expected.Object, resultElement);
-            
-            algebraMock.Verify(
-                alg => alg.GenerateElement(It.Is<BigInteger>(x => x == validIndex)),
-                Times.Once()
-            );
-
-            groupMock.Protected().As<CryptoGroupProtectedMembers>()
-                .Verify(group => group.CreateGroupElement(It.Is<int>(x => x == expectedRaw)),
-                        Times.Once());
-
-            rngMock.Verify(rng => rng.GetBytes(It.Is<byte[]>(x => x.Length == orderByteLength)), Times.Exactly(2));
         }
 
         [Test]

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Numerics;
 using System.Security.Cryptography;
 
@@ -172,15 +172,7 @@ namespace CompactCryptoGroupAlgebra
         /// <inheritdoc/>
         public Tuple<BigInteger, ICryptoGroupElement> GenerateRandom(RandomNumberGenerator rng)
         {
-            BigInteger index;
-            do
-            {
-                byte[] buffer = new byte[OrderByteLength];
-                rng.GetBytes(buffer);
-                index = new BigInteger(buffer);
-            }
-            while (index <= 1 || index >= Order - 1);
-
+            BigInteger index = rng.RandomBetween(1, Order - 1);
             ICryptoGroupElement element = Generate(index);
             return new Tuple<BigInteger, ICryptoGroupElement>(index, element);
         }

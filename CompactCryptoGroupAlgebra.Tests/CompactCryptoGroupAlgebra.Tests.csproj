@@ -85,6 +85,7 @@
     <Compile Include="ECCryptoGroupTests.cs" />
     <Compile Include="NumberLengthTests.cs" />
     <Compile Include="DebugAssertTests.cs" />
+    <Compile Include="RandomNumberGeneratorExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
