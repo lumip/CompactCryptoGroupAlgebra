@@ -1,12 +1,10 @@
-﻿using System;
+using System;
 using System.Numerics;
 using System.Diagnostics;
 
 using NUnit.Framework;
 using Moq;
 using Moq.Protected;
-
-using CompactCryptoGroupAlgebra;
 
 namespace CompactCryptoGroupAlgebra.Tests
 {
@@ -134,6 +132,21 @@ namespace CompactCryptoGroupAlgebra.Tests
 
             var fixedAlgebra = new FixedFactorLengthCryptoGroupAlgebra<int>(baseAlgebraStub.Object, factorBitLength);
             Assert.AreEqual(elementBitLength, fixedAlgebra.ElementBitLength);
+        }
+
+        [Test]
+        public void TestCofactorCallsBaseAlgebra()
+        {
+            int factorBitLength = 1;
+            var order = new BigInteger(24);
+            var cofactor = new BigInteger(8);
+
+            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
+            baseAlgebraStub.Setup(alg => alg.Order).Returns(order);
+            baseAlgebraStub.Setup(alg => alg.Cofactor).Returns(cofactor);
+
+            var fixedAlgebra = new FixedFactorLengthCryptoGroupAlgebra<int>(baseAlgebraStub.Object, factorBitLength);
+            Assert.AreEqual(cofactor, fixedAlgebra.Cofactor);
         }
 
         [Test]
