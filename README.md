@@ -26,7 +26,6 @@ Performing a Diffie-Helman Key Exchange on a multiplicative group looks like
 using CompactCryptoGroupAlgebra;
 using System.Numerics;
 using System.Security.Cryptography;
-using System.Diagnostics;
 
 // Choosing parameters for multiplicative group:
 // order 11 subgroup with generator 4 of characteristic 23 multiplicative group 
