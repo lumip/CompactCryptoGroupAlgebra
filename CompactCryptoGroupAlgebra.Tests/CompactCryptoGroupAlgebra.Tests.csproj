@@ -83,6 +83,7 @@
     <Compile Include="NISTP256Tests.cs" />
     <Compile Include="MultiplicativeCryptoGroupTests.cs" />
     <Compile Include="ECCryptoGroupTests.cs" />
+    <Compile Include="NumberLengthTests.cs" />
     <Compile Include="DebugAssertTests.cs" />
   </ItemGroup>
   <ItemGroup>

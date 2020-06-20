@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Numerics;
 
 namespace CompactCryptoGroupAlgebra
@@ -38,9 +38,7 @@ namespace CompactCryptoGroupAlgebra
         /// <returns>The bit length of the input.</returns>
         public static int GetBitLength(BigInteger x)
         {
-            if (x.IsZero)
-                return 0;
-            return (int)Math.Floor(BigInteger.Log(x, 2) + 1);
+            return NumberLength.GetLength(x).InBits;
         }
 
         /// <inheritdoc/>
