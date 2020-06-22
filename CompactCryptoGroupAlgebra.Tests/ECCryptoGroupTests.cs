@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Numerics;
 
 using NUnit.Framework;
@@ -14,14 +14,15 @@ namespace CompactCryptoGroupAlgebra.Tests
 
         public ECCryptoGroupTests()
         {
-            ecParams = new ECParameters()
-            {
-                P = 23,
-                A = -2,
-                B = 2,
-                Generator = new ECPoint(1, 1),
-                Order = 16
-            };
+            ecParams = new ECParameters(
+                p: 23,
+                a: -2,
+                b: 9,
+                generator: new ECPoint(5, 3),
+                order: 11,
+                cofactor: 2,
+                rng: new SeededRandomNumberGenerator()
+            );
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace CompactCryptoGroupAlgebra.Tests
             var groupAlgebra = new ECGroupAlgebra(ecParams);
             var group = new ECCryptoGroup(groupAlgebra);
 
-            var expectedRaw = new ECPoint(5, 5);
+            var expectedRaw = new ECPoint(5, 3);
             var expected = new CryptoGroupElement<ECPoint>(expectedRaw, groupAlgebra);
             var bytes = expected.ToBytes();
             var result = group.FromBytes(bytes);

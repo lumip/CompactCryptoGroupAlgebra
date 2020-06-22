@@ -87,6 +87,7 @@
     <Compile Include="NumberLengthTests.cs" />
     <Compile Include="DebugAssertTests.cs" />
     <Compile Include="RandomNumberGeneratorExtensionsTests.cs" />
+    <Compile Include="SeededRandomNumberGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

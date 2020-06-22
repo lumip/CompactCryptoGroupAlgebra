@@ -22,5 +22,22 @@ namespace CompactCryptoGroupAlgebra.Tests
             elem = groupAlgebra.GenerateElement(BigInteger.Parse("28367823582636726875877070967237095880621"));
             Assert.AreEqual(groupAlgebra.NeutralElement, groupAlgebra.Add(elem, groupAlgebra.Negate(elem)));
         }
+
+        [Test]
+        public void TestConstructorFailsForNonPrimeP()
+        {
+            Assert.Throws<ArgumentException>(
+                () => new ECParameters(10, 0, 0, ECPoint.PointAtInfinity, 3, 1, new SeededRandomNumberGenerator())
+            );
+        }
+
+        [Test]
+        public void TestConstructorFailsForNonPrimeOrder()
+        {
+            Assert.Throws<ArgumentException>(
+                () => new ECParameters(5, 0, 0, ECPoint.PointAtInfinity, 4, 1, new SeededRandomNumberGenerator())
+            );
+        }
+
     }
 }

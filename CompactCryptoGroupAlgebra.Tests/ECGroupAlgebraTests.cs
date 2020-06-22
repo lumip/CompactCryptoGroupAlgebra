@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Numerics;
 
 using NUnit.Framework;
@@ -8,32 +8,20 @@ namespace CompactCryptoGroupAlgebra.Tests
     [TestFixture]
     public class ECGroupAlgebraTests
     {
-        // reference results from https://trustica.cz/en/2018/04/26/elliptic-curves-prime-order-curves/
-        // generator has order 16, i.e., OrderSize = 5 bits
 
         private readonly ECParameters ecParams;
-        private readonly ECParameters primeOrderECParams;
 
         public ECGroupAlgebraTests()
         {
-            ecParams = new ECParameters()
-            {
-                P = 23,
-                A = -2,
-                B = 2,
-                Generator = new ECPoint(1, 1),
-                Order = 16,
-                Cofactor = 2
-            };
-            primeOrderECParams = new ECParameters()
-            {
-                P = 23,
-                A = -2,
-                B = 9,
-                Generator = new ECPoint(5, 3),
-                Order = 11,
-                Cofactor = 2
-            };
+            ecParams = new ECParameters(
+                p: 23,
+                a: -2,
+                b: 9,
+                generator: new ECPoint(5, 3),
+                order: 11,
+                cofactor: 2,
+                rng: new SeededRandomNumberGenerator()
+            );
         }
 
         [Test]
@@ -156,10 +144,6 @@ namespace CompactCryptoGroupAlgebra.Tests
         }
         
         [Test]
-        //[TestCase(10, 4)]
-        //[TestCase(1, 22)]
-        //[TestCase(18, 5)]
-        //[TestCase(1, 1)]
         [TestCase(1, 10)]
         [TestCase(2, 17)]
         [TestCase(6, 11)]
@@ -168,7 +152,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         [TestCase(0, 20)]
         public void TestPointValidTrueForValidPoint(int xRaw, int yRaw)
         {
-            var curve = new ECGroupAlgebra(primeOrderECParams);
+            var curve = new ECGroupAlgebra(ecParams);
             var point = new ECPoint(xRaw, yRaw);
             Assert.IsTrue(curve.IsValid(point));
         }
@@ -189,7 +173,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         [TestCase(4, 78)]
         public void TestIsValidFalseForPointNotOnCurve(int xRaw, int yRaw)
         {
-            var curve = new ECGroupAlgebra(primeOrderECParams);
+            var curve = new ECGroupAlgebra(ecParams);
             var point = new ECPoint(xRaw, yRaw);
             Assert.IsFalse(curve.IsValid(point));
         }
@@ -198,7 +182,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         [TestCase(10, 0)]
         public void TestIsValidFalseForLowOrderCurvePoint(int xRaw, int yRaw)
         {
-            var curve = new ECGroupAlgebra(primeOrderECParams);
+            var curve = new ECGroupAlgebra(ecParams);
             var point = new ECPoint(xRaw, yRaw);
             Assert.IsFalse(curve.IsValid(point));
         }
@@ -281,7 +265,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         public void TestOrderBitLength()
         {
             var curve = new ECGroupAlgebra(ecParams);
-            Assert.AreEqual(5, curve.OrderBitLength);
+            Assert.AreEqual(4, curve.OrderBitLength);
         }
         
         [Test]
@@ -301,16 +285,16 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestFromBytes()
         {
-            ECParameters largeParams = new ECParameters()
-            {
-                P = 134217728, // == 2 ^ 27
-                Generator = ECPoint.PointAtInfinity,
-                Order = 1
-            };
+            ECParameters largeParams = new ECParameters(
+                p: 18392027, // 25 bits
+                generator: ECPoint.PointAtInfinity,
+                order: 3,
+                a: 0, b: 0, cofactor: 1, rng: new SeededRandomNumberGenerator()
+            );
 
             var curve = new ECGroupAlgebra(largeParams);
-            var expected = new ECPoint(5, 5);
-            var buffer = new byte[] { 5, 0, 0, 0, 5, 0, 0, 0 };
+            var expected = new ECPoint(5, 3);
+            var buffer = new byte[] { 5, 0, 0, 0, 3, 0, 0, 0 };
 
             var result = curve.FromBytes(buffer);
             Assert.AreEqual(expected, result);
@@ -328,12 +312,12 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestFromBytesRejectsTooShortBuffer()
         {
-            ECParameters largeParams = new ECParameters()
-            {
-                P = 134217728, // == 2 ^ 27
-                Generator = ECPoint.PointAtInfinity,
-                Order = 1
-            };
+            ECParameters largeParams = new ECParameters(
+                p: 18392027, // 25 bits
+                generator: ECPoint.PointAtInfinity,
+                order: 3,
+                a: 0, b: 0, cofactor: 1, rng: new SeededRandomNumberGenerator()
+            );
             var curve = new ECGroupAlgebra(largeParams);
             var buffer = new byte[7];
             Assert.Throws<ArgumentException>(
@@ -344,16 +328,16 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestToBytes()
         {
-            ECParameters largeParams = new ECParameters()
-            {
-                P = 134217728, // == 2 ^ 27
-                Generator = ECPoint.PointAtInfinity,
-                Order = 1
-            };
+            ECParameters largeParams = new ECParameters(
+                p: 18392027, // 25 bits
+                generator: ECPoint.PointAtInfinity,
+                order: 3,
+                a: 0, b: 0, cofactor: 1, rng: new SeededRandomNumberGenerator()
+            );
 
             var curve = new ECGroupAlgebra(largeParams);
-            var p = new ECPoint(5, 5);
-            var expected = new byte[] { 5, 0, 0, 0, 5, 0, 0, 0 };
+            var p = new ECPoint(5, 3);
+            var expected = new byte[] { 5, 0, 0, 0, 3, 0, 0, 0 };
 
             var result = curve.ToBytes(p);
             CollectionAssert.AreEqual(expected, result);
@@ -363,8 +347,8 @@ namespace CompactCryptoGroupAlgebra.Tests
         public void TestFromBytesWithLessThanOneByteLargeElements()
         {
             var curve = new ECGroupAlgebra(ecParams);
-            var expected = new ECPoint(5, 5);
-            var buffer = new byte[] { 5, 5 };
+            var expected = new ECPoint(5, 3);
+            var buffer = new byte[] { 5, 3 };
 
             var result = curve.FromBytes(buffer);
             Assert.AreEqual(expected, result);
@@ -384,9 +368,17 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestInvalidElementRejectedAsGenerator()
         {
-            var generator = new ECPoint(16, 1);
-            var invalidParams = ecParams;
-            invalidParams.Generator = generator;
+            var invalidGenerator = new ECPoint(16, 1);
+            ECParameters invalidParams = new ECParameters(
+                generator: invalidGenerator,
+                p: ecParams.P,
+                a: ecParams.A,
+                b: ecParams.B,
+                order: ecParams.Order,
+                cofactor: ecParams.Cofactor,
+                rng: new SeededRandomNumberGenerator()
+            );
+                
             Assert.Throws<ArgumentException>(
                 () => new ECGroupAlgebra(invalidParams)
             );
@@ -438,12 +430,12 @@ namespace CompactCryptoGroupAlgebra.Tests
         public void TestEqualsFalseForOtherAlgebra()
         {
             var groupAlgebra = new ECGroupAlgebra(ecParams);
-            ECParameters otherParams = new ECParameters()
-            {
-                P = 134217728, // == 2 ^ 27
-                Generator = ECPoint.PointAtInfinity,
-                Order = 1
-            };
+            ECParameters otherParams = new ECParameters(
+                p: 18392027, // 25 bits
+                generator: ECPoint.PointAtInfinity,
+                order: 3,
+                a: 0, b: 0, cofactor: 1, rng: new SeededRandomNumberGenerator()
+            );
             var otherAlgebra = new ECGroupAlgebra(otherParams);
 
             bool result = groupAlgebra.Equals(otherAlgebra);
