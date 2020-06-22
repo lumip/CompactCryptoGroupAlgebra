@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Security.Cryptography;
 
 namespace CompactCryptoGroupAlgebra
 {
@@ -20,13 +21,7 @@ namespace CompactCryptoGroupAlgebra
         public BigInteger Prime { get; }
 
         /// <inheritdoc/>
-        public override BigInteger Order { get; }
-
-        /// <inheritdoc/>
         public override BigInteger NeutralElement { get { return BigInteger.One; } }
-
-        /// <inheritdoc/>
-        public override BigInteger Generator { get; }
 
         /// <inheritdoc/>
         public override BigInteger Cofactor
@@ -47,15 +42,27 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="prime">The prime modulo of the group.</param>
         /// <param name="order">The order of the group</param>
         /// <param name="generator">The generator of the group.</param>
-        public MultiplicativeGroupAlgebra(BigInteger prime, BigInteger order, BigInteger generator)
-            : base()
+        /// <param name="rng">Random number generator.</param>
+        public MultiplicativeGroupAlgebra(BigInteger prime, BigInteger order, BigInteger generator, RandomNumberGenerator rng)
+            : base(generator, order, rng)
         {
+            if (!prime.IsProbablyPrime(rng))
+                throw new ArgumentException("prime must be a prime number.", nameof(prime));
             Prime = prime;
-            Generator = generator;
-            Order = order;
             if (!IsValid(generator))
                 throw new ArgumentException("The generator must be an element of the group.", nameof(generator));
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MultiplicativeGroupAlgebra"/> class
+        /// given the group's parameters.
+        /// </summary>
+        /// <param name="prime">The prime modulo of the group.</param>
+        /// <param name="order">The order of the group</param>
+        /// <param name="generator">The generator of the group.</param>
+        public MultiplicativeGroupAlgebra(BigInteger prime, BigInteger order, BigInteger generator)
+            : this(prime, order, generator, RandomNumberGenerator.Create())
+        { }
 
         /// <inheritdoc/>
         public override BigInteger Add(BigInteger left, BigInteger right)
@@ -77,21 +84,9 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <inheritdoc/>
-        public override bool IsValid(BigInteger element)
+        protected override bool IsValidDerived(BigInteger element)
         {
-
-            if (element <= BigInteger.Zero || element >= Prime)
-                return false;
-
-            // verifying that the point is not from a small subgroup of the whole group (and thus outside
-            // of the safe subgroup over which operations are considered)
-            if (Cofactor > 1)
-            {
-                BigInteger check = MultiplyScalar(element, Cofactor, GetBitLength(Cofactor));
-                if (check.IsOne)
-                    return false;
-            }
-            return true;
+            return (element > BigInteger.Zero && element < Prime);
         }
 
         /// <inheritdoc/>

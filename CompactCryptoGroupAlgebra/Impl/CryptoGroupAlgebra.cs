@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Security.Cryptography;
 
 namespace CompactCryptoGroupAlgebra
 {
@@ -17,10 +18,10 @@ namespace CompactCryptoGroupAlgebra
     public abstract class CryptoGroupAlgebra<E> : ICryptoGroupAlgebra<E> where E : struct
     {
         /// <inheritdoc/>
-        public abstract BigInteger Order { get; }
+        public BigInteger Order { get; }
 
         /// <inheritdoc/>
-        public abstract E Generator { get; }
+        public E Generator { get; }
 
         /// <inheritdoc/>
         public abstract BigInteger Cofactor { get; }
@@ -39,6 +40,25 @@ namespace CompactCryptoGroupAlgebra
         public static int GetBitLength(BigInteger x)
         {
             return NumberLength.GetLength(x).InBits;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="CryptoGroupAlgebra{E}"/>
+        /// with a given generator <paramref name="order"/>.
+        /// 
+        /// Checks that the given <paramref name="order"/> is prime and throws
+        /// a <exception cref="ArgumentException"/> if that is not the case.
+        /// </summary>
+        /// <param name="generator">Generator of the group.</param>
+        /// <param name="order">Order of the group's generator.</param>
+        /// <param name="rng">Random number generator.</param>
+        protected CryptoGroupAlgebra(E generator, BigInteger order, RandomNumberGenerator rng)
+        {
+            if (!order.IsProbablyPrime(rng))
+                throw new ArgumentException("Order must be prime", nameof(order));
+            // todo: would be nice to do IsValid(generator) here - but that is virtual
+            Generator = generator;
+            Order = order;
         }
 
         /// <inheritdoc/>
@@ -161,7 +181,36 @@ namespace CompactCryptoGroupAlgebra
         public abstract E Add(E left, E right);
 
         /// <inheritdoc/>
-        public abstract bool IsValid(E element);
+        public bool IsValid(E element)
+        {
+            // implementation specific checks
+            if (!IsValidDerived(element)) return false;
+
+            // verifying that the point is not from a small subgroup of the whole curve (and thus outside
+            // of the safe subgroup over which operations are considered)
+            if (Cofactor > 1)
+            {
+                E check = MultiplyScalarUnchecked(element, Cofactor, GetBitLength(Cofactor));
+                if (check.Equals(NeutralElement))
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Implementation specific checks for validity of group elements.
+        /// 
+        /// Must be provided by inheriting classes and is called by
+        /// <see cref="IsValid"/>.
+        /// </summary>
+        /// <param name="element">The group element candidate to be checked for validity.</param>
+        /// <returns><c>true</c>, if the candidate is valid, <c>false</c> otherwise.</returns>
+        /// <remarks>
+        /// Implementations of <see cref="IsValidDerived(E)"/> do not need to
+        /// check whether the element candidate has too small order, as that
+        /// check is performed in <see cref="IsValid(E)"/>.
+        /// </remarks>
+        protected abstract bool IsValidDerived(E element);
 
         /// <inheritdoc/>
         public abstract E FromBytes(byte[] buffer);

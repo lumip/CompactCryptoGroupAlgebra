@@ -115,9 +115,6 @@ namespace CompactCryptoGroupAlgebra
         /// To be valid, an element has to verify two conditions:
         /// - be an element of the mathematical structure the group is defined in,
         /// - be of group order (to prevent subgroup attacks).
-        /// 
-        /// CAUTION: The check for the element to be of group order only works reliably if
-        /// the group order is prime.
         /// </summary>
         /// <param name="element">The group element type object to check for validity.</param>
         /// <returns><c>true</c> if the given input is a valid group element.</returns>

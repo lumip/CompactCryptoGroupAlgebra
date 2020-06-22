@@ -158,10 +158,10 @@ namespace CompactCryptoGroupAlgebra.Tests
         }
 
         [Test]
-        public void TestIsValidTrueForPointAtInfinity()
+        public void TestIsValidFalseForPointAtInfinity()
         {
             var curve = new ECGroupAlgebra(ecParams);
-            Assert.IsTrue(curve.IsValid(ECPoint.PointAtInfinity));
+            Assert.IsFalse(curve.IsValid(ECPoint.PointAtInfinity));
         }
 
         [Test]

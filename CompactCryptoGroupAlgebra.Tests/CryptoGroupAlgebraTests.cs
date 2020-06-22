@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Numerics;
+using System.Reflection;
 
 using NUnit.Framework;
 using Moq;
 using Moq.Protected;
-
-using CompactCryptoGroupAlgebra;
 
 namespace CompactCryptoGroupAlgebra.Tests
 {
@@ -13,6 +12,7 @@ namespace CompactCryptoGroupAlgebra.Tests
     {
         int Multiplex(BigInteger selection, int left, int right);
         int MultiplyScalarUnchecked(int e, BigInteger k, int factorBitLength);
+        bool IsValidDerived(int e);
     }
 
     [TestFixture]
@@ -33,18 +33,14 @@ namespace CompactCryptoGroupAlgebra.Tests
         }
 
         [Test]
-        [TestCase(0, 0)]
-        [TestCase(1, 1)]
-        [TestCase(2, 2)]
-        [TestCase(15, 4)]
-        [TestCase(16, 5)]
+        [TestCase(13, 4)]
         public void TestOrderBitLength(int orderInt, int expectedBitLength)
         {
             var order = new BigInteger(orderInt);
+            var generatorStub = 1;
+            var rng = new SeededRandomNumberGenerator();
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            algebraMock.Setup(alg => alg.Order).Returns(order);
-
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generatorStub, order, rng);
             var result = algebraMock.Object.OrderBitLength;
 
             Assert.AreEqual(expectedBitLength, result);
@@ -65,11 +61,12 @@ namespace CompactCryptoGroupAlgebra.Tests
 
             var k = new BigInteger(scalarInt);
             var order = new BigInteger(5);
+            var generatorStub = 1;
+            var rng = new SeededRandomNumberGenerator();
             int element = 3;
             int expected = 3 * (scalarInt % 5);
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>() { CallBase = true };
-            algebraMock.Setup(alg => alg.Order).Returns(order);
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, rng) { CallBase = true };
             algebraMock.Setup(alg => alg.NeutralElement).Returns(0);
             algebraMock.Setup(alg => alg.Add(It.IsAny<int>(), It.IsAny<int>())).Returns((int x, int y) => x + y);
 
@@ -95,8 +92,11 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             int element = 5;
             var index = BigInteger.MinusOne;
+            var order = new BigInteger(5);
+            var generatorStub = 1;
+            var rng = new SeededRandomNumberGenerator();
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generatorStub, order, rng);
 
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => algebraMock.Object.MultiplyScalar(element, index)
@@ -113,10 +113,15 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             int element = 5;
             var k = new BigInteger(factorInt);
+
+            var order = new BigInteger(5);
+            var generatorStub = 1;
+            var rng = new SeededRandomNumberGenerator();
+
             int factorBitLength = 3;
             int expected = 5 * factorInt;
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>() { CallBase = true };
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, rng) { CallBase = true };
             algebraMock.Setup(alg => alg.NeutralElement).Returns(0);
             algebraMock.Setup(alg => alg.Add(It.IsAny<int>(), It.IsAny<int>())).Returns((int x, int y) => x + y);
 
@@ -144,7 +149,11 @@ namespace CompactCryptoGroupAlgebra.Tests
             var index = BigInteger.MinusOne;
             int factorBitLength = 3;
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
+            var order = new BigInteger(5);
+            var generatorStub = 1;
+            var rng = new SeededRandomNumberGenerator();
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generatorStub, order, rng);
 
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => algebraMock.Object.MultiplyScalar(element, index, factorBitLength)
@@ -161,7 +170,11 @@ namespace CompactCryptoGroupAlgebra.Tests
             int element = 5;
             int factorBitLength = 3;
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
+            var order = new BigInteger(5);
+            var generatorStub = 1;
+            var rng = new SeededRandomNumberGenerator();
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generatorStub, order, rng);
 
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => algebraMock.Object.MultiplyScalar(element, k, factorBitLength)
@@ -177,11 +190,9 @@ namespace CompactCryptoGroupAlgebra.Tests
             int generator = 2;
             var index = new BigInteger(3);
             int expected = 3 * generator;
+            var rng = new SeededRandomNumberGenerator();
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            algebraMock.Setup(alg => alg.Order).Returns(order);
-            algebraMock.Setup(alg => alg.Generator).Returns(generator);
-
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
                 .Setup(alg => alg.MultiplyScalarUnchecked(
                     It.IsAny<int>(), It.Is<BigInteger>(i => i == index), It.Is<int>(i => i == orderBitLength))
@@ -203,8 +214,11 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             var index = BigInteger.MinusOne;
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>() { CallBase = true };
-            algebraMock.Setup(alg => alg.Generator).Returns(1);
+            var order = new BigInteger(5);
+            var generatorStub = 1;
+            var rng = new SeededRandomNumberGenerator();
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, rng) { CallBase = true };
 
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => algebraMock.Object.GenerateElement(index)
@@ -218,8 +232,10 @@ namespace CompactCryptoGroupAlgebra.Tests
             int element = 7;
             int expected = -7;
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>() { CallBase = true };
-            algebraMock.Setup(alg => alg.Order).Returns(order);
+            var generatorStub = 1;
+            var rng = new SeededRandomNumberGenerator();
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, rng) { CallBase = true };
             algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
                 .Setup(alg => alg.MultiplyScalarUnchecked(
                     It.IsAny<int>(), It.Is<BigInteger>(i => i == order - 1), It.Is<int>(i => i == 5))
@@ -239,10 +255,14 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestEqualsCallsSpecificEquals()
         {
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>() { CallBase = true };
+            var order = new BigInteger(5);
+            var generatorStub = 1;
+            var rng = new SeededRandomNumberGenerator();
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, rng) { CallBase = true };
             algebraMock.Setup(alg => alg.Equals(It.IsAny<CryptoGroupAlgebra<int>>())).Returns(true);
 
-            var otherAlgebraMock = new Mock<CryptoGroupAlgebra<int>>();
+            var otherAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, rng);
 
             Assert.IsTrue(algebraMock.Object.Equals((object)(otherAlgebraMock.Object)));
 
@@ -250,6 +270,22 @@ namespace CompactCryptoGroupAlgebra.Tests
                 alg => alg.Equals(It.Is<CryptoGroupAlgebra<int>>(x => x == otherAlgebraMock.Object)),
                 Times.Once()
             );
+        }
+
+        [Test]
+        public void TestConstructorRejectsNonPrimeOrder()
+        {
+            var rng = new SeededRandomNumberGenerator();
+            var ex = Assert.Throws<TargetInvocationException>(() =>
+            {
+                var algebraMock = new Mock<CryptoGroupAlgebra<int>>(
+                    MockBehavior.Strict, 1, new BigInteger(9), rng
+                );
+                var order = algebraMock.Object.Order;
+                //Assert.AreEqual(9, algebraMock.Object.Order);
+            });
+            Assert.IsInstanceOf(typeof(ArgumentException), ex.InnerException);
+
         }
 
     }

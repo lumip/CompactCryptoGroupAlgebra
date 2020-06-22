@@ -15,17 +15,17 @@ namespace CompactCryptoGroupAlgebra.Tests
         [TestCase(0, 1)]
         [TestCase(1, 3)]
         [TestCase(2, 9)]
-        [TestCase(3, 5)]
-        [TestCase(4, 4)]
-        [TestCase(5, 1)]
-        [TestCase(6, 3)]
-        [TestCase(12, 9)]
+        [TestCase(3, 4)]
+        [TestCase(4, 12)]
+        [TestCase(5, 13)]
+        [TestCase(6, 16)]
+        [TestCase(13, 9)]
         public void TestMultiplyScalar(int scalarInt, int expectedInt)
         {
             var k = new BigInteger(scalarInt);
             var expected = new BigInteger(expectedInt);
 
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
 
             var x = new BigInteger(3);
             var result = groupAlgebra.MultiplyScalar(x, k);
@@ -39,49 +39,50 @@ namespace CompactCryptoGroupAlgebra.Tests
         public void TestGeneratorIsAsSet(int generatorInt)
         {
             var generator = new BigInteger(generatorInt);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, generator);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, generator);
             Assert.AreEqual(generator, groupAlgebra.Generator);
         }
 
         [Test]
         [TestCase(0)]
         [TestCase(-3)]
-        [TestCase(11)]
+        [TestCase(23)]
         [TestCase(136)]
         public void TestInvalidElementRejectedAsGenerator(int generatorInt)
         {
             var generator = new BigInteger(generatorInt);
             Assert.Throws<ArgumentException>(
-                () => new MultiplicativeGroupAlgebra(11, 10, generator)
+                () => new MultiplicativeGroupAlgebra(23, 11, generator)
             );
         }
 
         [Test]
-        [TestCase(1)]
+        [TestCase(2)]
         [TestCase(5)]
         [TestCase(10)]
         public void TestIsValidAcceptsValidElements(int elementInt)
         {
             var element = new BigInteger(elementInt);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             Assert.IsTrue(groupAlgebra.IsValid(element));
         }
 
         [Test]
         [TestCase(0)]
         [TestCase(-3)]
-        [TestCase(11)]
+        [TestCase(23)]
         [TestCase(136)]
         public void TestIsValidRejectsInvalidElementsOutOfBounds(int elementInt)
         {
             var element = new BigInteger(elementInt);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             Assert.IsFalse(groupAlgebra.IsValid(element));
         }
 
         [Test]
+        [TestCase(1)]
         [TestCase(22)]
-        public void TestIsValidRejectsInvalidElementsNotGenerated(int elementInt)
+        public void TestIsValidRejectsUnsafeElements(int elementInt)
         {
             var element = new BigInteger(elementInt);
             var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 4);
@@ -91,15 +92,15 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestGroupElementBitLength()
         {
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
-            Assert.AreEqual(4, groupAlgebra.ElementBitLength);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
+            Assert.AreEqual(5, groupAlgebra.ElementBitLength);
         }
 
         [Test]
         public void TestOrderBitLength()
         {
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 5, 3);
-            Assert.AreEqual(3, groupAlgebra.OrderBitLength);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 3);
+            Assert.AreEqual(4, groupAlgebra.OrderBitLength);
         }
 
         [Test]
@@ -110,21 +111,21 @@ namespace CompactCryptoGroupAlgebra.Tests
         public void TestNegate(int elementInt)
         {
             var x = new BigInteger(elementInt);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             Assert.AreEqual(groupAlgebra.MultiplyScalar(x, groupAlgebra.Order - 1), groupAlgebra.Negate(x));
         }
 
         [Test]
         public void TestNeutralElement()
         {
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             Assert.AreEqual(BigInteger.One, groupAlgebra.NeutralElement);
         }
 
         [Test]
         public void TestFromBytes()
         {
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             var expected = new BigInteger(7);
             var buffer = expected.ToByteArray();
 
@@ -135,7 +136,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestFromBytesRejectsNullArgument()
         {
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             Assert.Throws<ArgumentNullException>(
                 () => groupAlgebra.FromBytes(null)
             );
@@ -144,7 +145,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestToBytes()
         {
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             var element = new BigInteger(7);
             var expected = element.ToByteArray();
 
@@ -156,44 +157,26 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestProperties()
         {
-            var generatorRaw = new BigInteger(2);
-            var neutralElementRaw = BigInteger.One;
-            var moduloRaw = new BigInteger(11);
-            var orderRaw = new BigInteger(10);
-            var cofactorRaw = new BigInteger(1);
+            var generator = new BigInteger(2);
+            var neutralElement = BigInteger.One;
+            var modulo = new BigInteger(23);
+            var order = new BigInteger(11);
+            var cofactor = new BigInteger(2);
 
-            var groupAlgebra = new MultiplicativeGroupAlgebra(moduloRaw, orderRaw, generatorRaw);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(modulo, order, generator);
 
-            Assert.AreEqual(neutralElementRaw, groupAlgebra.NeutralElement, "verifying neutral element");
-            Assert.AreEqual(generatorRaw, groupAlgebra.Generator, "verifying generator");
-            Assert.AreEqual(orderRaw, groupAlgebra.Order, "verifying order");
-            Assert.AreEqual(moduloRaw, groupAlgebra.Prime, "verifying modulo");
-            Assert.AreEqual(cofactorRaw, groupAlgebra.Cofactor, "verifying cofactor");
-        }
-
-        [Test]
-        public void TestPropertiesSubgroup()
-        {
-            var generatorRaw = new BigInteger(4);
-            var neutralElementRaw = BigInteger.One;
-            var moduloRaw = new BigInteger(23);
-            var orderRaw = new BigInteger(11);
-            var cofactorRaw = new BigInteger(2);
-
-            var groupAlgebra = new MultiplicativeGroupAlgebra(moduloRaw, orderRaw, generatorRaw);
-
-            Assert.AreEqual(neutralElementRaw, groupAlgebra.NeutralElement, "verifying neutral element");
-            Assert.AreEqual(generatorRaw, groupAlgebra.Generator, "verifying generator");
-            Assert.AreEqual(orderRaw, groupAlgebra.Order, "verifying order");
-            Assert.AreEqual(moduloRaw, groupAlgebra.Prime, "verifying modulo");
-            Assert.AreEqual(cofactorRaw, groupAlgebra.Cofactor, "verifying cofactor");
+            Assert.AreEqual(neutralElement, groupAlgebra.NeutralElement, "verifying neutral element");
+            Assert.AreEqual(generator, groupAlgebra.Generator, "verifying generator");
+            Assert.AreEqual(order, groupAlgebra.Order, "verifying order");
+            Assert.AreEqual(modulo, groupAlgebra.Prime, "verifying modulo");
+            Assert.AreEqual(cofactor, groupAlgebra.Cofactor, "verifying cofactor");
         }
 
         [Test]
         public void TestEqualsTrue()
         {
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
-            var otherAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
+            var otherAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
 
             bool result = groupAlgebra.Equals(otherAlgebra);
             Assert.IsTrue(result);
@@ -202,7 +185,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestEqualsFalseForNull()
         {
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             MultiplicativeGroupAlgebra otherAlgebra = null;
 
             bool result = groupAlgebra.Equals(otherAlgebra);
@@ -212,7 +195,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestEqualsFalseForUnrelatedObject()
         {
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             var otherAlgebra = new object { };
 
             bool result = groupAlgebra.Equals(otherAlgebra);
@@ -222,25 +205,33 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestEqualsFalseForOtherAlgebra()
         {
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
 
-            var otherAlgebra = new MultiplicativeGroupAlgebra(13, 10, 2);
+            var otherAlgebra = new MultiplicativeGroupAlgebra(59, 29, 2);
             Assert.IsFalse(groupAlgebra.Equals(otherAlgebra));
 
-            otherAlgebra = new MultiplicativeGroupAlgebra(11, 7, 2);
+            otherAlgebra = new MultiplicativeGroupAlgebra(23, 7, 2);
             Assert.IsFalse(groupAlgebra.Equals(otherAlgebra));
 
-            otherAlgebra = new MultiplicativeGroupAlgebra(11, 10, 4);
+            otherAlgebra = new MultiplicativeGroupAlgebra(23, 11, 4);
             Assert.IsFalse(groupAlgebra.Equals(otherAlgebra));
         }
 
         [Test]
         public void TestGetHashCodeSameForEqual()
         {
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
-            var otherAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
+            var otherAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
 
             Assert.AreEqual(groupAlgebra.GetHashCode(), otherAlgebra.GetHashCode());
+        }
+
+        [Test]
+        public void TestConstructorFailsWhenPNotPrime()
+        {
+            Assert.Throws<ArgumentException>(
+                () => new MultiplicativeGroupAlgebra(6, 3, 2)
+            );
         }
 
     }

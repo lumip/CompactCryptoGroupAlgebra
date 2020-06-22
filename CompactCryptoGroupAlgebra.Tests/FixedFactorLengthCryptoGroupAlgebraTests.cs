@@ -17,11 +17,12 @@ namespace CompactCryptoGroupAlgebra.Tests
         [TestCase(5)]
         public void TestConstructorRejectsInvalidFactorBitLength(int factorBitLength)
         {
-            var order = new BigInteger(8);
+            var generator = 3;
+            var rng = new SeededRandomNumberGenerator();
+            var order = new BigInteger(11);
             int orderBitLength = 4;
 
-            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraStub.Setup(alg => alg.Order).Returns(order);
+            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             Debug.Assert(orderBitLength == baseAlgebraStub.Object.OrderBitLength);
 
             Assert.Throws<ArgumentOutOfRangeException>(
@@ -40,12 +41,13 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestFactorBitLengthCorrect()
         {
-            var order = new BigInteger(8);
+            var generator = 3;
+            var rng = new SeededRandomNumberGenerator();
+            var order = new BigInteger(11);
             int orderBitLength = 4;
             int factorBitLength = 2;
 
-            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraStub.Setup(alg => alg.Order).Returns(order);
+            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             Debug.Assert(baseAlgebraStub.Object.OrderBitLength == orderBitLength);
 
             var fixedAlgebra = new FixedFactorLengthCryptoGroupAlgebra<int>(baseAlgebraStub.Object, factorBitLength);
@@ -55,12 +57,13 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestOrderCallsBaseAlgebra()
         {
+            var generator = 3;
+            var rng = new SeededRandomNumberGenerator();
             var order = new BigInteger(7);
             int orderBitLength = 3;
             int factorBitLength = 2;
 
-            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraStub.Setup(alg => alg.Order).Returns(order);
+            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             Debug.Assert(orderBitLength == baseAlgebraStub.Object.OrderBitLength);
 
             var fixedAlgebra = new FixedFactorLengthCryptoGroupAlgebra<int>(baseAlgebraStub.Object, factorBitLength);
@@ -70,12 +73,13 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestOrderBitLengthCallsBaseAlgebra()
         {
+            var generator = 3;
+            var rng = new SeededRandomNumberGenerator();
             var order = new BigInteger(7);
             int orderBitLength = 3;
             int factorBitLength = 1;
 
-            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraStub.Setup(alg => alg.Order).Returns(order);
+            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             Debug.Assert(orderBitLength == baseAlgebraStub.Object.OrderBitLength);
 
             var fixedAlgebra = new FixedFactorLengthCryptoGroupAlgebra<int>(baseAlgebraStub.Object, factorBitLength);
@@ -85,14 +89,13 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestGeneratorCallsBaseAlgebra()
         {
+            var rng = new SeededRandomNumberGenerator();
             int generator = 23;
-            var order = new BigInteger(24);
+            var order = new BigInteger(23);
             int orderBitLength = 5;
             int factorBitLength = 1;
 
-            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraStub.Setup(alg => alg.Order).Returns(order);
-            baseAlgebraStub.Setup(alg => alg.Generator).Returns(generator);
+            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             Debug.Assert(orderBitLength == baseAlgebraStub.Object.OrderBitLength);
 
             var fixedAlgebra = new FixedFactorLengthCryptoGroupAlgebra<int>(baseAlgebraStub.Object, factorBitLength);
@@ -102,13 +105,14 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestNeutralElementCallsBaseAlgebra()
         {
+            var rng = new SeededRandomNumberGenerator();
+            var generator = 3;
             int neutralElement = 3;
-            var order = new BigInteger(24);
+            var order = new BigInteger(23);
             int orderBitLength = 5;
             int factorBitLength = 1;
 
-            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraStub.Setup(alg => alg.Order).Returns(order);
+            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             baseAlgebraStub.Setup(alg => alg.NeutralElement).Returns(neutralElement);
             Debug.Assert(orderBitLength == baseAlgebraStub.Object.OrderBitLength);
 
@@ -119,13 +123,14 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestElementBitLengthCallsBaseAlgebra()
         {
+            var rng = new SeededRandomNumberGenerator();
+            var generator = 3;
             int elementBitLength = 3;
-            var order = new BigInteger(24);
+            var order = new BigInteger(23);
             int orderBitLength = 5;
             int factorBitLength = 1;
 
-            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraStub.Setup(alg => alg.Order).Returns(order);
+            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             baseAlgebraStub.Setup(alg => alg.ElementBitLength).Returns(elementBitLength);
             Debug.Assert(orderBitLength == baseAlgebraStub.Object.OrderBitLength);
 
@@ -136,12 +141,13 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestCofactorCallsBaseAlgebra()
         {
+            var rng = new SeededRandomNumberGenerator();
+            var generator = 3;
             int factorBitLength = 1;
-            var order = new BigInteger(24);
+            var order = new BigInteger(23);
             var cofactor = new BigInteger(8);
 
-            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraStub.Setup(alg => alg.Order).Returns(order);
+            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             baseAlgebraStub.Setup(alg => alg.Cofactor).Returns(cofactor);
 
             var fixedAlgebra = new FixedFactorLengthCryptoGroupAlgebra<int>(baseAlgebraStub.Object, factorBitLength);
@@ -151,15 +157,16 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestAddCallsBaseAlgebra()
         {
+            var rng = new SeededRandomNumberGenerator();
+            var generator = 3;
             int leftElement = 11;
             int rightElement = 6;
             int expected = 17;
-            var order = new BigInteger(24);
+            var order = new BigInteger(23);
             int orderBitLength = 5;
             int factorBitLength = 1;
 
-            var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraMock.Setup(alg => alg.Order).Returns(order);
+            var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             baseAlgebraMock.Setup(alg => alg.Add(It.IsAny<int>(), It.IsAny<int>())).Returns(expected);
             Debug.Assert(orderBitLength == baseAlgebraMock.Object.OrderBitLength);
 
@@ -176,14 +183,15 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestFromBytesCallsBaseAlgebra()
         {
+            var rng = new SeededRandomNumberGenerator();
+            var generator = 3;
             byte[] buffer = new byte[0];
             int expected = 17;
-            var order = new BigInteger(24);
+            var order = new BigInteger(23);
             int orderBitLength = 5;
             int factorBitLength = 1;
 
-            var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraMock.Setup(alg => alg.Order).Returns(order);
+            var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             baseAlgebraMock.Setup(alg => alg.FromBytes(It.IsAny<byte[]>())).Returns(expected);
             Debug.Assert(orderBitLength == baseAlgebraMock.Object.OrderBitLength);
 
@@ -202,14 +210,15 @@ namespace CompactCryptoGroupAlgebra.Tests
         [TestCase(8)]
         public void TestGenerateElementRejectsIndexWithDeviatingBitLength(int indexBitLength)
         {
-            var order = new BigInteger(1024);
+            var rng = new SeededRandomNumberGenerator();
+            var generator = 3;
+            var order = new BigInteger(1031);
             int orderBitLength = 11;
             int factorBitLength = 7;
             var index = new BigInteger(1 << (indexBitLength - 1));
             Debug.Assert(CryptoGroupAlgebra<int>.GetBitLength(index) == indexBitLength);
 
-            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraStub.Setup(alg => alg.Order).Returns(order);
+            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             Debug.Assert(orderBitLength == baseAlgebraStub.Object.OrderBitLength);
 
             var fixedAlgebra = new FixedFactorLengthCryptoGroupAlgebra<int>(baseAlgebraStub.Object, factorBitLength);
@@ -221,16 +230,15 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestGenerateElementCallsBaseAlgebra()
         {
-            var order = new BigInteger(1024);
+            var rng = new SeededRandomNumberGenerator();
+            var order = new BigInteger(1031);
             int orderBitLength = 11;
             int factorBitLength = 7;
             var index = new BigInteger(1 << (factorBitLength - 1));
             int expected = 236;
             int generator = 4;
 
-            var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraMock.Setup(alg => alg.Order).Returns(order);
-            baseAlgebraMock.Setup(alg => alg.Generator).Returns(generator);
+            var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             baseAlgebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
                 .Setup(alg => alg.MultiplyScalarUnchecked(It.IsAny<int>(), It.IsAny<BigInteger>(), It.IsAny<int>()))
                 .Returns(expected);
@@ -252,23 +260,27 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestIsValidCallsBaseAlgebra()
         {
+            var rng = new SeededRandomNumberGenerator();
+            var generator = 3;
             int element = 9;
-            var order = new BigInteger(24);
+            var order = new BigInteger(23);
             int orderBitLength = 5;
             int factorBitLength = 1;
 
 
-            var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraMock.Setup(alg => alg.Order).Returns(order);
-            baseAlgebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
+            var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
+            baseAlgebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
+                .Setup(alg => alg.IsValidDerived(It.IsAny<int>())).Returns(true);
+            baseAlgebraMock.Setup(alg => alg.Cofactor).Returns(1);
             Debug.Assert(orderBitLength == baseAlgebraMock.Object.OrderBitLength);
 
             var fixedAlgebra = new FixedFactorLengthCryptoGroupAlgebra<int>(baseAlgebraMock.Object, factorBitLength);
             Assert.IsTrue(fixedAlgebra.IsValid(element));
 
-            baseAlgebraMock.Verify(
-                alg => alg.IsValid(It.Is<int>(x => x == element)),
-                Times.Once()
+            baseAlgebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
+                .Verify(
+                    alg => alg.IsValidDerived(It.Is<int>(x => x == element)),
+                    Times.Once()
             );
         }
 
@@ -277,15 +289,16 @@ namespace CompactCryptoGroupAlgebra.Tests
         [TestCase(8)]
         public void TestMultiplyScalarRejectsFactorWithDeviationBitLength(int bitLength)
         {
-            var order = new BigInteger(1024);
+            var rng = new SeededRandomNumberGenerator();
+            var generator = 3;
+            var order = new BigInteger(1031);
             int orderBitLength = 11;
             int factorBitLength = 7;
             int element = 2;
             var k = new BigInteger(1 << (bitLength - 1));
             Debug.Assert(CryptoGroupAlgebra<int>.GetBitLength(k) == bitLength);
 
-            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraStub.Setup(alg => alg.Order).Returns(order);
+            var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             Debug.Assert(orderBitLength == baseAlgebraStub.Object.OrderBitLength);
 
             var fixedAlgebra = new FixedFactorLengthCryptoGroupAlgebra<int>(baseAlgebraStub.Object, factorBitLength);
@@ -297,7 +310,9 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestMultiplyScalarCallsBaseAlgebra()
         {
-            var order = new BigInteger(1024);
+            var rng = new SeededRandomNumberGenerator();
+            var generator = 3;
+            var order = new BigInteger(1031);
             int orderBitLength = 11;
             int element = 2;
             int expected = 124;
@@ -305,8 +320,7 @@ namespace CompactCryptoGroupAlgebra.Tests
             var factor = new BigInteger(1 << (factorBitLength - 1));
             Debug.Assert(CryptoGroupAlgebra<int>.GetBitLength(factor) == factorBitLength);
 
-            var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraMock.Setup(alg => alg.Order).Returns(order);
+            var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             baseAlgebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
                 .Setup(alg => alg.MultiplyScalarUnchecked(It.IsAny<int>(), It.IsAny<BigInteger>(), It.IsAny<int>()))
                 .Returns(expected);
@@ -327,15 +341,16 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestNegateCallsBaseAlgebra()
         {
+            var rng = new SeededRandomNumberGenerator();
+            var generator = 3;
             int element = 9;
             int expected = 35;
-            var order = new BigInteger(24);
+            var order = new BigInteger(23);
             int orderBitLength = 5;
             int factorBitLength = 1;
 
 
-            var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraMock.Setup(alg => alg.Order).Returns(order);
+            var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             baseAlgebraMock.Setup(alg => alg.Negate(It.IsAny<int>())).Returns(expected);
             Debug.Assert(orderBitLength == baseAlgebraMock.Object.OrderBitLength);
 
@@ -353,15 +368,16 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestToBytesCallsBaseAlgebra()
         {
+            var rng = new SeededRandomNumberGenerator();
+            var generator = 3;
             int element = 9;
             var expected = new byte[0];
-            var order = new BigInteger(24);
+            var order = new BigInteger(23);
             int orderBitLength = 5;
             int factorBitLength = 1;
 
 
-            var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            baseAlgebraMock.Setup(alg => alg.Order).Returns(order);
+            var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             baseAlgebraMock.Setup(alg => alg.ToBytes(It.IsAny<int>())).Returns(expected);
             Debug.Assert(orderBitLength == baseAlgebraMock.Object.OrderBitLength);
 

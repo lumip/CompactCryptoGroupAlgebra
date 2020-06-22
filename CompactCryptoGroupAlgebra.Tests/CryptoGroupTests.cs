@@ -104,8 +104,10 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestAddRejectsNullArgumentRight()
         {
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            algebraMock.Setup(algebra => algebra.IsValid(It.IsAny<int>())).Returns(true);
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, 1, new BigInteger(3), new SeededRandomNumberGenerator());
+            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
+                .Setup(algebra => algebra.IsValidDerived(It.IsAny<int>())).Returns(true);
+            algebraMock.Setup(algebra => algebra.Cofactor).Returns(1);
             var groupMock = new CryptoGroupFake(algebraMock.Object);
             var otherElementStub = new CryptoGroupElement<int>(3, algebraMock.Object);
 
@@ -119,8 +121,10 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             byte[] inputBuffer = new byte[0];
 
-            var algebraMock = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            algebraMock.Setup(algebra => algebra.IsValid(It.IsAny<int>())).Returns(true);
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, 1, new BigInteger(3), new SeededRandomNumberGenerator());
+            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
+                .Setup(algebra => algebra.IsValidDerived(It.IsAny<int>())).Returns(true);
+            algebraMock.Setup(algebra => algebra.Cofactor).Returns(1);
 
             var resultStub = new Mock<CryptoGroupElement<int>>(MockBehavior.Strict, 0, algebraMock.Object);
 
@@ -489,34 +493,13 @@ namespace CompactCryptoGroupAlgebra.Tests
         }
 
         [Test]
-        public void TestNeutralElementAccessor()
-        {
-            var expectedRaw = 17;
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            algebraMock.SetupGet(alg => alg.NeutralElement).Returns(expectedRaw);
-            algebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
-
-            var expected = new Mock<CryptoGroupElement<int>>(expectedRaw, algebraMock.Object);
-
-            var groupMock = new Mock<CryptoGroup<int>>(algebraMock.Object);
-            groupMock.Protected().As<CryptoGroupProtectedMembers>()
-                .Setup(group => group.CreateGroupElement(It.IsAny<int>()))
-                .Returns(expected.Object);
-                
-            Assert.AreEqual(expected.Object, groupMock.Object.NeutralElement);
-
-            algebraMock.Verify(alg => alg.NeutralElement, Times.Once());
-            groupMock.Protected().As<CryptoGroupProtectedMembers>()
-                .Verify(group => group.CreateGroupElement(It.Is<int>(x => x == expectedRaw)));
-        }
-
-        [Test]
         public void TestGeneratorAccessor()
         {
             var expectedRaw = 3;
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            algebraMock.Setup(alg => alg.Generator).Returns(expectedRaw);
-            algebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, expectedRaw, new BigInteger(3), new SeededRandomNumberGenerator()) { CallBase = true };
+            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>().
+                Setup(alg => alg.IsValidDerived(It.IsAny<int>())).Returns(true);
+            algebraMock.Setup(alg => alg.Cofactor).Returns(1);
 
             var expected = new Mock<CryptoGroupElement<int>>(expectedRaw, algebraMock.Object);
             var groupMock = new Mock<CryptoGroup<int>>(algebraMock.Object);
@@ -526,7 +509,6 @@ namespace CompactCryptoGroupAlgebra.Tests
 
             Assert.AreEqual(expected.Object, groupMock.Object.Generator);
 
-            algebraMock.Verify(alg => alg.Generator, Times.Once());
             groupMock.Protected().As<CryptoGroupProtectedMembers>()
                 .Verify(group => group.CreateGroupElement(It.Is<int>(x => x == expectedRaw)));
         }

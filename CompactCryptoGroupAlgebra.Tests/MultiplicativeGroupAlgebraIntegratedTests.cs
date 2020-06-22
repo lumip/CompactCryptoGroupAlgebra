@@ -22,7 +22,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         public void TestGenerateIsGeneratorMultiplied(int idInt)
         {
             var id = new BigInteger(idInt);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
 
             Assert.AreEqual(groupAlgebra.MultiplyScalar(groupAlgebra.Generator, id), groupAlgebra.GenerateElement(id));
         }
@@ -31,7 +31,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         public void TestGenerateRejectsNegativeIds()
         {
             var id = new BigInteger(-1);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
 
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => groupAlgebra.GenerateElement(id)
@@ -42,7 +42,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         public void TestMultiplyScalarRejectsNegativeScalars()
         {
             var k = new BigInteger(-1);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             var x = new BigInteger(3);
 
             Assert.Throws<ArgumentOutOfRangeException>(
@@ -60,7 +60,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             int factorBitLength = 3;
             var k = new BigInteger(factorInt);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             var x = new BigInteger(6);
             Assert.AreEqual(groupAlgebra.MultiplyScalar(x, k), groupAlgebra.MultiplyScalar(x, k, factorBitLength));
         }
@@ -70,7 +70,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             int factorBitLength = 3;
             var k = new BigInteger(-1);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             var x = new BigInteger(6);
 
             Assert.Throws<ArgumentOutOfRangeException>(
@@ -86,7 +86,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             int factorBitLength = 3;
             var k = new BigInteger(factorInt);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(11, 10, 2);
+            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             var x = new BigInteger(6);
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => groupAlgebra.MultiplyScalar(x, k, factorBitLength)

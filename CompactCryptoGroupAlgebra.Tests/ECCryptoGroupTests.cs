@@ -50,13 +50,10 @@ namespace CompactCryptoGroupAlgebra.Tests
             var groupAlgebra = new ECGroupAlgebra(ecParams);
             var group = new ECCryptoGroup(groupAlgebra);
 
-            var expectedNeutralElement = new CryptoGroupElement<ECPoint>(ECPoint.PointAtInfinity, groupAlgebra);
             var expectedGenerator = new CryptoGroupElement<ECPoint>(ecParams.Generator, groupAlgebra);
 
-            var resultNeutralElement = group.NeutralElement;
             var resultGenerator = group.Generator;
 
-            Assert.AreEqual(expectedNeutralElement, resultNeutralElement, "verifying neutral element");
             Assert.AreEqual(expectedGenerator, resultGenerator, "verifying generator");
             Assert.AreEqual(ecParams.Order, group.Order, "verifying order");
         }
@@ -70,13 +67,10 @@ namespace CompactCryptoGroupAlgebra.Tests
             var groupAlgebra = new ECGroupAlgebra(ecParams);
             var group = new ECCryptoGroup(ecParams);
 
-            var expectedNeutralElement = new CryptoGroupElement<ECPoint>(ECPoint.PointAtInfinity, groupAlgebra);
             var expectedGenerator = new CryptoGroupElement<ECPoint>(ecParams.Generator, groupAlgebra);
 
-            var resultNeutralElement = group.NeutralElement;
             var resultGenerator = group.Generator;
 
-            Assert.AreEqual(expectedNeutralElement, resultNeutralElement, "verifying neutral element");
             Assert.AreEqual(expectedGenerator, resultGenerator, "verifying generator");
             Assert.AreEqual(ecParams.Order, group.Order, "verifying order");
         }

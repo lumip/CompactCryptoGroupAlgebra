@@ -50,9 +50,6 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <inheritdoc/>
-        public ICryptoGroupElement NeutralElement { get { return CreateGroupElement(Algebra.NeutralElement); } }
-
-        /// <inheritdoc/>
         public ICryptoGroupElement Generator { get { return CreateGroupElement(Algebra.Generator); } }
 
         /// <inheritdoc/>
