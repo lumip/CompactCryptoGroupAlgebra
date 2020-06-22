@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -263,7 +263,7 @@ namespace CompactCryptoGroupAlgebra
         public override byte[] ToBytes(ECPoint element)
         {
             byte[] xBytes = element.X.ToByteArray();
-            byte[] yBytes = element.X.ToByteArray();
+            byte[] yBytes = element.Y.ToByteArray();
 
             Debug.Assert(xBytes.Length <= _ring.ElementByteLength);
             Debug.Assert(yBytes.Length <= _ring.ElementByteLength);
