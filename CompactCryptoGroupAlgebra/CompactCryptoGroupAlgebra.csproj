@@ -10,11 +10,13 @@
     <DocumentationFile>bin/$(Configuration)/CompactCryptoGroupAlgebra.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <OutputPath>bin/$(Configuration)/</OutputPath>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin/$(Configuration)/CompactCryptoGroupAlgebra.xml</DocumentationFile>
     <OutputPath>bin/$(Configuration)/</OutputPath>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
