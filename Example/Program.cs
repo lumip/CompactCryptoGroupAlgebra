@@ -21,7 +21,7 @@ namespace Example
             DoDiffieHelman(group);
         }
 
-        public static void DoDiffieHelman<T>(ICryptoGroup<T> group) where T : notnull
+        public static void DoDiffieHelman<T>(CryptoGroup<T> group) where T : notnull
         {
             // Instantiating a strong random number generator
             RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
