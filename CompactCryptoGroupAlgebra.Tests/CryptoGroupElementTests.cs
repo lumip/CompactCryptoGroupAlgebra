@@ -71,21 +71,6 @@ namespace CompactCryptoGroupAlgebra.Tests
         }
 
         [Test]
-        public void TestAddRejectsOtherCryptoGroupElementSubclasses()
-        {
-            var otherElementStub = new Mock<ICryptoGroupElement<int>>(MockBehavior.Strict);
-
-            var algebraStub = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
-
-            var element = new CryptoGroupElement<int>(0, algebraStub.Object);
-
-            Assert.Throws<ArgumentException>(
-                () => element.Add(otherElementStub.Object)
-            );
-        }
-
-        [Test]
         public void TestAddRejectsElementFromDifferentGroup()
         {
             var otherAlgebraStub = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
@@ -159,20 +144,6 @@ namespace CompactCryptoGroupAlgebra.Tests
 
             Assert.AreEqual(expected, element.Value);
             algebraMock.Verify(alg => alg.Negate(It.Is<int>(x => x == value)), Times.Once());
-        }
-
-        [Test]
-        public void TestEqualsFalseForOtherCryptoGroupElementSubclasses()
-        {
-            var otherElementStub = new Mock<ICryptoGroupElement<int>>(MockBehavior.Strict);
-
-            var algebraStub = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
-            algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
-
-            var element = new CryptoGroupElement<int>(0, algebraStub.Object);
-            bool result = element.Equals(otherElementStub.Object);
-            
-            Assert.IsFalse(result);
         }
 
         [Test]

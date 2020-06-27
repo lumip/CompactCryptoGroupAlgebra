@@ -27,16 +27,16 @@ namespace Example
             RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
 
             // Generating DH secret and public key for Alice
-            (BigInteger dhSecretAlice, ICryptoGroupElement<T> dhPublicAlice) = 
+            (BigInteger dhSecretAlice, CryptoGroupElement<T> dhPublicAlice) = 
                 group.GenerateRandom(randomNumberGenerator);
 
             // Generating DH secret and public key for Bob
-            (BigInteger dhSecretBob, ICryptoGroupElement<T> dhPublicBob) =
+            (BigInteger dhSecretBob, CryptoGroupElement<T> dhPublicBob) =
                 group.GenerateRandom(randomNumberGenerator);
 
             // Computing shared secret for Alice and Bob
-            ICryptoGroupElement<T> sharedSecretBob = group.MultiplyScalar(dhPublicAlice, dhSecretBob);
-            ICryptoGroupElement<T> sharedSecretAlice = group.MultiplyScalar(dhPublicBob, dhSecretAlice);
+            CryptoGroupElement<T> sharedSecretBob = group.MultiplyScalar(dhPublicAlice, dhSecretBob);
+            CryptoGroupElement<T> sharedSecretAlice = group.MultiplyScalar(dhPublicBob, dhSecretAlice);
 
             // Confirm that it's the same
             Debug.Assert(sharedSecretAlice.Equals(sharedSecretBob));

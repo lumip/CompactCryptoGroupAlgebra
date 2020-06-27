@@ -14,16 +14,19 @@ namespace CompactCryptoGroupAlgebra
     /// such as addition with other elements from the same group as well as multiplication with a scalar.
     /// </summary>
     /// <typeparam name="T">The data type used for raw group elements the algebraic operations operate on.</typeparam>
-    /// <inheritdoc/>
-    public class CryptoGroupElement<T> : ICryptoGroupElement<T> where T : notnull // todo: consider making immutable
+    /// <remarks>
+    /// ICryptoGroupElement abstracts from any underlying implementation and allows production code
+    /// to be oblivious to the exact group implementation and the specific data types required to store group elements.
+    /// </remarks>
+    public class CryptoGroupElement<T> where T : notnull // todo: consider making immutable
     {
         /// <summary>
-        /// Subclass accessor to the <see cref="ICryptoGroupAlgebra{T}"/> that provides
+        /// Accessor to the <see cref="ICryptoGroupAlgebra{T}"/> that provides
         /// implementations of the group's underlying operations.
         /// </summary>
         /// <value>The <see cref="ICryptoGroupAlgebra{T}"/> that provides implementations of 
         /// the group's underlying operations.</value>
-        protected ICryptoGroupAlgebra<T> Algebra { get; }
+        public ICryptoGroupAlgebra<T> Algebra { get; }
 
         /// <summary>
         /// Raw value accessor.
@@ -64,22 +67,15 @@ namespace CompactCryptoGroupAlgebra
             Value = value;
         }
 
-        /// <inheritdoc/>
-        public void Add(ICryptoGroupElement<T> element)
-        {
-            CryptoGroupElement<T>? e = element as CryptoGroupElement<T>;
-            if (e == null)
-                throw new ArgumentException("The provided value is not a valid element of the group.", nameof(Value));
-
-            Add(e);
-        }
-
         /// <summary>
-        /// <see cref="ICryptoGroupElement{T}.Add(ICryptoGroupElement{T})"/>
+        /// Performs a group addition with another element of the associated group.
+        /// 
+        /// This is an in-place operation, i.e., this istance is modified.
+        /// 
+        /// This is only a valid operation if passed in element is of the same
+        /// group.
         /// </summary>
-        /// <remarks>
-        /// Overloaded variant for <see cref="CryptoGroupElement{T}"/>
-        /// </remarks>
+        /// <param name="element">The group element to add to the one represented by this instance.</param>
         public void Add(CryptoGroupElement<T> element)
         {
             if (Algebra != element.Algebra)
@@ -87,19 +83,29 @@ namespace CompactCryptoGroupAlgebra
             Value = Algebra.Add(Value, element.Value);
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Performs multiplication with a scalar within the associated group.
+        /// 
+        /// This is an in-place operation, i.e., this instance is modified.
+        /// </summary>
+        /// <param name="k">The scalar by which to multiply the element represented by this instance.</param>
         public void MultiplyScalar(BigInteger k)
         {
             Value = Algebra.MultiplyScalar(Value, k);
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Performs negation in the associated group.
+        /// </summary>
         public void Negate()
         {
             Value = Algebra.Negate(Value);
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Converts this group element into a unique byte representation.
+        /// </summary>
+        /// <returns>Byte representation of the element represented by this instance.</returns>
         public byte[] ToBytes()
         {
             return Algebra.ToBytes(Value);
@@ -109,38 +115,21 @@ namespace CompactCryptoGroupAlgebra
         /// Creates a clone of this <see cref="CryptoGroup{T}"/> instance.
         /// </summary>
         /// <returns>A new copy of the current <see cref="CryptoGroup{T}"/>.</returns>
-        /// <remarks>Used extensively in the operator overload implementations.</remarks>
-        protected CryptoGroupElement<T> CloneInternal()
+        public CryptoGroupElement<T> Clone()
         {
             return new CryptoGroupElement<T>(Value, Algebra);
         }
 
-        /// <inheritdoc/>
-        public ICryptoGroupElement<T> Clone()
-        {
-            return CloneInternal();
-        }
 
         /// <summary>
-        /// Determines whether the specified <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/> is equal to
-        /// the current <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/>.
+        /// Determines whether the specified <see cref="CryptoGroupElement{T}"/> is equal to
+        /// the current <see cref="CryptoGroupElement{T}"/>.
         /// </summary>
         /// <param name="other">The <see cref="CryptoGroupElement{T}"/> to compare with the current <see cref="CryptoGroupElement{T}"/>.</param>
         /// <returns><c>true</c> no equality; otherwise, <c>false</c>.</returns>
         public bool Equals(CryptoGroupElement<T>? other)
         {
             return other != null && Algebra.Equals(other.Algebra) && Value.Equals(other.Value);
-        }
-
-        /// <summary>
-        /// Determines whether the specified <see cref="ICryptoGroupElement{T}"/> is equal to the
-        /// the current <see cref="CryptoGroupElement{T}"/>.
-        /// </summary>
-        /// <param name="other">The <see cref="ICryptoGroupElement{T}"/> to compare with the current <see cref="CryptoGroupElement{T}"/>.</param>
-        /// <returns><c>true</c> no equality; otherwise, <c>false</c>.</returns>
-        public bool Equals(ICryptoGroupElement<T> other)
-        {
-            return Equals(other as CryptoGroupElement<T>);
         }
 
         /// <summary>
@@ -164,68 +153,68 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <summary>
-        /// Adds a <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/> to a
-        /// <see cref="CompactCryptoGroupAlgebra.ICryptoGroupElement{T}"/>, yielding a new <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/>.
+        /// Adds a <see cref="CryptoGroupElement{T}"/> to a
+        /// <see cref="ICryptoGroupElement{T}"/>, yielding a new <see cref="CryptoGroupElement{T}"/>.
         /// </summary>
-        /// <param name="left">The first <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/> to add.</param>
-        /// <param name="right">The second <see cref="CompactCryptoGroupAlgebra.ICryptoGroupElement{T}"/> to add.</param>
-        /// <returns>The <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/> that is the group addition result of the values of
+        /// <param name="left">The first <see cref="CryptoGroupElement{T}"/> to add.</param>
+        /// <param name="right">The second <see cref="CryptoGroupElement{T}"/> to add.</param>
+        /// <returns>The <see cref="CryptoGroupElement{T}"/> that is the group addition result of the values of
         /// <c>left</c> and <c>right</c>.</returns>
-        public static CryptoGroupElement<T> operator +(CryptoGroupElement<T> left, ICryptoGroupElement<T> right)
+        public static CryptoGroupElement<T> operator +(CryptoGroupElement<T> left, CryptoGroupElement<T> right)
         {
-            var result = left.CloneInternal();
+            var result = left.Clone();
             result.Add(right);
             return result;
         }
 
         /// <summary>
-        /// Negates a <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/>, yielding a new <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/> instance.
+        /// Negates a <see cref="CryptoGroupElement{T}"/>, yielding a new <see cref="CryptoGroupElement{T}"/> instance.
         /// </summary>
-        /// <param name="e">The <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/> to negate.</param>
-        /// <returns>The group negation of <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/>.</returns>
+        /// <param name="e">The <see cref="CryptoGroupElement{T}"/> to negate.</param>
+        /// <returns>The group negation of <see cref="CryptoGroupElement{T}"/>.</returns>
         public static CryptoGroupElement<T> operator -(CryptoGroupElement<T> e)
         {
-            var result = e.CloneInternal();
+            var result = e.Clone();
             result.Negate();
             return result;
         }
 
         /// <summary>
-        /// Subtracts a <see cref="CompactCryptoGroupAlgebra.ICryptoGroupElement{T}"/> from a
-        /// <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/>, yielding a new <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/>.
+        /// Subtracts a <see cref="CryptoGroupElement{T}"/> from a
+        /// <see cref="CryptoGroupElement{T}"/>, yielding a new <see cref="CryptoGroupElement{T}"/>.
         /// </summary>
-        /// <param name="left">The <see cref="CompactCryptoGroupAlgebra.ICryptoGroupElement{T}"/> to subtract from (the minuend).</param>
-        /// <param name="right">The <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/> to subtract (the subtrahend).</param>
-        /// <returns>The <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/> that is results from the subtraction.</returns>
-        public static CryptoGroupElement<T> operator -(ICryptoGroupElement<T> left, CryptoGroupElement<T> right)
+        /// <param name="left">The <see cref="ICryptoGroupElement{T}"/> to subtract from (the minuend).</param>
+        /// <param name="right">The <see cref="CryptoGroupElement{T}"/> to subtract (the subtrahend).</param>
+        /// <returns>The <see cref="CryptoGroupElement{T}"/> that is results from the subtraction.</returns>
+        public static CryptoGroupElement<T> operator -(CryptoGroupElement<T> left, CryptoGroupElement<T> right)
         {
-            var result = right.CloneInternal();
+            var result = right.Clone();
             result.Negate();
             result.Add(left);
             return result;
         }
 
         /// <summary>
-        /// Computes the multiplication of a <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/>
-        /// and a scalar <see cref="System.Numerics.BigInteger"/>, yielding a new <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/>.
+        /// Computes the multiplication of a <see cref="CryptoGroupElement{T}"/>
+        /// and a scalar <see cref="System.Numerics.BigInteger"/>, yielding a new <see cref="CryptoGroupElement{T}"/>.
         /// </summary>
-        /// <param name="e">The <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/> to multiply.</param>
+        /// <param name="e">The <see cref="CryptoGroupElement{T}"/> to multiply.</param>
         /// <param name="k">The <see cref="System.Numerics.BigInteger"/> to multiply.</param>
-        /// <returns>The <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/> that is the product of <c>e</c> * <c>k</c>.</returns>
+        /// <returns>The <see cref="CryptoGroupElement{T}"/> that is the product of <c>e</c> * <c>k</c>.</returns>
         public static CryptoGroupElement<T> operator *(CryptoGroupElement<T> e, BigInteger k)
         {
-            var result = e.CloneInternal();
+            var result = e.Clone();
             result.MultiplyScalar(k);
             return result;
         }
 
         /// <summary>
-        /// Computes the multiplication of a <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/>
-        /// and a scalar <see cref="System.Numerics.BigInteger"/>, yielding a new <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/>.
+        /// Computes the multiplication of a <see cref="CryptoGroupElement{T}"/>
+        /// and a scalar <see cref="BigInteger"/>, yielding a new <see cref="CryptoGroupElement{T}"/>.
         /// </summary>
-        /// <param name="k">The <see cref="System.Numerics.BigInteger"/> to multiply.</param>
-        /// <param name="e">The <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/> to multiply.</param>
-        /// <returns>The <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{T}"/> that is the product of <c>e</c> * <c>k</c>.</returns>
+        /// <param name="k">The <see cref="BigInteger"/> to multiply.</param>
+        /// <param name="e">The <see cref="CryptoGroupElement{T}"/> to multiply.</param>
+        /// <returns>The <see cref="CryptoGroupElement{T}"/> that is the product of <c>e</c> * <c>k</c>.</returns>
         public static CryptoGroupElement<T> operator *(BigInteger k, CryptoGroupElement<T> e)
         {
             return e * k;

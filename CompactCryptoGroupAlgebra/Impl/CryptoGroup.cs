@@ -21,6 +21,7 @@ namespace CompactCryptoGroupAlgebra
     /// The interface is intended to facilitate group operations as required
     /// e.g. in a Diffie-Helman key exchange and related protocols.
     /// </summary>
+    /// <typeparam name="T">The data type used for raw group elements the algebraic operations operate on.</typeparam>
     /// <remarks>
     /// Implementers of <see cref="CryptoGroup{T}"/> should provide an implementation of
     /// <see cref="ICryptoGroupAlgebra{T}"/> (preferrably by extending <see cref="CryptoGroupAlgebra{T}"/>)
@@ -57,7 +58,7 @@ namespace CompactCryptoGroupAlgebra
         /// 
         /// The generator is a group element that allows to generate the entire group by scalar multiplication.
         /// </summary>
-        public ICryptoGroupElement<T> Generator { get { return CreateGroupElement(Algebra.Generator); } }
+        public CryptoGroupElement<T> Generator { get { return CreateGroupElement(Algebra.Generator); } }
 
         /// <summary>
         /// The bit length of the group's order.
@@ -100,7 +101,7 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="value">Value of the group element as raw type.</param>
         /// <returns>An <see cref="CryptoGroupElement{T}"/>instance representing the given value.</returns>
         /// <remarks>
-        /// Used to convert outputs of <see cref="ICryptoGroupAlgebra{T}"/> operations to <see cref="ICryptoGroupElement{T}"/>
+        /// Used to convert outputs of <see cref="ICryptoGroupAlgebra{T}"/> operations to <see cref="CryptoGroupElement{T}"/>
         /// instances by methods within this class.
         /// 
         /// Needs to be implemented by specializations.
@@ -126,8 +127,12 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="left">Group element to add.</param>
         /// <param name="right">Group element to add.</param>
         /// <returns>The result of the group addition.</returns>
-        public ICryptoGroupElement<T> Add(CryptoGroupElement<T> left, CryptoGroupElement<T> right)
+        public CryptoGroupElement<T> Add(CryptoGroupElement<T> left, CryptoGroupElement<T> right)
         {
+            if (!left.Algebra.Equals(Algebra))
+                throw new ArgumentException("The arugment is not an element of the group.", nameof(left));
+            if (!right.Algebra.Equals(Algebra))
+                throw new ArgumentException("The argument is not an element of the group.", nameof(right));
             return CreateGroupElement(Algebra.Add(left.Value, right.Value));
         }
 
@@ -135,8 +140,8 @@ namespace CompactCryptoGroupAlgebra
         /// Restores a group element from a byte representation.
         /// </summary>
         /// <param name="buffer">Byte array holding a representation of a group element.</param>
-        /// <returns>The group element as an instance of ICryptoGroupElement.</returns>
-        public ICryptoGroupElement<T> FromBytes(byte[] buffer)
+        /// <returns>The group element as an instance of CryptoGroupElement.</returns>
+        public CryptoGroupElement<T> FromBytes(byte[] buffer)
         {
             return CreateGroupElement(buffer);
         }
@@ -153,7 +158,7 @@ namespace CompactCryptoGroupAlgebra
         ///  that uniquely identifies the element to generate.
         /// </param>
         /// <returns>The group element uniquely identified by the index.</returns>
-        public ICryptoGroupElement<T> Generate(BigInteger index)
+        public CryptoGroupElement<T> Generate(BigInteger index)
         {
             return CreateGroupElement(Algebra.GenerateElement(index));
         }
@@ -167,8 +172,10 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="element">A group element.</param>
         /// <param name="k">A scalar.</param>
         /// <returns>The result of the multiplication.</returns>
-        public ICryptoGroupElement<T> MultiplyScalar(CryptoGroupElement<T> element, BigInteger k)
+        public CryptoGroupElement<T> MultiplyScalar(CryptoGroupElement<T> element, BigInteger k)
         {
+            if (!element.Algebra.Equals(Algebra))
+                throw new ArgumentException("The arugment is not an element of the group.", nameof(element));
             return CreateGroupElement(Algebra.MultiplyScalar(element.Value, k));
         }
 
@@ -179,64 +186,11 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="element">The group element to negate.</param>
         /// <returns>The negation of the given element in the group.</returns>
-        public ICryptoGroupElement<T> Negate(CryptoGroupElement<T> element)
+        public CryptoGroupElement<T> Negate(CryptoGroupElement<T> element)
         {
+            if (!element.Algebra.Equals(Algebra))
+                throw new ArgumentException("The arugment is not an element of the group.", nameof(element));
             return CreateGroupElement(Algebra.Negate(element.Value));
-        }
-
-        /// <summary>
-        /// Adds two group elements according to the addition semantics
-        /// defined for this group.
-        /// 
-        /// The operation is commutative, (i.e., symmetric in its arguments).
-        /// </summary>
-        /// <param name="left">Group element to add.</param>
-        /// <param name="right">Group element to add.</param>
-        /// <returns>The result of the group addition.</returns>
-        public ICryptoGroupElement<T> Add(ICryptoGroupElement<T> left, ICryptoGroupElement<T> right)
-        {
-            CryptoGroupElement<T>? lhs = left as CryptoGroupElement<T>;
-            CryptoGroupElement<T>? rhs = right as CryptoGroupElement<T>;
-            if (lhs == null)
-                throw new ArgumentException("The left summand is not an element of the group.", nameof(left));
-            if (rhs == null)
-                throw new ArgumentException("The right summand is not an element of the group.", nameof(left));
-
-            return Add(lhs, rhs);
-        }
-
-        /// <summary>
-        /// Multiplies a group element with a scalar factor.
-        /// 
-        /// Scalar multiplication is understood as adding the group element to itself
-        /// as many times as dictated by the scalar factor.
-        /// </summary>
-        /// <param name="element">A group element.</param>
-        /// <param name="k">A scalar.</param>
-        /// <returns>The result of the multiplication.</returns>
-        public ICryptoGroupElement<T> MultiplyScalar(ICryptoGroupElement<T> element, BigInteger k)
-        {
-            CryptoGroupElement<T>? e = element as CryptoGroupElement<T>;
-            if (e == null)
-                throw new ArgumentException("The provided value is not an element of the group.", nameof(element));
-
-            return MultiplyScalar(e, k);
-        }
-
-        /// <summary>
-        /// Negates a group element.
-        /// 
-        /// The returned element added to the given element will thus result in the neutral element of the group.
-        /// </summary>
-        /// <param name="element">The group element to negate.</param>
-        /// <returns>The negation of the given element in the group.</returns>
-        public ICryptoGroupElement<T> Negate(ICryptoGroupElement<T> element)
-        {
-            CryptoGroupElement<T>? e = element as CryptoGroupElement<T>;
-            if (e == null)
-                throw new ArgumentException("The provided value is not an element of the group.", nameof(element));
-
-            return Negate(e);
         }
 
         /// <summary>
@@ -252,10 +206,10 @@ namespace CompactCryptoGroupAlgebra
         /// which the index will be drawn.
         /// </param>
         /// <returns>A tuple of the random index and the corresponding group element.</returns>
-        public (BigInteger, ICryptoGroupElement<T>) GenerateRandom(RandomNumberGenerator rng)
+        public (BigInteger, CryptoGroupElement<T>) GenerateRandom(RandomNumberGenerator rng)
         {
             BigInteger index = rng.RandomBetween(1, Order - 1);
-            ICryptoGroupElement<T> element = Generate(index);
+            CryptoGroupElement<T> element = Generate(index);
             return (index, element);
         }
     }
