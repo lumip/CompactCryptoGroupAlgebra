@@ -5,50 +5,50 @@ using System.Security.Cryptography;
 namespace CompactCryptoGroupAlgebra
 {
     /// <summary>
-    /// Base implementation of <see cref="ICryptoGroup"/>.
+    /// Base implementation of <see cref="ICryptoGroup{T}"/>.
     /// 
-    /// Relies on <see cref="ICryptoGroupAlgebra{E}"/> to provide basic algebraic group
+    /// Relies on <see cref="ICryptoGroupAlgebra{T}"/> to provide basic algebraic group
     /// opertions on group elements represented the template type. The implementation of
     /// CryptoGroup mainly provides abstraction from this specifics for production code,
-    /// wrapping the template type into <see cref="CryptoGroupElement{E}"/>
+    /// wrapping the template type into <see cref="CryptoGroupElement{T}"/>
     /// instances, thus allowing production code to interface only with the
-    /// <see cref="ICryptoGroup"/> and <see cref="ICryptoGroupElement"/> interfaces,
+    /// <see cref="ICryptoGroup{T}"/> and <see cref="ICryptoGroupElement{T}"/> interfaces,
     /// irrespective of the specific group implementation.
     /// </summary>
-    /// <typeparam name="E">The data type used for raw group elements the algebraic operations operate on.</typeparam>
+    /// <typeparam name="T">The data type used for raw group elements the algebraic operations operate on.</typeparam>
     /// <remarks>
-    /// Implementers of <see cref="ICryptoGroup"/> should provide an implementation of
-    /// <see cref="ICryptoGroupAlgebra{E}"/> (preferrably by extending <see cref="CryptoGroupAlgebra{E}"/>)
-    /// to realize basic algebraic operations and an extension of <see cref="CryptoGroupElement{E}"/> 
-    /// which can then be employed in a specialization of <see cref="CryptoGroup{E}"/>.
+    /// Implementers of <see cref="ICryptoGroup{T}"/> should provide an implementation of
+    /// <see cref="ICryptoGroupAlgebra{T}"/> (preferrably by extending <see cref="CryptoGroupAlgebra{T}"/>)
+    /// to realize basic algebraic operations and an extension of <see cref="CryptoGroupElement{T}"/> 
+    /// which can then be employed in a specialization of <see cref="CryptoGroup{T}"/>.
     /// 
     /// All these classes are designed to have a minimum of fully virtual/abstract methods in need of implementation
     /// to provide full algebraic group functionality.
     /// </remarks>
-    public abstract class CryptoGroup<E> : ICryptoGroup where E : struct
+    public abstract class CryptoGroup<T> : ICryptoGroup<T> where T: notnull
     {
         /// <summary>
-        /// Subclass accessor for the <see cref="ICryptoGroupAlgebra{E}"/> that provides
+        /// Subclass accessor for the <see cref="ICryptoGroupAlgebra{T}"/> that provides
         /// implementations of underlying group operatiosn on raw group element type
-        /// <typeparamref name="E"/>.
+        /// <typeparamref name="T"/>.
         /// </summary>
-        /// <value>The <see cref="ICryptoGroupAlgebra{E}"/> that provides
+        /// <value>The <see cref="ICryptoGroupAlgebra{T}"/> that provides
         /// implementations of underlying group operatiosn on raw group element type
-        /// <typeparamref name="E"/>.</value>
-        protected ICryptoGroupAlgebra<E> Algebra { get; }
+        /// <typeparamref name="T"/>.</value>
+        protected ICryptoGroupAlgebra<T> Algebra { get; }
 
         /// <summary>
-        /// Initializes a <see cref="CryptoGroup{E}"/> instance using a given <see cref="ICryptoGroupAlgebra{E}"/> instance
+        /// Initializes a <see cref="CryptoGroup{T}"/> instance using a given <see cref="ICryptoGroupAlgebra{T}"/> instance
         /// for algebraic operations.
         /// </summary>
-        /// <param name="algebra">Group algebra implementation on raw data type <typeparamref name="E"/></param>
-        protected CryptoGroup(ICryptoGroupAlgebra<E> algebra)
+        /// <param name="algebra">Group algebra implementation on raw data type <typeparamref name="T"/></param>
+        protected CryptoGroup(ICryptoGroupAlgebra<T> algebra)
         {
             Algebra = algebra;
         }
 
         /// <inheritdoc/>
-        public ICryptoGroupElement Generator { get { return CreateGroupElement(Algebra.Generator); } }
+        public ICryptoGroupElement<T> Generator { get { return CreateGroupElement(Algebra.Generator); } }
 
         /// <inheritdoc/>
         public int OrderBitLength { get { return Algebra.OrderBitLength; } }
@@ -60,71 +60,71 @@ namespace CompactCryptoGroupAlgebra
         public BigInteger Order { get { return Algebra.Order; } }
 
         /// <summary>
-        /// <see cref="ICryptoGroup.ElementBitLength"/>
+        /// <see cref="ICryptoGroup{T}.ElementBitLength"/>
         /// </summary>
         public int ElementBitLength { get { return Algebra.ElementBitLength; } }
 
         /// <inheritdoc/>
-        public int ElementByteLength { get { return (int)Math.Ceiling((double)ElementBitLength / 8); } }
+        public int ElementByteLength { get { return (int)Math.Ceiling((double)ElementBitLength / 8); } } // todo: use NumberLength
 
         /// <summary>
-        /// Creates a new <see cref="ICryptoGroupElement"/> instance for a given raw group element of type <typeparamref name="E"/>.
+        /// Creates a new <see cref="CryptoGroupElement{T}"/> instance for a given raw group element of type <typeparamref name="T"/>.
         /// </summary>
         /// <param name="value">Value of the group element as raw type.</param>
-        /// <returns>An <see cref="ICryptoGroupElement"/>instance representing the given value.</returns>
+        /// <returns>An <see cref="CryptoGroupElement{T}"/>instance representing the given value.</returns>
         /// <remarks>
-        /// Used to convert outputs of <see cref="ICryptoGroupAlgebra{E}"/> operations to <see cref="ICryptoGroupElement"/>
+        /// Used to convert outputs of <see cref="ICryptoGroupAlgebra{T}"/> operations to <see cref="ICryptoGroupElement{T}"/>
         /// instances by methods within this class.
         /// 
         /// Needs to be implemented by specializations.
         /// </remarks>
-        protected abstract CryptoGroupElement<E> CreateGroupElement(E value);
+        protected abstract CryptoGroupElement<T> CreateGroupElement(T value);
 
         /// <summary>
-        /// Creates a new <see cref="ICryptoGroupElement"/> instance from a byte representation of the group element.
+        /// Creates a new <see cref="CryptoGroupElement{T}"/> instance from a byte representation of the group element.
         /// </summary>
         /// <param name="buffer">Byte representation of the group elements.</param>
-        /// <returns>An <see cref="ICryptoGroupElement"/>instance representing the given value.</returns>
+        /// <returns>An <see cref="CryptoGroupElement{T}"/>instance representing the given value.</returns>
         /// <remarks>
         /// Needs to be implemented by specializations.
         /// </remarks>
-        protected abstract CryptoGroupElement<E> CreateGroupElement(byte[] buffer);
+        protected abstract CryptoGroupElement<T> CreateGroupElement(byte[] buffer);
 
         /// <inheritdoc/>
-        public ICryptoGroupElement Add(CryptoGroupElement<E> left, CryptoGroupElement<E> right)
+        public ICryptoGroupElement<T> Add(CryptoGroupElement<T> left, CryptoGroupElement<T> right)
         {
             return CreateGroupElement(Algebra.Add(left.Value, right.Value));
         }
 
         /// <inheritdoc/>
-        public ICryptoGroupElement FromBytes(byte[] buffer)
+        public ICryptoGroupElement<T> FromBytes(byte[] buffer)
         {
             return CreateGroupElement(buffer);
         }
 
         /// <inheritdoc/>
-        public ICryptoGroupElement Generate(BigInteger index)
+        public ICryptoGroupElement<T> Generate(BigInteger index)
         {
             return CreateGroupElement(Algebra.GenerateElement(index));
         }
 
         /// <inheritdoc/>
-        public ICryptoGroupElement MultiplyScalar(CryptoGroupElement<E> element, BigInteger k)
+        public ICryptoGroupElement<T> MultiplyScalar(CryptoGroupElement<T> element, BigInteger k)
         {
             return CreateGroupElement(Algebra.MultiplyScalar(element.Value, k));
         }
 
         /// <inheritdoc/>
-        public ICryptoGroupElement Negate(CryptoGroupElement<E> element)
+        public ICryptoGroupElement<T> Negate(CryptoGroupElement<T> element)
         {
             return CreateGroupElement(Algebra.Negate(element.Value));
         }
 
         /// <inheritdoc/>
-        public ICryptoGroupElement Add(ICryptoGroupElement left, ICryptoGroupElement right)
+        public ICryptoGroupElement<T> Add(ICryptoGroupElement<T> left, ICryptoGroupElement<T> right)
         {
-            CryptoGroupElement<E>? lhs = left as CryptoGroupElement<E>;
-            CryptoGroupElement<E>? rhs = right as CryptoGroupElement<E>;
+            CryptoGroupElement<T>? lhs = left as CryptoGroupElement<T>;
+            CryptoGroupElement<T>? rhs = right as CryptoGroupElement<T>;
             if (lhs == null)
                 throw new ArgumentException("The left summand is not an element of the group.", nameof(left));
             if (rhs == null)
@@ -134,9 +134,9 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <inheritdoc/>
-        public ICryptoGroupElement MultiplyScalar(ICryptoGroupElement element, BigInteger k)
+        public ICryptoGroupElement<T> MultiplyScalar(ICryptoGroupElement<T> element, BigInteger k)
         {
-            CryptoGroupElement<E>? e = element as CryptoGroupElement<E>;
+            CryptoGroupElement<T>? e = element as CryptoGroupElement<T>;
             if (e == null)
                 throw new ArgumentException("The provided value is not an element of the group.", nameof(element));
 
@@ -144,9 +144,9 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <inheritdoc/>
-        public ICryptoGroupElement Negate(ICryptoGroupElement element)
+        public ICryptoGroupElement<T> Negate(ICryptoGroupElement<T> element)
         {
-            CryptoGroupElement<E>? e = element as CryptoGroupElement<E>;
+            CryptoGroupElement<T>? e = element as CryptoGroupElement<T>;
             if (e == null)
                 throw new ArgumentException("The provided value is not an element of the group.", nameof(element));
 
@@ -154,11 +154,11 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <inheritdoc/>
-        public Tuple<BigInteger, ICryptoGroupElement> GenerateRandom(RandomNumberGenerator rng)
+        public (BigInteger, ICryptoGroupElement<T>) GenerateRandom(RandomNumberGenerator rng)
         {
             BigInteger index = rng.RandomBetween(1, Order - 1);
-            ICryptoGroupElement element = Generate(index);
-            return new Tuple<BigInteger, ICryptoGroupElement>(index, element);
+            ICryptoGroupElement<T> element = Generate(index);
+            return (index, element);
         }
     }
 }

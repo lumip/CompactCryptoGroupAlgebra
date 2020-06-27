@@ -11,10 +11,10 @@ namespace CompactCryptoGroupAlgebra
     ///
     /// The exact parameters of the curve (A, B, P) are encoded in a <see cref="ECParameters"/> object.
     /// </summary>
-    public class ECGroupAlgebra : CryptoGroupAlgebra<ECPoint>
+    public sealed class ECGroupAlgebra : CryptoGroupAlgebra<ECPoint>
     {
         private readonly ECParameters _parameters;
-        private BigIntegerRing _ring;
+        private readonly BigIntegerRing _ring;
 
         /// <summary>
         /// The neutral element of the group i.e., the point at infinity of the elliptic curve.
@@ -133,42 +133,9 @@ namespace CompactCryptoGroupAlgebra
         /// <returns>The negation of the given curve point.</returns>
         public override ECPoint Negate(ECPoint p)
         {
-            return new ECPoint(p.X, _ring.Mod(-p.Y), p.IsAtInfinity);
-        }
-
-        /// <summary>
-        /// Selects one of two given BigInteger scalars.
-        /// 
-        /// This allows side-channel resistant selection by avoiding branching.
-        /// The selection is made based on the value of the parameter
-        /// <paramref name="selection"/>. A value of <c>BigInteger.Zero</c> selects the BigInteger
-        /// given as <paramref name="first"/>, a value of <c>BigInteger.One</c> selects <paramref name="second"/>.
-        /// </summary>
-        /// <returns>The selected BigInteger.</returns>
-        /// <param name="selection">Selection indicator.</param>
-        /// <param name="first">First selection option.</param>
-        /// <param name="second">Second selection option.</param>
-        protected BigInteger Multiplex(BigInteger selection, BigInteger first, BigInteger second)
-        {
-            Debug.Assert(selection == BigInteger.Zero || selection == BigInteger.One);
-            return first + selection * (second - first);
-        }
-
-        /// <summary>
-        /// Selects one of two given booleans.
-        /// 
-        /// This allows side-channel resistant selection by avoiding branching.
-        /// The selection is made based on the value of the parameter
-        /// <paramref name="selection"/>. A value of <c>false</c> selects the boolean
-        /// given as <paramref name="first"/>, a value of <c>true</c> selects <paramref name="second"/>.
-        /// </summary>
-        /// <returns>The selected boolean.</returns>
-        /// <param name="selection">Selection indicator.</param>
-        /// <param name="first">First selection option.</param>
-        /// <param name="second">First selection option.</param>
-        private bool Multiplex(bool selection, bool first, bool second)
-        {
-            return first ^ (selection & (second ^ first));
+            if (p.Equals(ECPoint.PointAtInfinity))
+                return p;
+            return new ECPoint(p.X, _ring.Mod(-p.Y));
         }
 
         /// <summary>
@@ -179,19 +146,13 @@ namespace CompactCryptoGroupAlgebra
         /// <paramref name="selection"/>. A value of <c>BigInteger.Zero</c>selects the curve point
         /// given as <paramref name="first"/>, a value of <c>BigInteger.One</c> selects <paramref name="second"/>.
         /// </summary>
-        /// <returns>The selected boolean.</returns>
+        /// <returns>The selected curve point.</returns>
         /// <param name="selection">Selection indicator.</param>
         /// <param name="first">First selection option.</param>
         /// <param name="second">First selection option.</param>
         protected override ECPoint Multiplex(BigInteger selection, ECPoint first, ECPoint second)
         {
-            Debug.Assert(selection.IsOne || selection.IsZero);
-            var sel = !selection.IsZero;
-            return new ECPoint(
-                Multiplex(selection, first.X, second.X),
-                Multiplex(selection, first.Y, second.Y),
-                Multiplex(sel, first.IsAtInfinity, second.IsAtInfinity)
-            );
+            return ECPoint.Multiplex(selection, first, second);
         }
 
         /// <inheritdocs/>
@@ -252,7 +213,7 @@ namespace CompactCryptoGroupAlgebra
         public override bool Equals(CryptoGroupAlgebra<ECPoint>? other)
         {
             var algebra = other as ECGroupAlgebra;
-            return algebra != null && EqualityComparer<ECParameters>.Default.Equals(_parameters, algebra._parameters);
+            return algebra != null! && EqualityComparer<ECParameters>.Default.Equals(_parameters, algebra._parameters);
         }
 
         /// <inheritdoc/>

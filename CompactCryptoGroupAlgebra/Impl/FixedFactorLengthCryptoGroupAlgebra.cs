@@ -6,7 +6,7 @@ namespace CompactCryptoGroupAlgebra
     // todo: problem: CryptoGroup.GenerateRandom does not work with FixedFactorLengthCryptoGroupAlgebra 
 
     /// <summary>
-    /// An <see cref="ICryptoGroupAlgebra{E}"/> variants that only allows
+    /// An <see cref="ICryptoGroupAlgebra{T}"/> variants that only allows
     /// multiplication with scalar factors - and thus generation with indices -
     /// of a predefined bitlength.
     /// 
@@ -19,9 +19,9 @@ namespace CompactCryptoGroupAlgebra
         private CryptoGroupAlgebra<E> _baseAlgebra;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="FixedFactorLengthCryptoGroupAlgebra{E}"/>.
+        /// Initializes a new instance of <see cref="FixedFactorLengthCryptoGroupAlgebra{T}"/>.
         /// </summary>
-        /// <param name="baseAlgebra">The <see cref="CryptoGroupAlgebra{E}"/> instance to decorate to fixed-length factors.</param>
+        /// <param name="baseAlgebra">The <see cref="CryptoGroupAlgebra{T}"/> instance to decorate to fixed-length factors.</param>
         /// <param name="fixedFactorBitLength">Permissible bit length of scalar factors.</param>
         public FixedFactorLengthCryptoGroupAlgebra(CryptoGroupAlgebra<E> baseAlgebra, int fixedFactorBitLength)
         {

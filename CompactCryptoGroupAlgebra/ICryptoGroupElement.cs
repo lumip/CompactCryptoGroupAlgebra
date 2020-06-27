@@ -8,7 +8,7 @@ namespace CompactCryptoGroupAlgebra
     /// <summary>
     /// An element of a (cryptographic) algebraic group.
     /// 
-    /// Every <see cref="ICryptoGroupElement"/> instance is associated with a <see cref="ICryptoGroup"/>
+    /// Every <see cref="ICryptoGroupElement{T}"/> instance is associated with a <see cref="ICryptoGroup{T}"/>
     /// and exposes algebraic operations to modify the element according to the group definition,
     /// such as addition with other elements from the same group as well as multiplication with a scalar.
     /// </summary>
@@ -16,7 +16,7 @@ namespace CompactCryptoGroupAlgebra
     /// ICryptoGroupElement abstracts from any underlying implementation and allows production code
     /// to be oblivious to the exact group implementation and the specific data types required to store group elements.
     /// </remarks>
-    public interface ICryptoGroupElement : IEquatable<ICryptoGroupElement>
+    public interface ICryptoGroupElement<T> : IEquatable<ICryptoGroupElement<T>> where T : notnull
     {
         /// <summary>
         /// Performs a group addition with another element of the associated group.
@@ -27,7 +27,7 @@ namespace CompactCryptoGroupAlgebra
         /// group.
         /// </summary>
         /// <param name="other">The group element to add to the one represented by this instance.</param>
-        void Add(ICryptoGroupElement other);
+        void Add(ICryptoGroupElement<T> other);
 
         /// <summary>
         /// Performs multiplication with a scalar within the associated group.
@@ -52,6 +52,6 @@ namespace CompactCryptoGroupAlgebra
         /// Creates an exact clone of this instance.
         /// </summary>
         /// <returns>A new ICryptoGroupElement instance that is equal to this one.</returns>
-        ICryptoGroupElement Clone();
+        ICryptoGroupElement<T> Clone();
     }
 }

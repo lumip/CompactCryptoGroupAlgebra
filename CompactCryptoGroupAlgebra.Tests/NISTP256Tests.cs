@@ -13,10 +13,9 @@ namespace CompactCryptoGroupAlgebra.Tests
     public class NISTP256Tests
     {
         [Test]
-        [TestCaseSource("NISTP256TestVectors")]
+        [TestCaseSource(nameof(NISTP256TestVectors))]
         public void TestCurvePoint(BigInteger k, BigInteger expectedX, BigInteger expectedY)
         {
-            //ECCryptoGroup group = new ECCryptoGroup(ECParameters.CreateNISTP256());
             var p256Algebra = new ECGroupAlgebra(ECParameters.CreateNISTP256());
 
             var point = p256Algebra.GenerateElement(k);

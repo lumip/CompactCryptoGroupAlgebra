@@ -17,19 +17,26 @@ namespace Example
             BigInteger generator = 4;
 
             // Creating the group instance
-            ICryptoGroup group = new MultiplicativeCryptoGroup(prime, order, generator);
+            var group = new MultiplicativeCryptoGroup(prime, order, generator);
+            DoDiffieHelman(group);
+        }
+
+        public static void DoDiffieHelman<T>(ICryptoGroup<T> group) where T : notnull
+        {
             // Instantiating a strong random number generator
-            RandomNumberGenerator rng = RandomNumberGenerator.Create();
+            RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
 
             // Generating DH secret and public key for Alice
-            (BigInteger dhSecretAlice, ICryptoGroupElement dhPublicAlice) = group.GenerateRandom(rng);
+            (BigInteger dhSecretAlice, ICryptoGroupElement<T> dhPublicAlice) = 
+                group.GenerateRandom(randomNumberGenerator);
 
             // Generating DH secret and public key for Bob
-            (BigInteger dhSecretBob, ICryptoGroupElement dhPublicBob) = group.GenerateRandom(rng);
+            (BigInteger dhSecretBob, ICryptoGroupElement<T> dhPublicBob) =
+                group.GenerateRandom(randomNumberGenerator);
 
             // Computing shared secret for Alice and Bob
-            ICryptoGroupElement sharedSecretBob = group.MultiplyScalar(dhPublicAlice, dhSecretBob);
-            ICryptoGroupElement sharedSecretAlice = group.MultiplyScalar(dhPublicBob, dhSecretAlice);
+            ICryptoGroupElement<T> sharedSecretBob = group.MultiplyScalar(dhPublicAlice, dhSecretBob);
+            ICryptoGroupElement<T> sharedSecretAlice = group.MultiplyScalar(dhPublicBob, dhSecretAlice);
 
             // Confirm that it's the same
             Debug.Assert(sharedSecretAlice.Equals(sharedSecretBob));

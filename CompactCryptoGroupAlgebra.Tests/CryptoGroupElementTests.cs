@@ -73,7 +73,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestAddRejectsOtherCryptoGroupElementSubclasses()
         {
-            var otherElementStub = new Mock<ICryptoGroupElement>(MockBehavior.Strict);
+            var otherElementStub = new Mock<ICryptoGroupElement<int>>(MockBehavior.Strict);
 
             var algebraStub = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
@@ -164,7 +164,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestEqualsFalseForOtherCryptoGroupElementSubclasses()
         {
-            var otherElementStub = new Mock<ICryptoGroupElement>(MockBehavior.Strict);
+            var otherElementStub = new Mock<ICryptoGroupElement<int>>(MockBehavior.Strict);
 
             var algebraStub = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);

@@ -68,7 +68,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         public void TestToStringPointAtInfinity()
         {
             var p = ECPoint.PointAtInfinity;
-            var expected = "(atInf)";
+            var expected = "(at infinity)";
             Assert.AreEqual(expected, p.ToString());
         }
     }

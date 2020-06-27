@@ -15,22 +15,22 @@ namespace CompactCryptoGroupAlgebra
     /// A group features a generator from which each of its elements can
     /// be obtained by scalar multiplication with a unique scalar identifier.
     /// For safety reasons (i.e., resistance against small subgroup attacks)
-    /// generators of <see cref="ICryptoGroup"/> instances are always of prime
+    /// generators of <see cref="ICryptoGroup{T}"/> instances are always of prime
     /// order.
     ///
     /// The interface is intended to facilitate group operations as required
     /// e.g. in a Diffie-Helman key exchange and related protocols.
     /// </summary>
     /// <remarks>
-    /// Implementers of <see cref="ICryptoGroup"/> should provide an implementation of
-    /// <see cref="ICryptoGroupAlgebra{E}"/> (preferrably by extending <see cref="CryptoGroupAlgebra{E}"/>)
-    /// to more easily realize basic algebraic operations and an extension of <see cref="CryptoGroupElement{E}"/> 
-    /// which can then be employed in a specialization of <see cref="CryptoGroup{E}"/>.
+    /// Implementers of <see cref="ICryptoGroup{T}"/> should provide an implementation of
+    /// <see cref="ICryptoGroupAlgebra{T}"/> (preferrably by extending <see cref="CryptoGroupAlgebra{T}"/>)
+    /// to more easily realize basic algebraic operations and an extension of <see cref="CryptoGroupElement{T}"/> 
+    /// which can then be employed in a specialization of <see cref="CryptoGroup{T}"/>.
     /// 
     /// All these classes are designed to have a minimum of fully virtual/abstract methods in need of implementation
     /// to provide full algebraic group functionality.
     /// </remarks>
-    public interface ICryptoGroup
+    public interface ICryptoGroup<T> where T : notnull // todo: consider removing the interface and have only abstract base class
     {
         /// <summary>
         /// Adds two group elements according to the addition semantics
@@ -41,7 +41,7 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="left">Group element to add.</param>
         /// <param name="right">Group element to add.</param>
         /// <returns>The result of the group addition.</returns>
-        ICryptoGroupElement Add(ICryptoGroupElement left, ICryptoGroupElement right);
+        ICryptoGroupElement<T> Add(ICryptoGroupElement<T> left, ICryptoGroupElement<T> right);
 
         /// <summary>
         /// Multiplies a group element with a scalar factor.
@@ -52,7 +52,7 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="element">A group element.</param>
         /// <param name="k">A scalar.</param>
         /// <returns>The result of the multiplication.</returns>
-        ICryptoGroupElement MultiplyScalar(ICryptoGroupElement element, BigInteger k);
+        ICryptoGroupElement<T> MultiplyScalar(ICryptoGroupElement<T> element, BigInteger k);
 
         /// <summary>
         /// Negates a group element.
@@ -61,7 +61,7 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="element">The group element to negate.</param>
         /// <returns>The negation of the given element in the group.</returns>
-        ICryptoGroupElement Negate(ICryptoGroupElement element);
+        ICryptoGroupElement<T> Negate(ICryptoGroupElement<T> element);
 
         /// <summary>
         /// Obtains the group element for a given index.
@@ -75,21 +75,21 @@ namespace CompactCryptoGroupAlgebra
         ///  that uniquely identifies the element to generate.
         /// </param>
         /// <returns>The group element uniquely identified by the index.</returns>
-        ICryptoGroupElement Generate(BigInteger index);
+        ICryptoGroupElement<T> Generate(BigInteger index);
 
         /// <summary>
         /// The generator of the group.
         /// 
         /// The generator is a group element that allows to generate the entire group by scalar multiplication.
         /// </summary>
-        ICryptoGroupElement Generator { get; }
+        ICryptoGroupElement<T> Generator { get; }
 
         /// <summary>
         /// Restores a group element from a byte representation.
         /// </summary>
         /// <param name="buffer">Byte array holding a representation of a group element.</param>
         /// <returns>The group element as an instance of ICryptoGroupElement.</returns>
-        ICryptoGroupElement FromBytes(byte[] buffer);
+        ICryptoGroupElement<T> FromBytes(byte[] buffer);
 
         /// <summary>
         /// Generates a random group element.
@@ -104,7 +104,7 @@ namespace CompactCryptoGroupAlgebra
         /// which the index will be drawn.
         /// </param>
         /// <returns>A tuple of the random index and the corresponding group element.</returns>
-        Tuple<BigInteger, ICryptoGroupElement> GenerateRandom(RandomNumberGenerator rng);
+        (BigInteger, ICryptoGroupElement<T>) GenerateRandom(RandomNumberGenerator rng); //todo: avoid abbreviations such as rng
 
         /// <summary>
         /// The bit length of the group's order.
@@ -119,6 +119,9 @@ namespace CompactCryptoGroupAlgebra
         /// This is the number of bytes required to represent any scalar factor.
         /// </summary>
         int OrderByteLength { get; }
+
+        // todo: OrderBitLength and OrderByteLength are redundant and could be independently implemented
+        // -> implement and use BitLength structure
 
         /// <summary>
         /// The order of the group's generator.

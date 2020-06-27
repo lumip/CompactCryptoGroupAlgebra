@@ -16,7 +16,7 @@ namespace CompactCryptoGroupAlgebra
         /// implementation for underlying group operations and has already been
         /// initialized group parameters.
         /// </summary>
-        /// <param name="algebra">The <see cref="ICryptoGroupAlgebra{E}"/> instance.</param>
+        /// <param name="algebra">The <see cref="ICryptoGroupAlgebra{T}"/> instance.</param>
         public ECCryptoGroup(ICryptoGroupAlgebra<ECPoint> algebra) : base(algebra)
         { }
 
