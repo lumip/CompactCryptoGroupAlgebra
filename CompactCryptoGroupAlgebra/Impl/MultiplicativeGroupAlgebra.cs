@@ -102,7 +102,7 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <inheritdoc/>
-        public override bool Equals(CryptoGroupAlgebra<BigInteger> other)
+        public override bool Equals(CryptoGroupAlgebra<BigInteger>? other)
         {
             var algebra = other as MultiplicativeGroupAlgebra;
             return algebra != null &&

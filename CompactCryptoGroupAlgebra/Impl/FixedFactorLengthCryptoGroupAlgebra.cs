@@ -25,8 +25,6 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="fixedFactorBitLength">Permissible bit length of scalar factors.</param>
         public FixedFactorLengthCryptoGroupAlgebra(CryptoGroupAlgebra<E> baseAlgebra, int fixedFactorBitLength)
         {
-            if (baseAlgebra == null)
-                throw new ArgumentNullException(nameof(baseAlgebra));
             _baseAlgebra = baseAlgebra;
 
             if (fixedFactorBitLength <= 0 || fixedFactorBitLength > _baseAlgebra.OrderBitLength)

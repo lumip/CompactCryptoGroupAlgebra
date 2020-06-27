@@ -301,15 +301,6 @@ namespace CompactCryptoGroupAlgebra.Tests
         }
 
         [Test]
-        public void TestFromBytesRejectsNullArgument()
-        {
-            var curve = new ECGroupAlgebra(ecParams);
-            Assert.Throws<ArgumentNullException>(
-                () => curve.FromBytes(null)
-            );
-        }
-
-        [Test]
         public void TestFromBytesRejectsTooShortBuffer()
         {
             ECParameters largeParams = new ECParameters(
@@ -410,9 +401,8 @@ namespace CompactCryptoGroupAlgebra.Tests
         public void TestEqualsFalseForNull()
         {
             var groupAlgebra = new ECGroupAlgebra(ecParams);
-            MultiplicativeGroupAlgebra otherAlgebra = null;
 
-            bool result = groupAlgebra.Equals(otherAlgebra);
+            bool result = groupAlgebra.Equals(null);
             Assert.IsFalse(result);
         }
 

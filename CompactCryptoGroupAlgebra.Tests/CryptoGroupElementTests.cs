@@ -27,16 +27,6 @@ namespace CompactCryptoGroupAlgebra.Tests
         }
 
         [Test]
-        public void TestConstructorRejectsNullAlgebra()
-        {
-            int element = -3;
-
-            Assert.Throws<ArgumentNullException>(
-                () => new CryptoGroupElement<int>(element, null)
-            );
-        }
-
-        [Test]
         public void TestConstructorSetsValueCorrectly()
         {
             int elementRaw = -3;
@@ -67,16 +57,6 @@ namespace CompactCryptoGroupAlgebra.Tests
         }
 
         [Test]
-        public void TestConstructorFromBytesRejectsNullAlgebra()
-        {
-            byte[] buffer = new byte[0];
-
-            Assert.Throws<ArgumentNullException>(
-                () => new CryptoGroupElement<int>(buffer, null)
-            );
-        }
-
-        [Test]
         public void TestConstructorFromBytesRejectsInvalidValue()
         {
             byte[] buffer = new byte[0];
@@ -102,36 +82,6 @@ namespace CompactCryptoGroupAlgebra.Tests
 
             Assert.Throws<ArgumentException>(
                 () => element.Add(otherElementStub.Object)
-            );
-        }
-
-        [Test]
-        public void TestAddRejectsNull()
-        {
-            ICryptoGroupElement otherElement = null;
-
-            var algebraStub = new Mock<ICryptoGroupAlgebra<int>>();
-            algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
-
-            var element = new CryptoGroupElement<int>(0, algebraStub.Object);
-
-            Assert.Throws<ArgumentNullException>(
-                () => element.Add(otherElement)
-            );
-        }
-
-        [Test]
-        public void TestSpecificAddRejectsNull()
-        {
-            CryptoGroupElement<int> otherElement = null;
-
-            var algebraStub = new Mock<ICryptoGroupAlgebra<int>>();
-            algebraStub.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
-
-            var element = new CryptoGroupElement<int>(0, algebraStub.Object);
-
-            Assert.Throws<ArgumentNullException>(
-                () => element.Add(otherElement)
             );
         }
 

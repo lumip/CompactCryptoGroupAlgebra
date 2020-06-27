@@ -40,8 +40,6 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="groupAlgebra">Corresponding group algebra instance.</param>
         protected internal CryptoGroupElement(E value, ICryptoGroupAlgebra<E> groupAlgebra)
         {
-            if (groupAlgebra == null)
-                throw new ArgumentNullException(nameof(groupAlgebra));
             Algebra = groupAlgebra;
             
             if (!Algebra.IsValid(value))
@@ -58,8 +56,6 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="groupAlgebra">Corresponding group algebra instance.</param>
         protected internal CryptoGroupElement(byte[] valueBuffer, ICryptoGroupAlgebra<E> groupAlgebra)
         {
-            if (groupAlgebra == null)
-                throw new ArgumentNullException(nameof(groupAlgebra));
             Algebra = groupAlgebra;
 
             E value = Algebra.FromBytes(valueBuffer);
@@ -71,9 +67,7 @@ namespace CompactCryptoGroupAlgebra
         /// <inheritdoc/>
         public void Add(ICryptoGroupElement element)
         {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
-            CryptoGroupElement<E> e = element as CryptoGroupElement<E>;
+            CryptoGroupElement<E>? e = element as CryptoGroupElement<E>;
             if (e == null)
                 throw new ArgumentException("The provided value is not a valid element of the group.", nameof(Value));
 
@@ -88,8 +82,6 @@ namespace CompactCryptoGroupAlgebra
         /// </remarks>
         public void Add(CryptoGroupElement<E> element)
         {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
             if (Algebra != element.Algebra)
                 throw new ArgumentException("Added group element must be from the same group!", nameof(element));
             Value = Algebra.Add(Value, element.Value);
@@ -135,7 +127,7 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="other">The <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{E}"/> to compare with the current <see cref="CompactCryptoGroupAlgebra.CryptoGroupElement{E}"/>.</param>
         /// <returns><c>true</c> no equality; otherwise, <c>false</c>.</returns>
-        public bool Equals(CryptoGroupElement<E> other)
+        public bool Equals(CryptoGroupElement<E>? other)
         {
             return other != null && Algebra.Equals(other.Algebra) && Value.Equals(other.Value);
         }

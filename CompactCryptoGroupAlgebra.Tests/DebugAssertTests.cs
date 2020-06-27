@@ -20,6 +20,9 @@ namespace CompactCryptoGroupAlgebra.Tests
                 var msg = "Assertion error!";
                 var ex = Assert.Throws<AssertionException>(() => Debug.Assert(false, msg));
                 Assert.AreEqual(msg, ex.Message);
+
+                ex = Assert.Throws<AssertionException>(() => Debug.Assert(false));
+                Assert.AreEqual("Assertion failure!", ex.Message);
             }
             else
             {

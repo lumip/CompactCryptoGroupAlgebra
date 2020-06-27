@@ -10,7 +10,7 @@ namespace CompactCryptoGroupAlgebra
         /// <summary>
         /// Initializes a new instance of <see cref="AssertionException"/>.
         /// </summary>
-        public AssertionException(String msg = null) : base(msg) { }
+        public AssertionException(string? msg = null) : base(msg != null ? msg : "Assertion failure!") { }
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="expressionResult">Expression result to assert.</param>
         /// <param name="msg">Optional message for the thrown <see cref="AssertionException"/>.</param>
-        public static void Assert(bool expressionResult, String msg = null)
+        public static void Assert(bool expressionResult, string? msg = null)
         {
 #if DEBUG
             if (!expressionResult)

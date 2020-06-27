@@ -215,8 +215,6 @@ namespace CompactCryptoGroupAlgebra
         /// <returns>The loaded curve point.</returns>
         public override ECPoint FromBytes(byte[] buffer)
         {
-            if (buffer == null)
-                throw new ArgumentNullException(nameof(buffer));
             if (buffer.Length < 2 * _ring.ElementByteLength)
                 throw new ArgumentException("The given buffer is too short to contain a valid element representation.", nameof(buffer));
 
@@ -251,7 +249,7 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <inheritdoc/>
-        public override bool Equals(CryptoGroupAlgebra<ECPoint> other)
+        public override bool Equals(CryptoGroupAlgebra<ECPoint>? other)
         {
             var algebra = other as ECGroupAlgebra;
             return algebra != null && EqualityComparer<ECParameters>.Default.Equals(_parameters, algebra._parameters);

@@ -4,23 +4,26 @@
     <TargetFramework>netstandard1.3</TargetFramework>
     <AssemblyName>CompactCryptoGroupAlgebra</AssemblyName>
     <RootNamespace>CompactCryptoGroupAlgebra</RootNamespace>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>CS8602;CS8603;CS8600;CS8625;CS8610</WarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin/$(Configuration)/CompactCryptoGroupAlgebra.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <OutputPath>bin/$(Configuration)/</OutputPath>
-    <LangVersion>8</LangVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin/$(Configuration)/CompactCryptoGroupAlgebra.xml</DocumentationFile>
     <OutputPath>bin/$(Configuration)/</OutputPath>
-    <LangVersion>8</LangVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
 </Project>

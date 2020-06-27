@@ -31,14 +31,6 @@ namespace CompactCryptoGroupAlgebra.Tests
         }
 
         [Test]
-        public void TestConstructorRejectsNullBaseAlgebra()
-        {
-            Assert.Throws<ArgumentNullException>(
-                () => new FixedFactorLengthCryptoGroupAlgebra<int>(null, 2)
-            );
-        }
-
-        [Test]
         public void TestFactorBitLengthCorrect()
         {
             var generator = 3;

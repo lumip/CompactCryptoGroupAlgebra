@@ -44,8 +44,6 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="algebra">Group algebra implementation on raw data type <typeparamref name="E"/></param>
         protected CryptoGroup(ICryptoGroupAlgebra<E> algebra)
         {
-            if (algebra == null)
-                throw new ArgumentNullException(nameof(algebra));
             Algebra = algebra;
         }
 
@@ -95,11 +93,6 @@ namespace CompactCryptoGroupAlgebra
         /// <inheritdoc/>
         public ICryptoGroupElement Add(CryptoGroupElement<E> left, CryptoGroupElement<E> right)
         {
-            if (left == null)
-                throw new ArgumentNullException(nameof(left));
-            if (right == null)
-                throw new ArgumentNullException(nameof(right));
-
             return CreateGroupElement(Algebra.Add(left.Value, right.Value));
         }
 
@@ -118,26 +111,20 @@ namespace CompactCryptoGroupAlgebra
         /// <inheritdoc/>
         public ICryptoGroupElement MultiplyScalar(CryptoGroupElement<E> element, BigInteger k)
         {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
-
             return CreateGroupElement(Algebra.MultiplyScalar(element.Value, k));
         }
 
         /// <inheritdoc/>
         public ICryptoGroupElement Negate(CryptoGroupElement<E> element)
         {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
-
             return CreateGroupElement(Algebra.Negate(element.Value));
         }
 
         /// <inheritdoc/>
         public ICryptoGroupElement Add(ICryptoGroupElement left, ICryptoGroupElement right)
         {
-            CryptoGroupElement<E> lhs = left as CryptoGroupElement<E>;
-            CryptoGroupElement<E> rhs = right as CryptoGroupElement<E>;
+            CryptoGroupElement<E>? lhs = left as CryptoGroupElement<E>;
+            CryptoGroupElement<E>? rhs = right as CryptoGroupElement<E>;
             if (lhs == null)
                 throw new ArgumentException("The left summand is not an element of the group.", nameof(left));
             if (rhs == null)
@@ -149,7 +136,7 @@ namespace CompactCryptoGroupAlgebra
         /// <inheritdoc/>
         public ICryptoGroupElement MultiplyScalar(ICryptoGroupElement element, BigInteger k)
         {
-            CryptoGroupElement<E> e = element as CryptoGroupElement<E>;
+            CryptoGroupElement<E>? e = element as CryptoGroupElement<E>;
             if (e == null)
                 throw new ArgumentException("The provided value is not an element of the group.", nameof(element));
 
@@ -159,7 +146,7 @@ namespace CompactCryptoGroupAlgebra
         /// <inheritdoc/>
         public ICryptoGroupElement Negate(ICryptoGroupElement element)
         {
-            CryptoGroupElement<E> e = element as CryptoGroupElement<E>;
+            CryptoGroupElement<E>? e = element as CryptoGroupElement<E>;
             if (e == null)
                 throw new ArgumentException("The provided value is not an element of the group.", nameof(element));
 

@@ -134,15 +134,6 @@ namespace CompactCryptoGroupAlgebra.Tests
         }
 
         [Test]
-        public void TestFromBytesRejectsNullArgument()
-        {
-            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
-            Assert.Throws<ArgumentNullException>(
-                () => groupAlgebra.FromBytes(null)
-            );
-        }
-
-        [Test]
         public void TestToBytes()
         {
             var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
@@ -186,9 +177,8 @@ namespace CompactCryptoGroupAlgebra.Tests
         public void TestEqualsFalseForNull()
         {
             var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
-            MultiplicativeGroupAlgebra otherAlgebra = null;
 
-            bool result = groupAlgebra.Equals(otherAlgebra);
+            bool result = groupAlgebra.Equals(null);
             Assert.IsFalse(result);
         }
 
