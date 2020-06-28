@@ -8,7 +8,7 @@ namespace CompactCryptoGroupAlgebra
     /// <summary>
     /// Algebraic group based on multiplications in the finite field of a prime number <c>P</c>.
     /// 
-    /// Through the <see cref="ICryptoGroup{T}"/> interface, the addition represents
+    /// Through the <see cref="CryptoGroup{T}"/> interface, the addition represents
     /// multiplication of two integers modulo <c>P</c>, while scalar multiplication
     /// is exponentiation of an integer modulo <c>P</c>.
     /// </summary>

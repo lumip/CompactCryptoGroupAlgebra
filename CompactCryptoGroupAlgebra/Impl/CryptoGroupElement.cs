@@ -154,7 +154,7 @@ namespace CompactCryptoGroupAlgebra
 
         /// <summary>
         /// Adds a <see cref="CryptoGroupElement{T}"/> to a
-        /// <see cref="ICryptoGroupElement{T}"/>, yielding a new <see cref="CryptoGroupElement{T}"/>.
+        /// <see cref="CryptoGroupElement{T}"/>, yielding a new <see cref="CryptoGroupElement{T}"/>.
         /// </summary>
         /// <param name="left">The first <see cref="CryptoGroupElement{T}"/> to add.</param>
         /// <param name="right">The second <see cref="CryptoGroupElement{T}"/> to add.</param>
@@ -183,7 +183,7 @@ namespace CompactCryptoGroupAlgebra
         /// Subtracts a <see cref="CryptoGroupElement{T}"/> from a
         /// <see cref="CryptoGroupElement{T}"/>, yielding a new <see cref="CryptoGroupElement{T}"/>.
         /// </summary>
-        /// <param name="left">The <see cref="ICryptoGroupElement{T}"/> to subtract from (the minuend).</param>
+        /// <param name="left">The <see cref="CryptoGroupElement{T}"/> to subtract from (the minuend).</param>
         /// <param name="right">The <see cref="CryptoGroupElement{T}"/> to subtract (the subtrahend).</param>
         /// <returns>The <see cref="CryptoGroupElement{T}"/> that is results from the subtraction.</returns>
         public static CryptoGroupElement<T> operator -(CryptoGroupElement<T> left, CryptoGroupElement<T> right)

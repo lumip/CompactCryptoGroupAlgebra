@@ -13,10 +13,10 @@ namespace CompactCryptoGroupAlgebra
     /// </summary>
     /// <typeparam name="T">The data type used for raw group elements the algebraic operations operate on.</typeparam>
     /// <remarks>
-    /// ICryptoGroupAlgebra should not used directly by productive code. Use <see cref="ICryptoGroup{T}"/>
+    /// ICryptoGroupAlgebra should not used directly by productive code. Use <see cref="CryptoGroup{T}"/>
     /// instead.
     /// 
-    /// ICryptoGroupAlgebra is intended to facilitate implementing the <see cref="ICryptoGroup{T}"/>
+    /// ICryptoGroupAlgebra is intended to facilitate implementing the <see cref="CryptoGroup{T}"/>
     /// interface by allowing an implementer to focus on the actual group operations without
     /// having to deal with boilerplate constructs. The aim is mostly to avoid code duplication.
     /// In the same manner, <see cref="CryptoGroupAlgebra{T}"/> implements this interface and
