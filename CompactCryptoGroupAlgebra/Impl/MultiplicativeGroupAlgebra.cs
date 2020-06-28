@@ -8,7 +8,7 @@ namespace CompactCryptoGroupAlgebra
     /// <summary>
     /// Algebraic group operations based on multiplications in the finite field of a prime number <c>P</c>.
     /// 
-    /// Through the <see cref="CryptoGroup{T}"/> interface, the addition represents
+    /// Through the <see cref="ICryptoGroup{T}"/> interface, the addition represents
     /// multiplication of two integers modulo <c>P</c>, while scalar multiplication
     /// is exponentiation of an integer modulo <c>P</c>.
     /// </summary>
@@ -33,7 +33,7 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <inheritdoc/>
-        public override int ElementBitLength { get { return GetBitLength(Prime); } }
+        public override int ElementBitLength { get { return NumberLength.GetLength(Prime).InBits; } }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiplicativeGroupAlgebra"/> class

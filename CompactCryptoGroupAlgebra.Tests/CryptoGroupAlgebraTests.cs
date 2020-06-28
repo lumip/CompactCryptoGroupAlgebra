@@ -18,19 +18,6 @@ namespace CompactCryptoGroupAlgebra.Tests
     [TestFixture]
     public class CryptoGroupAlgebraTests
     {
-        [Test]
-        [TestCase(0, 0)]
-        [TestCase(1, 1)]
-        [TestCase(2, 2)]
-        [TestCase(15, 4)]
-        [TestCase(16, 5)]
-        public void TestBitLength(int valueInt, int expectedBitLength)
-        {
-            var value = new BigInteger(valueInt);
-            var result = CryptoGroupAlgebra<int>.GetBitLength(value);
-
-            Assert.AreEqual(expectedBitLength, result);
-        }
 
         [Test]
         [TestCase(13, 4)]

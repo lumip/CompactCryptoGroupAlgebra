@@ -60,5 +60,23 @@ namespace CompactCryptoGroupAlgebra.Tests
 
             Assert.AreEqual(expectedBitLength, result);
         }
+
+        [Test]
+        public void TestEqualsTrueForEqual()
+        {
+            var e1 = NumberLength.FromBitLength(10);
+            var e2 = NumberLength.FromBitLength(10);
+
+            Assert.AreEqual(e1, e2);
+        }
+
+        [Test]
+        public void TestEqualsFalseForDifferent()
+        {
+            var e1 = NumberLength.FromBitLength(10);
+            var e2 = NumberLength.FromBitLength(12);
+
+            Assert.AreNotEqual(e1, e2);
+        }
     }
 }

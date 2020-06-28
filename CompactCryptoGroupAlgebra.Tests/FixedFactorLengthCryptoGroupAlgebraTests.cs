@@ -208,7 +208,7 @@ namespace CompactCryptoGroupAlgebra.Tests
             int orderBitLength = 11;
             int factorBitLength = 7;
             var index = new BigInteger(1 << (indexBitLength - 1));
-            Debug.Assert(CryptoGroupAlgebra<int>.GetBitLength(index) == indexBitLength);
+            Debug.Assert(NumberLength.GetLength(index).InBits == indexBitLength);
 
             var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             Debug.Assert(orderBitLength == baseAlgebraStub.Object.OrderBitLength);
@@ -288,7 +288,7 @@ namespace CompactCryptoGroupAlgebra.Tests
             int factorBitLength = 7;
             int element = 2;
             var k = new BigInteger(1 << (bitLength - 1));
-            Debug.Assert(CryptoGroupAlgebra<int>.GetBitLength(k) == bitLength);
+            Debug.Assert(NumberLength.GetLength(k).InBits == bitLength);
 
             var baseAlgebraStub = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             Debug.Assert(orderBitLength == baseAlgebraStub.Object.OrderBitLength);
@@ -310,7 +310,7 @@ namespace CompactCryptoGroupAlgebra.Tests
             int expected = 124;
             int factorBitLength = 7;
             var factor = new BigInteger(1 << (factorBitLength - 1));
-            Debug.Assert(CryptoGroupAlgebra<int>.GetBitLength(factor) == factorBitLength);
+            Debug.Assert(NumberLength.GetLength(factor).InBits == factorBitLength);
 
             var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, rng);
             baseAlgebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()

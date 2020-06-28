@@ -34,7 +34,7 @@ namespace CompactCryptoGroupAlgebra
         /// 
         /// This is the number of bits required to represent any element of the group.
         /// </summary>
-        public override int ElementBitLength { get { return 2 * GetBitLength(_ring.Modulo); } }
+        public override int ElementBitLength { get { return 2 * NumberLength.GetLength(_ring.Modulo).InBits; } }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ECGroupAlgebra"/> class.

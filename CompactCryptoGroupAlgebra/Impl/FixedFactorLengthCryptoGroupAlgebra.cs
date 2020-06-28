@@ -68,7 +68,7 @@ namespace CompactCryptoGroupAlgebra
         /// <inheritdoc/>
         public E GenerateElement(BigInteger index)
         {
-            int indexBitLength = CryptoGroupAlgebra<E>.GetBitLength(index);
+            int indexBitLength = NumberLength.GetLength(index).InBits;
             if (indexBitLength != FactorBitLength)
                 throw new ArgumentException("Index does have an incorrect bit length!");
             return _baseAlgebra.MultiplyScalar(Generator, index, FactorBitLength);
@@ -83,7 +83,7 @@ namespace CompactCryptoGroupAlgebra
         /// <inheritdoc/>
         public E MultiplyScalar(E e, BigInteger k)
         {
-            int factorBitLength = CryptoGroupAlgebra<E>.GetBitLength(k);
+            int factorBitLength = NumberLength.GetLength(k).InBits;
             if (factorBitLength != FactorBitLength)
                 throw new ArgumentException("Index does have an incorrect bit length!");
             return _baseAlgebra.MultiplyScalar(e, k, FactorBitLength);

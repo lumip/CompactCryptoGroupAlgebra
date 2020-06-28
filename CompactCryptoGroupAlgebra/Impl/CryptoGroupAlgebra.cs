@@ -30,17 +30,7 @@ namespace CompactCryptoGroupAlgebra
         public abstract int ElementBitLength { get; }
 
         /// <inheritdoc/>
-        public int OrderBitLength { get { return GetBitLength(Order); } }
-
-        /// <summary>
-        /// Returns the bit length of a <see cref="BigInteger"/>.
-        /// </summary>
-        /// <param name="x">Any <see cref="BigInteger"/>.</param>
-        /// <returns>The bit length of the input.</returns>
-        public static int GetBitLength(BigInteger x)
-        {
-            return NumberLength.GetLength(x).InBits;
-        }
+        public int OrderBitLength { get { return NumberLength.GetLength(Order).InBits; } }
 
         /// <summary>
         /// Initializes a new instance of <see cref="CryptoGroupAlgebra{T}"/>
@@ -139,7 +129,7 @@ namespace CompactCryptoGroupAlgebra
             if (k < BigInteger.Zero)
                 throw new ArgumentOutOfRangeException(nameof(k), "The given factor must be non-negative.");
 
-            if (GetBitLength(k) > factorBitLength)
+            if (NumberLength.GetLength(k).InBits > factorBitLength)
                 throw new ArgumentOutOfRangeException(nameof(k), "The given factor must not exceed the admittable factor bit length.");
 
             return MultiplyScalarUnchecked(e, k, factorBitLength);
@@ -190,7 +180,7 @@ namespace CompactCryptoGroupAlgebra
             // of the safe subgroup over which operations are considered)
             if (Cofactor > 1)
             {
-                T check = MultiplyScalarUnchecked(element, Cofactor, GetBitLength(Cofactor));
+                T check = MultiplyScalarUnchecked(element, Cofactor, NumberLength.GetLength(Cofactor).InBits);
                 if (check.Equals(NeutralElement))
                     return false;
             }

@@ -61,18 +61,11 @@ namespace CompactCryptoGroupAlgebra
         public CryptoGroupElement<T> Generator { get { return CreateGroupElement(Algebra.Generator); } }
 
         /// <summary>
-        /// The bit length of the group's order.
-        /// 
-        /// This is the number of bits required to represent any scalar factor.
-        /// </summary>
-        public int OrderBitLength { get { return Algebra.OrderBitLength; } }
-
-        /// <summary>
-        /// The length of the group's order in bytes.
+        /// The length (in binary digits) of the group's order.
         /// 
         /// This is the number of bytes required to represent any scalar factor.
         /// </summary>
-        public int OrderByteLength { get { return (int)Math.Ceiling((double)OrderBitLength / 8); } }
+        public NumberLength OrderLength { get { return NumberLength.FromBitLength(Algebra.OrderBitLength); } }
 
         /// <summary>
         /// The order of the group's generator.
@@ -82,18 +75,9 @@ namespace CompactCryptoGroupAlgebra
         public BigInteger Order { get { return Algebra.Order; } }
 
         /// <summary>
-        /// The maximum bit length of elements of the group.
-        /// 
-        /// This is the number of bits required to represent any element of the group.
+        /// The maximum length (in binary digits) required to represent elements of the group.
         /// </summary>
-        public int ElementBitLength { get { return Algebra.ElementBitLength; } }
-
-        /// <summary>
-        /// The maximum length of elements of the group in bytes.
-        /// 
-        /// This is the number of bytes required to represent any element of the group.
-        /// </summary>
-        public int ElementByteLength { get { return (int)Math.Ceiling((double)ElementBitLength / 8); } } // todo: use NumberLength
+        public NumberLength ElementLength { get { return NumberLength.FromBitLength(Algebra.ElementBitLength); } }
 
         /// <summary>
         /// Creates a new <see cref="CryptoGroupElement{T}"/> instance for a given raw group element of type <typeparamref name="T"/>.
