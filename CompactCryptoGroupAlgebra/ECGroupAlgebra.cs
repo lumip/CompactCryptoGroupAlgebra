@@ -40,9 +40,8 @@ namespace CompactCryptoGroupAlgebra
         /// Initializes a new instance of the <see cref="ECGroupAlgebra"/> class.
         /// </summary>
         /// <param name="parameters">Parameters for the curve.</param>
-        /// <param name="rng">Random number generator.</param>
-        public ECGroupAlgebra(ECParameters parameters, RandomNumberGenerator rng)
-            : base(parameters.Generator, parameters.Order, rng)
+        public ECGroupAlgebra(ECParameters parameters)
+            : base(parameters.Generator, parameters.Order)
         {
             _parameters = parameters;
             _ring = new BigIntegerRing(_parameters.P);
@@ -50,14 +49,6 @@ namespace CompactCryptoGroupAlgebra
                 throw new ArgumentException("The point given as generator is" +
                 	"not a valid point on the curve.", nameof(parameters));
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ECGroupAlgebra"/> class.
-        /// </summary>
-        /// <param name="parameters">Parameters for the curve.</param>
-        public ECGroupAlgebra(ECParameters parameters)
-            : this(parameters, RandomNumberGenerator.Create())
-        { }
 
         /// <summary>
         /// Checks whether two given points are negations of each other, i.e.,

@@ -31,7 +31,7 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="prime">The prime number which is the modulo of the finite field the group is based on.</param>
         /// <param name="order">The order of the group.</param>
         /// <param name="generator">A generator of the group.</param>
-        public MultiplicativeCryptoGroup(BigInteger prime, BigInteger order, BigInteger generator)
+        public MultiplicativeCryptoGroup(BigPrime prime, BigPrime order, BigInteger generator)
           : this(new MultiplicativeGroupAlgebra(prime, order, generator))
         { }
 

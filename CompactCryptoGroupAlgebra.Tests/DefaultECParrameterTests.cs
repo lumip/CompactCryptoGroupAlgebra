@@ -24,19 +24,119 @@ namespace CompactCryptoGroupAlgebra.Tests
         }
 
         [Test]
-        public void TestConstructorFailsForNonPrimeP()
+        public void TestEqualsIsTrueForEqualObjects()
         {
-            Assert.Throws<ArgumentException>(
-                () => new ECParameters(10, 0, 0, ECPoint.PointAtInfinity, 3, 1, new SeededRandomNumberGenerator())
+            var p = BigPrime.CreateWithoutChecks(11);
+            var order = BigPrime.CreateWithoutChecks(7);
+            var a = new BigInteger(2);
+            var b = new BigInteger(-3);
+            var cofactor = new BigInteger(2);
+            var generator = ECPoint.PointAtInfinity;
+            ECParameters parameters = new ECParameters(
+                p, a, b, generator, order, cofactor
             );
+
+            ECParameters otherParameters = new ECParameters(
+                p, a, b, generator, order, cofactor
+            );
+
+            Assert.AreEqual(parameters, otherParameters);
         }
 
         [Test]
-        public void TestConstructorFailsForNonPrimeOrder()
+        public void TestEqualsIsFalseForDifferentObjects()
         {
-            Assert.Throws<ArgumentException>(
-                () => new ECParameters(5, 0, 0, ECPoint.PointAtInfinity, 4, 1, new SeededRandomNumberGenerator())
+            var p = BigPrime.CreateWithoutChecks(11);
+            var order = BigPrime.CreateWithoutChecks(7);
+            var a = new BigInteger(2);
+            var b = new BigInteger(-3);
+            var cofactor = new BigInteger(2);
+            var generator = ECPoint.PointAtInfinity;
+            ECParameters parameters = new ECParameters(
+                p, a, b, generator, order, cofactor
             );
+
+            ECParameters otherParameters = new ECParameters(
+                BigPrime.CreateWithoutChecks(7), a, b, generator, order, cofactor
+            );
+            Assert.AreNotEqual(parameters, otherParameters);
+
+            otherParameters = new ECParameters(
+                p, new BigInteger(3), b, generator, order, cofactor
+            );
+            Assert.AreNotEqual(parameters, otherParameters);
+
+            otherParameters = new ECParameters(
+                p, a, new BigInteger(5), generator, order, cofactor
+            );
+            Assert.AreNotEqual(parameters, otherParameters);
+
+            otherParameters = new ECParameters(
+                p, a, b, new ECPoint(1, 1), order, cofactor
+            );
+            Assert.AreNotEqual(parameters, otherParameters);
+
+            otherParameters = new ECParameters(
+                p, a, b, generator, BigPrime.CreateWithoutChecks(3), cofactor
+            );
+            Assert.AreNotEqual(parameters, otherParameters);
+
+            otherParameters = new ECParameters(
+                p, a, b, generator, order, BigInteger.One
+            );
+            Assert.AreNotEqual(parameters, otherParameters);
+        }
+
+        [Test]
+        public void TestEqualsIsFalseForNull()
+        {
+            var p = BigPrime.CreateWithoutChecks(11);
+            var order = BigPrime.CreateWithoutChecks(7);
+            var a = new BigInteger(2);
+            var b = new BigInteger(-3);
+            var cofactor = new BigInteger(2);
+            var generator = ECPoint.PointAtInfinity;
+            ECParameters parameters = new ECParameters(
+                p, a, b, generator, order, cofactor
+            );
+
+            Assert.AreNotEqual(parameters, null);
+        }
+
+        [Test]
+        public void TestEqualsIsFalseForUnrelatedObject()
+        {
+            var p = BigPrime.CreateWithoutChecks(11);
+            var order = BigPrime.CreateWithoutChecks(7);
+            var a = new BigInteger(2);
+            var b = new BigInteger(-3);
+            var cofactor = new BigInteger(2);
+            var generator = ECPoint.PointAtInfinity;
+            ECParameters parameters = new ECParameters(
+                p, a, b, generator, order, cofactor
+            );
+
+            Assert.AreNotEqual(parameters, new object { });
+        }
+
+        [Test]
+        public void TestHashCodeIsSameForEqualObjects()
+        {
+            var p = BigPrime.CreateWithoutChecks(11);
+            var order = BigPrime.CreateWithoutChecks(7);
+            var a = new BigInteger(2);
+            var b = new BigInteger(-3);
+            var cofactor = new BigInteger(2);
+            var generator = ECPoint.PointAtInfinity;
+            ECParameters parameters = new ECParameters(
+                p, a, b, generator, order, cofactor
+            );
+
+            ECParameters otherParameters = new ECParameters(
+                p, a, b, generator, order, cofactor
+            );
+
+            Assert.AreEqual(parameters.GetHashCode(), otherParameters.GetHashCode());
         }
 
     }

@@ -10,22 +10,24 @@ namespace Example
     {
         public static void Main(string[] args)
         {
+            // Instantiating a strong random number generator
+            RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
+
             // Choosing parameters for multiplicative group
             // order 11 subgroup with generator 4 of characteristic 23 multiplicative group 
-            BigInteger prime = 23;
-            BigInteger order = 11;
+            BigPrime prime = BigPrime.Create(23, randomNumberGenerator);
+            BigPrime order = BigPrime.Create(11, randomNumberGenerator);
             BigInteger generator = 4;
 
             // Creating the group instance
             var group = new MultiplicativeCryptoGroup(prime, order, generator);
-            DoDiffieHelman(group);
+            DoDiffieHelman(group, randomNumberGenerator);
         }
 
-        public static void DoDiffieHelman<T>(CryptoGroup<T> group) where T : notnull
+        public static void DoDiffieHelman<T>(
+            CryptoGroup<T> group, RandomNumberGenerator randomNumberGenerator
+        ) where T : notnull
         {
-            // Instantiating a strong random number generator
-            RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
-
             // Generating DH secret and public key for Alice
             (BigInteger dhSecretAlice, CryptoGroupElement<T> dhPublicAlice) = 
                 group.GenerateRandom(randomNumberGenerator);

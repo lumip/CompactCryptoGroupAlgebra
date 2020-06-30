@@ -10,6 +10,18 @@ namespace CompactCryptoGroupAlgebra.Tests
     [TestFixture]
     public class MultiplicativeGroupAlgebraIntegratedTest
     {
+        private MultiplicativeGroupAlgebra? groupAlgebra;
+
+        [SetUp]
+        public void SetUpAlgebra()
+        {
+            groupAlgebra = new MultiplicativeGroupAlgebra(
+                prime: BigPrime.CreateWithoutChecks(23),
+                order: BigPrime.CreateWithoutChecks(11),
+                generator: 2
+            );
+        }
+
         [Test]
         [TestCase(0)]
         [TestCase(1)]
@@ -22,19 +34,17 @@ namespace CompactCryptoGroupAlgebra.Tests
         public void TestGenerateIsGeneratorMultiplied(int idInt)
         {
             var id = new BigInteger(idInt);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
 
-            Assert.AreEqual(groupAlgebra.MultiplyScalar(groupAlgebra.Generator, id), groupAlgebra.GenerateElement(id));
+            Assert.AreEqual(groupAlgebra!.MultiplyScalar(groupAlgebra.Generator, id), groupAlgebra!.GenerateElement(id));
         }
 
         [Test]
         public void TestGenerateRejectsNegativeIds()
         {
             var id = new BigInteger(-1);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
 
             Assert.Throws<ArgumentOutOfRangeException>(
-                () => groupAlgebra.GenerateElement(id)
+                () => groupAlgebra!.GenerateElement(id)
             );
         }
 
@@ -42,11 +52,10 @@ namespace CompactCryptoGroupAlgebra.Tests
         public void TestMultiplyScalarRejectsNegativeScalars()
         {
             var k = new BigInteger(-1);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             var x = new BigInteger(3);
 
             Assert.Throws<ArgumentOutOfRangeException>(
-                () => groupAlgebra.MultiplyScalar(x, k)
+                () => groupAlgebra!.MultiplyScalar(x, k)
             );
         }
 
@@ -60,9 +69,8 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             int factorBitLength = 3;
             var k = new BigInteger(factorInt);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             var x = new BigInteger(6);
-            Assert.AreEqual(groupAlgebra.MultiplyScalar(x, k), groupAlgebra.MultiplyScalar(x, k, factorBitLength));
+            Assert.AreEqual(groupAlgebra!.MultiplyScalar(x, k), groupAlgebra!.MultiplyScalar(x, k, factorBitLength));
         }
 
         [Test]
@@ -70,11 +78,10 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             int factorBitLength = 3;
             var k = new BigInteger(-1);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             var x = new BigInteger(6);
 
             Assert.Throws<ArgumentOutOfRangeException>(
-                () => groupAlgebra.MultiplyScalar(x, k, factorBitLength)
+                () => groupAlgebra!.MultiplyScalar(x, k, factorBitLength)
             );
         }
 
@@ -86,10 +93,9 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             int factorBitLength = 3;
             var k = new BigInteger(factorInt);
-            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
             var x = new BigInteger(6);
             Assert.Throws<ArgumentOutOfRangeException>(
-                () => groupAlgebra.MultiplyScalar(x, k, factorBitLength)
+                () => groupAlgebra!.MultiplyScalar(x, k, factorBitLength)
             );
         }
     }

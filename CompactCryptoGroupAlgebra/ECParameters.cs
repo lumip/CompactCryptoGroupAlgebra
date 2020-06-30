@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Security.Cryptography;
 
@@ -13,7 +14,7 @@ namespace CompactCryptoGroupAlgebra
         /// <summary>
         /// The prime P definining the finite field underlying the elliptic curve.
         /// </summary>
-        public BigInteger P { get; }
+        public BigPrime P { get; }
 
         /// <summary>
         /// The parameter A in the curve equation.
@@ -28,7 +29,7 @@ namespace CompactCryptoGroupAlgebra
         /// <summary>
         /// The order of the generator for the defined elliptic curve.
         /// </summary>
-        public BigInteger Order { get; }
+        public BigPrime Order { get; }
 
         /// <summary>
         /// A generator for the defined elliptic curve.
@@ -55,21 +56,15 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="generator">Curve generator point.</param>
         /// <param name="order">Generator order.</param>
         /// <param name="cofactor">Curve cofactor.</param>
-        /// <param name="rng">Random number generator.</param>
         public ECParameters(
-            BigInteger p,
+            BigPrime p,
             BigInteger a,
             BigInteger b,
             ECPoint generator,
-            BigInteger order,
-            BigInteger cofactor,
-            RandomNumberGenerator rng
+            BigPrime order,
+            BigInteger cofactor
         )
         {
-            if (!p.IsProbablyPrime(rng))
-                throw new ArgumentException("Argument must be prime", nameof(p));
-            if (!order.IsProbablyPrime(rng))
-                throw new ArgumentException("Argument must be prime", nameof(order));
             P = p;
             A = a;
             B = b;
@@ -77,28 +72,6 @@ namespace CompactCryptoGroupAlgebra
             Order = order;
             Cofactor = cofactor;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ECParameters"/> struct
-        /// with the given values.
-        /// </summary>
-        /// <returns><see cref="ECParameters"/> instance with the given
-        /// parameters.</returns>
-        /// <param name="p">Prime of the underlying field.</param>
-        /// <param name="a">Curve parameter A.</param>
-        /// <param name="b">Curve parameter B.</param>
-        /// <param name="generator">Curve generator point.</param>
-        /// <param name="order">Generator order.</param>
-        /// <param name="cofactor">Curve cofactor.</param>
-        public ECParameters(
-            BigInteger p,
-            BigInteger a,
-            BigInteger b,
-            ECPoint generator,
-            BigInteger order,
-            BigInteger cofactor
-        ) : this(p, a, b, generator, order, cofactor, RandomNumberGenerator.Create())
-        { }
 
         /// <summary>
         /// Creates a parameter set for the NIST P-256 elliptic curve
@@ -110,7 +83,9 @@ namespace CompactCryptoGroupAlgebra
         /// <returns>An instance of ECParameters for the NIST P-256 curve.</returns>
         public static ECParameters CreateNISTP256() // todo: consider making that is static property field
         {
-            var p = BigInteger.Parse("115792089210356248762697446949407573530086143415290314195533631308867097853951");
+            var p = BigPrime.CreateWithoutChecks(
+                BigInteger.Parse("115792089210356248762697446949407573530086143415290314195533631308867097853951")
+            );
             var a = new BigInteger(-3);
             var b = new BigInteger(new byte[] {
                 0x4b, 0x60, 0xd2, 0x27, 0x3e, 0x3c, 0xce, 0x3b,
@@ -133,7 +108,9 @@ namespace CompactCryptoGroupAlgebra
                 0x16, 0x9e, 0x0f, 0x7c, 0x4a, 0xeb, 0xe7, 0x8e,
                 0x9b, 0x7f, 0x1a, 0xfe, 0xe2, 0x42, 0xe3, 0x4f, 
             });
-            var order = BigInteger.Parse("115792089210356248762697446949407573529996955224135760342422259061068512044369");
+            var order = BigPrime.CreateWithoutChecks(
+                BigInteger.Parse("115792089210356248762697446949407573529996955224135760342422259061068512044369")
+            );
             return new ECParameters(
                 p: p,
                 a: a,
@@ -144,6 +121,30 @@ namespace CompactCryptoGroupAlgebra
             );
         }
 
-        // todo: implement Equals and Hash code 
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            var parameters = obj as ECParameters;
+            return parameters != null &&
+                   P.Equals(parameters.P) &&
+                   A.Equals(parameters.A) &&
+                   B.Equals(parameters.B) &&
+                   Order.Equals(parameters.Order) &&
+                   Generator.Equals(parameters.Generator) &&
+                   Cofactor.Equals(parameters.Cofactor);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            var hashCode = -1791766799;
+            hashCode = hashCode * -1521134295 + P.GetHashCode();
+            hashCode = hashCode * -1521134295 + A.GetHashCode();
+            hashCode = hashCode * -1521134295 + B.GetHashCode();
+            hashCode = hashCode * -1521134295 + Order.GetHashCode();
+            hashCode = hashCode * -1521134295 + Generator.GetHashCode();
+            hashCode = hashCode * -1521134295 + Cofactor.GetHashCode();
+            return hashCode;
+        }
     }
 }

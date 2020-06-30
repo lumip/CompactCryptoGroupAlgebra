@@ -72,7 +72,7 @@ namespace CompactCryptoGroupAlgebra
         /// 
         /// The order expresses the number of unique group elements.
         /// </summary>
-        public BigInteger Order { get { return Algebra.Order; } }
+        public BigPrime Order { get { return Algebra.Order; } }
 
         /// <summary>
         /// The maximum length (in binary digits) required to represent elements of the group.

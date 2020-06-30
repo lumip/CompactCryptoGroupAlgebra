@@ -16,7 +16,10 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestFromBytes()
         {
-            var groupAlgebra = new MultiplicativeGroupAlgebra(23, 11, 2);
+            var modulo = BigPrime.CreateWithoutChecks(23);
+            var order = BigPrime.CreateWithoutChecks(11);
+
+            var groupAlgebra = new MultiplicativeGroupAlgebra(modulo, order, 2);
             var group = new MultiplicativeCryptoGroup(groupAlgebra);
 
             var expectedRaw = new BigInteger(7);
@@ -34,8 +37,8 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             var generatorRaw = new BigInteger(2);
             var neutralElementRaw = BigInteger.One;
-            var moduloRaw = new BigInteger(23);
-            var orderRaw = new BigInteger(11);
+            var moduloRaw = BigPrime.CreateWithoutChecks(23);
+            var orderRaw = BigPrime.CreateWithoutChecks(11);
 
             var groupAlgebra = new MultiplicativeGroupAlgebra(moduloRaw, orderRaw, generatorRaw);
             var group = new MultiplicativeCryptoGroup(groupAlgebra);
@@ -56,8 +59,8 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             var generatorRaw = new BigInteger(2);
             var neutralElementRaw = BigInteger.One;
-            var moduloRaw = new BigInteger(23);
-            var orderRaw = new BigInteger(11);
+            var moduloRaw = BigPrime.CreateWithoutChecks(23);
+            var orderRaw = BigPrime.CreateWithoutChecks(11);
 
             var group = new MultiplicativeCryptoGroup(moduloRaw, orderRaw, generatorRaw);
 

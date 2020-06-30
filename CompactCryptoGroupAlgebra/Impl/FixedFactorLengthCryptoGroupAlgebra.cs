@@ -33,7 +33,7 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <inheritdoc/>
-        public BigInteger Order => _baseAlgebra.Order;
+        public BigPrime Order => _baseAlgebra.Order;
 
         /// <inheritdoc/>
         public E Generator => _baseAlgebra.Generator;

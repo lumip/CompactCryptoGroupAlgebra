@@ -18,7 +18,7 @@ namespace CompactCryptoGroupAlgebra
         /// Accessor to the prime modulo definining the underlying number field.
         /// </summary>
         /// <value>The prime modulo of the group.</value>
-        public BigInteger Prime { get; }
+        public BigPrime Prime { get; }
 
         /// <inheritdoc/>
         public override BigInteger NeutralElement { get { return BigInteger.One; } }
@@ -42,27 +42,13 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="prime">The prime modulo of the group.</param>
         /// <param name="order">The order of the group</param>
         /// <param name="generator">The generator of the group.</param>
-        /// <param name="rng">Random number generator.</param>
-        public MultiplicativeGroupAlgebra(BigInteger prime, BigInteger order, BigInteger generator, RandomNumberGenerator rng)
-            : base(generator, order, rng)
+        public MultiplicativeGroupAlgebra(BigPrime prime, BigPrime order, BigInteger generator)
+            : base(generator, order)
         {
-            if (!prime.IsProbablyPrime(rng))
-                throw new ArgumentException("prime must be a prime number.", nameof(prime));
             Prime = prime;
             if (!IsValid(generator))
                 throw new ArgumentException("The generator must be an element of the group.", nameof(generator));
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MultiplicativeGroupAlgebra"/> class
-        /// given the group's parameters.
-        /// </summary>
-        /// <param name="prime">The prime modulo of the group.</param>
-        /// <param name="order">The order of the group</param>
-        /// <param name="generator">The generator of the group.</param>
-        public MultiplicativeGroupAlgebra(BigInteger prime, BigInteger order, BigInteger generator)
-            : this(prime, order, generator, RandomNumberGenerator.Create())
-        { }
 
         /// <inheritdoc/>
         public override BigInteger Add(BigInteger left, BigInteger right)

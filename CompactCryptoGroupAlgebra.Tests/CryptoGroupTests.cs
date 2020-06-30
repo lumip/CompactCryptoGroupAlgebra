@@ -65,10 +65,8 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             byte[] inputBuffer = new byte[0];
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, 1, new BigInteger(3), new SeededRandomNumberGenerator());
-            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
-                .Setup(algebra => algebra.IsValidDerived(It.IsAny<int>())).Returns(true);
-            algebraMock.Setup(algebra => algebra.Cofactor).Returns(1);
+            var algebraMock = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
+            algebraMock.Setup(algebra => algebra.IsValid(It.IsAny<int>())).Returns(true);
 
             var resultStub = new Mock<CryptoGroupElement<int>>(MockBehavior.Strict, 0, algebraMock.Object);
 
@@ -242,7 +240,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestOrderCallsAlgebra()
         {
-            var order = new BigInteger(29);
+            var order = BigPrime.CreateWithoutChecks(29);
 
             var algebraMock = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraMock.Setup(alg => alg.Order).Returns(order);
@@ -288,7 +286,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestGenerateRandom()
         {
-            var order = new BigInteger(1021);
+            var order = BigPrime.CreateWithoutChecks(1021);
             int orderByteLength = 2;
 
             var expectedRaw = 7;
@@ -340,10 +338,9 @@ namespace CompactCryptoGroupAlgebra.Tests
         public void TestGeneratorAccessor()
         {
             var expectedRaw = 3;
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, expectedRaw, new BigInteger(3), new SeededRandomNumberGenerator()) { CallBase = true };
-            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>().
-                Setup(alg => alg.IsValidDerived(It.IsAny<int>())).Returns(true);
-            algebraMock.Setup(alg => alg.Cofactor).Returns(1);
+            var algebraMock = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
+            algebraMock.Setup(alg => alg.IsValid(It.IsAny<int>())).Returns(true);
+            algebraMock.Setup(alg => alg.Generator).Returns(3);
 
             var expected = new Mock<CryptoGroupElement<int>>(expectedRaw, algebraMock.Object);
             var groupMock = new Mock<CryptoGroup<int>>(algebraMock.Object);

@@ -15,13 +15,12 @@ namespace CompactCryptoGroupAlgebra.Tests
         public ECCryptoGroupTests()
         {
             ecParams = new ECParameters(
-                p: 23,
+                p: BigPrime.CreateWithoutChecks(23),
                 a: -2,
                 b: 9,
                 generator: new ECPoint(5, 3),
-                order: 11,
-                cofactor: 2,
-                rng: new SeededRandomNumberGenerator()
+                order: BigPrime.CreateWithoutChecks(11),
+                cofactor: 2
             );
         }
 

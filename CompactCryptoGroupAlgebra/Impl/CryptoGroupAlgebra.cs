@@ -18,7 +18,7 @@ namespace CompactCryptoGroupAlgebra
     public abstract class CryptoGroupAlgebra<T> : ICryptoGroupAlgebra<T> where T : notnull
     {
         /// <inheritdoc/>
-        public BigInteger Order { get; }
+        public BigPrime Order { get; }
 
         /// <inheritdoc/>
         public T Generator { get; }
@@ -41,11 +41,8 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="generator">Generator of the group.</param>
         /// <param name="order">Order of the group's generator.</param>
-        /// <param name="rng">Random number generator.</param>
-        protected CryptoGroupAlgebra(T generator, BigInteger order, RandomNumberGenerator rng)
+        protected CryptoGroupAlgebra(T generator, BigPrime order)
         {
-            if (!order.IsProbablyPrime(rng))
-                throw new ArgumentException("Order must be prime", nameof(order));
             // todo: would be nice to do IsValid(generator) here - but that is virtual
             Generator = generator;
             Order = order;
