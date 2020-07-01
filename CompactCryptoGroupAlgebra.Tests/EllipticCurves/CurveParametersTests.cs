@@ -11,7 +11,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestNISTP256()
         {
-            CurveParameters parameters = CurveParameters.CreateNISTP256();
+            CurveParameters parameters = CurveParameters.NISTP256;
             Assert.AreEqual(BigInteger.Parse("41058363725152142129326129780047268409114441015993725554835256314039467401291"), parameters.B);
             Assert.AreEqual(BigInteger.Parse("48439561293906451759052585252797914202762949526041747995844080717082404635286"), parameters.Generator.X);
             Assert.AreEqual(BigInteger.Parse("36134250956749795798585127919587881956611106672985015071877198253568414405109"), parameters.Generator.Y);
