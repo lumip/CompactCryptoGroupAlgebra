@@ -37,8 +37,8 @@ namespace Example
                 group.GenerateRandom(randomNumberGenerator);
 
             // Computing shared secret for Alice and Bob
-            CryptoGroupElement<T> sharedSecretBob = group.MultiplyScalar(dhPublicAlice, dhSecretBob);
-            CryptoGroupElement<T> sharedSecretAlice = group.MultiplyScalar(dhPublicBob, dhSecretAlice);
+            CryptoGroupElement<T> sharedSecretBob = dhPublicAlice * dhSecretBob;
+            CryptoGroupElement<T> sharedSecretAlice = dhPublicBob * dhSecretAlice;
 
             // Confirm that it's the same
             Debug.Assert(sharedSecretAlice.Equals(sharedSecretBob));
