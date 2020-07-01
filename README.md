@@ -63,7 +63,7 @@ Console.WriteLine("Alice - Result: {0}", sharedSecretAlice);
 Console.WriteLine("Bob   - Result: {0}", sharedSecretBob);
 ```
 
-Note that all operations specific to the DH key exchange only use the abstract interfaces. By instantiating them using `new ECCryptoGroup(...)` we can make replace the multiplicative group with elliptic curves in our key exchange without changing anything about else about the implementation.
+Note that all operations specific to the DH key exchange only use the abstract interfaces. By instantiating them using `new CurveCryptoGroup(...)` we can make replace the multiplicative group with elliptic curves in our key exchange without changing anything about else about the implementation.
 
 ## Organization
 

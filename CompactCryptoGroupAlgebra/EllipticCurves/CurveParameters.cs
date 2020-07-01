@@ -9,7 +9,7 @@ namespace CompactCryptoGroupAlgebra
     /// A set of parameters of an elliptic curve with prime order over the
     /// finite field defined by prime P.
     /// </summary>
-    public class ECParameters // todo: consider CurveParameters as name
+    public class CurveParameters // todo: consider CurveParameters as name
     {
         /// <summary>
         /// The prime P definining the finite field underlying the elliptic curve.
@@ -34,7 +34,7 @@ namespace CompactCryptoGroupAlgebra
         /// <summary>
         /// A generator for the defined elliptic curve.
         /// </summary>
-        public ECPoint Generator { get; }
+        public CurvePoint Generator { get; }
 
         /// <summary>
         /// The cofactor of the defined elliptic curve.
@@ -45,10 +45,10 @@ namespace CompactCryptoGroupAlgebra
         public BigInteger Cofactor { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ECParameters"/> struct
+        /// Initializes a new instance of the <see cref="CurveParameters"/> struct
         /// with the given values.
         /// </summary>
-        /// <returns><see cref="ECParameters"/> instance with the given
+        /// <returns><see cref="CurveParameters"/> instance with the given
         /// parameters.</returns>
         /// <param name="p">Prime of the underlying field.</param>
         /// <param name="a">Curve parameter A.</param>
@@ -56,11 +56,11 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="generator">Curve generator point.</param>
         /// <param name="order">Generator order.</param>
         /// <param name="cofactor">Curve cofactor.</param>
-        public ECParameters(
+        public CurveParameters(
             BigPrime p,
             BigInteger a,
             BigInteger b,
-            ECPoint generator,
+            CurvePoint generator,
             BigPrime order,
             BigInteger cofactor
         )
@@ -80,8 +80,8 @@ namespace CompactCryptoGroupAlgebra
         /// <remarks>
         /// As defined in https://csrc.nist.gov/csrc/media/publications/fips/186/2/archive/2000-01-27/documents/fips186-2.pdf , p. 34.
         /// </remarks>
-        /// <returns>An instance of ECParameters for the NIST P-256 curve.</returns>
-        public static ECParameters CreateNISTP256() // todo: consider making that is static property field
+        /// <returns>An instance of CurveParameters for the NIST P-256 curve.</returns>
+        public static CurveParameters CreateNISTP256() // todo: consider making that is static property field
         {
             var p = BigPrime.CreateWithoutChecks(
                 BigInteger.Parse("115792089210356248762697446949407573530086143415290314195533631308867097853951")
@@ -111,11 +111,11 @@ namespace CompactCryptoGroupAlgebra
             var order = BigPrime.CreateWithoutChecks(
                 BigInteger.Parse("115792089210356248762697446949407573529996955224135760342422259061068512044369")
             );
-            return new ECParameters(
+            return new CurveParameters(
                 p: p,
                 a: a,
                 b: b,
-                generator: new ECPoint(generatorX, generatorY),
+                generator: new CurvePoint(generatorX, generatorY),
                 order: order,
                 cofactor: 1
             );
@@ -124,7 +124,7 @@ namespace CompactCryptoGroupAlgebra
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            var parameters = obj as ECParameters;
+            var parameters = obj as CurveParameters;
             return parameters != null &&
                    P.Equals(parameters.P) &&
                    A.Equals(parameters.A) &&

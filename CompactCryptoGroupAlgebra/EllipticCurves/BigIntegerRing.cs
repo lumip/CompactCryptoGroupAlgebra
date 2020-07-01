@@ -6,7 +6,7 @@ namespace CompactCryptoGroupAlgebra
     /// A prime integer ring using BigIntegers.
     /// </summary>
     /// <remarks>
-    /// Uses by elliptic curve implementations in <see cref="ECGroupAlgebra"/>.
+    /// Uses by elliptic curve implementations in <see cref="CurveGroupAlgebra"/>.
     /// </remarks>
     class BigIntegerRing
     {

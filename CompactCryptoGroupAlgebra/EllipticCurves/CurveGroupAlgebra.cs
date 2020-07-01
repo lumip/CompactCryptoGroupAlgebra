@@ -6,20 +6,20 @@ using System.Security.Cryptography;
 namespace CompactCryptoGroupAlgebra
 {
     /// <summary>
-    /// ECGroupAlgebra provides algebraic operations for groups based on elliptic curves
+    /// CurveGroupAlgebra provides algebraic operations for groups based on elliptic curves
     /// in Weierstrass form, i.e., <c>y² = x³ + Ax + B</c> over the finite field defined by a prime number <c>P</c>.
     ///
-    /// The exact parameters of the curve (A, B, P) are encoded in a <see cref="ECParameters"/> object.
+    /// The exact parameters of the curve (A, B, P) are encoded in a <see cref="CurveParameters"/> object.
     /// </summary>
-    public sealed class ECGroupAlgebra : CryptoGroupAlgebra<ECPoint>
+    public sealed class CurveGroupAlgebra : CryptoGroupAlgebra<CurvePoint>
     {
-        private readonly ECParameters _parameters;
+        private readonly CurveParameters _parameters;
         private readonly BigIntegerRing _ring;
 
         /// <summary>
         /// The neutral element of the group i.e., the point at infinity of the elliptic curve.
         /// </summary>
-        public override ECPoint NeutralElement { get { return ECPoint.PointAtInfinity; } }
+        public override CurvePoint NeutralElement { get { return CurvePoint.PointAtInfinity; } }
 
         /// <summary>
         /// The cofactor of the defined elliptic curve.
@@ -37,10 +37,10 @@ namespace CompactCryptoGroupAlgebra
         public override int ElementBitLength { get { return 2 * NumberLength.GetLength(_ring.Modulo).InBits; } }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ECGroupAlgebra"/> class.
+        /// Initializes a new instance of the <see cref="CurveGroupAlgebra"/> class.
         /// </summary>
         /// <param name="parameters">Parameters for the curve.</param>
-        public ECGroupAlgebra(ECParameters parameters)
+        public CurveGroupAlgebra(CurveParameters parameters)
             : base(parameters.Generator, parameters.Order)
         {
             _parameters = parameters;
@@ -57,7 +57,7 @@ namespace CompactCryptoGroupAlgebra
         /// <returns><c>true</c>, if the given points are negations of each other, <c>false</c> otherwise.</returns>
         /// <param name="left">Curve point</param>
         /// <param name="right">Curve point</param>
-        public bool AreNegations(ECPoint left, ECPoint right)
+        public bool AreNegations(CurvePoint left, CurvePoint right)
         {
             var inv = Negate(right);
             return left.Equals(inv);
@@ -76,7 +76,7 @@ namespace CompactCryptoGroupAlgebra
         /// <returns>The result of adding the two given points.</returns>
         /// <param name="left">Curve point to add.</param>
         /// <param name="right">Curve point to add.</param>
-        public override ECPoint Add(ECPoint left, ECPoint right)
+        public override CurvePoint Add(CurvePoint left, CurvePoint right)
         {
             BigInteger x1 = left.X;
             BigInteger x2 = right.X;
@@ -98,19 +98,19 @@ namespace CompactCryptoGroupAlgebra
             BigInteger x3 = _ring.Mod(_ring.Square(lambda) - x1 - x2);
             BigInteger y3 = _ring.Mod(lambda * (x1 - x3) - y1);
 
-            ECPoint result = ECPoint.PointAtInfinity;
+            CurvePoint result = CurvePoint.PointAtInfinity;
             bool pointsAreNegations = AreNegations(left, right);
             // note: branching is side-channel vulnerable
             if (left.IsAtInfinity && right.IsAtInfinity)
-                result = ECPoint.PointAtInfinity;
+                result = CurvePoint.PointAtInfinity;
             if (left.IsAtInfinity && !right.IsAtInfinity)
                 result = right.Clone();
             if (right.IsAtInfinity && !left.IsAtInfinity)
                 result = left.Clone();
             if (!left.IsAtInfinity && !right.IsAtInfinity && pointsAreNegations)
-                result = ECPoint.PointAtInfinity;
+                result = CurvePoint.PointAtInfinity;
             if (!left.IsAtInfinity && !right.IsAtInfinity && !pointsAreNegations)
-                result = new ECPoint(x3, y3);
+                result = new CurvePoint(x3, y3);
             return result;
         }
 
@@ -122,11 +122,11 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="p">The curve point o negate.</param>
         /// <returns>The negation of the given curve point.</returns>
-        public override ECPoint Negate(ECPoint p)
+        public override CurvePoint Negate(CurvePoint p)
         {
-            if (p.Equals(ECPoint.PointAtInfinity))
+            if (p.Equals(CurvePoint.PointAtInfinity))
                 return p;
-            return new ECPoint(p.X, _ring.Mod(-p.Y));
+            return new CurvePoint(p.X, _ring.Mod(-p.Y));
         }
 
         /// <summary>
@@ -141,13 +141,13 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="selection">Selection indicator.</param>
         /// <param name="first">First selection option.</param>
         /// <param name="second">First selection option.</param>
-        protected override ECPoint Multiplex(BigInteger selection, ECPoint first, ECPoint second)
+        protected override CurvePoint Multiplex(BigInteger selection, CurvePoint first, CurvePoint second)
         {
-            return ECPoint.Multiplex(selection, first, second);
+            return CurvePoint.Multiplex(selection, first, second);
         }
 
         /// <inheritdocs/>
-        protected override bool IsValidDerived(ECPoint point)
+        protected override bool IsValidDerived(CurvePoint point)
         {
             if (!(BigInteger.Zero <= point.X && point.X < _parameters.P))
                 return false;
@@ -165,7 +165,7 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="buffer">Byte array holding a representation of the curve point to restore.</param>
         /// <returns>The loaded curve point.</returns>
-        public override ECPoint FromBytes(byte[] buffer)
+        public override CurvePoint FromBytes(byte[] buffer)
         {
             if (buffer.Length < 2 * _ring.ElementByteLength)
                 throw new ArgumentException("The given buffer is too short to contain a valid element representation.", nameof(buffer));
@@ -178,7 +178,7 @@ namespace CompactCryptoGroupAlgebra
 
             BigInteger x = new BigInteger(xBytes);
             BigInteger y = new BigInteger(yBytes);
-            return new ECPoint(x, y);
+            return new CurvePoint(x, y);
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="element">The curve point to convert.</param>
         /// <returns>A byte array holding a representation of the given curve point.</returns>
-        public override byte[] ToBytes(ECPoint element)
+        public override byte[] ToBytes(CurvePoint element)
         {
             byte[] xBytes = element.X.ToByteArray();
             byte[] yBytes = element.Y.ToByteArray();
@@ -201,16 +201,16 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <inheritdoc/>
-        public override bool Equals(CryptoGroupAlgebra<ECPoint>? other)
+        public override bool Equals(CryptoGroupAlgebra<CurvePoint>? other)
         {
-            var algebra = other as ECGroupAlgebra;
-            return algebra != null! && EqualityComparer<ECParameters>.Default.Equals(_parameters, algebra._parameters);
+            var algebra = other as CurveGroupAlgebra;
+            return algebra != null! && EqualityComparer<CurveParameters>.Default.Equals(_parameters, algebra._parameters);
         }
 
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            return -1453010210 + EqualityComparer<ECParameters>.Default.GetHashCode(_parameters);
+            return -1453010210 + EqualityComparer<CurveParameters>.Default.GetHashCode(_parameters);
         }
     }
 }

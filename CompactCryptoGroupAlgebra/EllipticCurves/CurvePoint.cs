@@ -9,19 +9,19 @@ namespace CompactCryptoGroupAlgebra
     /// A point on an eliptic curve is a two-dimensional point with integer coordinates
     /// from the (finite) field underlying the curve or lies at infinity.
     /// 
-    /// Raw group element of <see cref="ECGroupAlgebra"/>. This struct is mainly a
+    /// Raw group element of <see cref="CurveGroupAlgebra"/>. This struct is mainly a
     /// information container and implements no algebraic operations. To perform
-    /// eliptic curve operations directly with ECPoint, use the methods of
-    /// <see cref="ECGroupAlgebra"/>. If you only need generic cryptographic
-    /// group algebra, use <see cref="CryptoGroup{ECPoint}"/> instead.
+    /// eliptic curve operations directly with CurvePoint, use the methods of
+    /// <see cref="CurveGroupAlgebra"/>. If you only need generic cryptographic
+    /// group algebra, use <see cref="CryptoGroup{CurvePoint}"/> instead.
     /// </summary>
-    public readonly struct ECPoint : IEquatable<ECPoint> // todo: consider CurvePoint as name
+    public readonly struct CurvePoint : IEquatable<CurvePoint> // todo: consider CurvePoint as name
     {
         /// <summary>
         /// Creates a point at infninity.
         /// </summary>
-        /// <returns>A ECPoint instance representing a point at infinity.</returns>
-        public static readonly ECPoint PointAtInfinity = new ECPoint(0, 0, true);
+        /// <returns>A CurvePoint instance representing a point at infinity.</returns>
+        public static readonly CurvePoint PointAtInfinity = new CurvePoint(0, 0, true);
 
         /// <summary>
         /// Whether this point is a point at infinity.
@@ -39,14 +39,14 @@ namespace CompactCryptoGroupAlgebra
         public BigInteger Y { get; }
 
         /// <summary>
-        /// Instantiates a new ECPoint with the given values.
+        /// Instantiates a new CurvePoint with the given values.
         /// 
         /// The integer coordinates are only relevant is the point is not at infinity.
         /// </summary>
         /// <param name="x">X-coordinate of the point.</param>
         /// <param name="y">Y-coordinate of the point.</param>
         /// <param name="isAtInfinity">Whether the point is a point at infinity</param>
-        private ECPoint(BigInteger x, BigInteger y, bool isAtInfinity)
+        private CurvePoint(BigInteger x, BigInteger y, bool isAtInfinity)
         {
             X = x;
             Y = y;
@@ -54,21 +54,21 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <summary>
-        /// Instantiates a new ECPoint with the given coordinates.
+        /// Instantiates a new CurvePoint with the given coordinates.
         /// </summary>
         /// <param name="x">X-coordinate of the point.</param>
         /// <param name="y">Y-coordinate of the point.</param>
-        public ECPoint(BigInteger x, BigInteger y) // todo: consider making this a static factory method
+        public CurvePoint(BigInteger x, BigInteger y) // todo: consider making this a static factory method
             : this(x, y, false)
         { }
 
         /// <summary>
         /// Clones this point.
         /// </summary>
-        /// <returns>A new ECPoint instance that is an identical copy of the original instance.</returns>
-        public ECPoint Clone()
+        /// <returns>A new CurvePoint instance that is an identical copy of the original instance.</returns>
+        public CurvePoint Clone()
         {
-            return new ECPoint(X, Y, IsAtInfinity);
+            return new CurvePoint(X, Y, IsAtInfinity);
         }
         
         /// <summary>
@@ -87,7 +87,7 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="other">The point to compare this one to.</param>
         /// <returns>True, if either both points are points at infinity or have identical coordinates.</returns>
-        public bool Equals(ECPoint other)
+        public bool Equals(CurvePoint other)
         {
             return (IsAtInfinity && other.IsAtInfinity) || (!IsAtInfinity && !other.IsAtInfinity && (X == other.X) && (Y == other.Y));
         }
@@ -130,22 +130,22 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <summary>
-        /// Selects one of two given <see cref="ECPoint"/> instances.
+        /// Selects one of two given <see cref="CurvePoint"/> instances.
         /// 
         /// This allows side-channel resistant selection by avoiding branching.
         /// The selection is made based on the value of the parameter
         /// <paramref name="selection"/>. A value of <c>BigInteger.Zero</c>selects the curve point
         /// given as <paramref name="first"/>, a value of <c>BigInteger.One</c> selects <paramref name="second"/>.
         /// </summary>
-        /// <returns>The selected <see cref="ECPoint"/> instance.</returns>
+        /// <returns>The selected <see cref="CurvePoint"/> instance.</returns>
         /// <param name="selection">Selection indicator.</param>
         /// <param name="first">First selection option.</param>
         /// <param name="second">First selection option.</param>
-        public static ECPoint Multiplex(BigInteger selection, ECPoint first, ECPoint second)
+        public static CurvePoint Multiplex(BigInteger selection, CurvePoint first, CurvePoint second)
         {
             Debug.Assert(selection.IsOne || selection.IsZero);
             var sel = !selection.IsZero;
-            return new ECPoint(
+            return new CurvePoint(
                 Multiplex(selection, first.X, second.X),
                 Multiplex(selection, first.Y, second.Y),
                 Multiplex(sel, first.IsAtInfinity, second.IsAtInfinity)
