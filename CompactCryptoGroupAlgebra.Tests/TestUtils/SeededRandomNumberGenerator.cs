@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace CompactCryptoGroupAlgebra.Tests
+namespace CompactCryptoGroupAlgebra.Tests.TestUtils
 {
     public class SeededRandomNumberGenerator : RandomNumberGenerator
     {

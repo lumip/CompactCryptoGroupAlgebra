@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace CompactCryptoGroupAlgebra
+namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
     /// <summary>
     /// A point on an eliptic curve.
@@ -15,7 +15,7 @@ namespace CompactCryptoGroupAlgebra
     /// <see cref="CurveGroupAlgebra"/>. If you only need generic cryptographic
     /// group algebra, use <see cref="CryptoGroup{CurvePoint}"/> instead.
     /// </summary>
-    public readonly struct CurvePoint : IEquatable<CurvePoint> // todo: consider CurvePoint as name
+    public readonly struct CurvePoint : IEquatable<CurvePoint>
     {
         /// <summary>
         /// Creates a point at infninity.

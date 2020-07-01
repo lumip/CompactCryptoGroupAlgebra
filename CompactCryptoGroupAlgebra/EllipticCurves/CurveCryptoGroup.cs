@@ -1,5 +1,5 @@
 ﻿using System;
-namespace CompactCryptoGroupAlgebra
+namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
     /// <summary>
     /// Cryptographic group based on point addition in elliptic curves in Weierstrass form.

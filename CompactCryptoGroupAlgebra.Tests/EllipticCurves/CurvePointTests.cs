@@ -3,9 +3,7 @@ using System.Numerics;
 
 using NUnit.Framework;
 
-using CompactCryptoGroupAlgebra;
-
-namespace CompactCryptoGroupAlgebra.Tests
+namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
 {
     [TestFixture]
     public class CurvePointTests

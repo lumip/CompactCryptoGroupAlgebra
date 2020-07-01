@@ -2,6 +2,8 @@
 using System.Numerics;
 using NUnit.Framework;
 
+using CompactCryptoGroupAlgebra.Tests.TestUtils;
+
 namespace CompactCryptoGroupAlgebra.Tests
 {
     [TestFixture]

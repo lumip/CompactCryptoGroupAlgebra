@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace CompactCryptoGroupAlgebra
+namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
     /// <summary>
     /// A prime integer ring using BigIntegers.

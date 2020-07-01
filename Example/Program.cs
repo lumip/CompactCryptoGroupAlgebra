@@ -1,8 +1,9 @@
 ﻿using System;
-
-using CompactCryptoGroupAlgebra;
 using System.Numerics;
 using System.Security.Cryptography;
+
+using CompactCryptoGroupAlgebra;
+using CompactCryptoGroupAlgebra.Multiplicative;
 
 namespace Example
 {

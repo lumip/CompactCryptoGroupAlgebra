@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Security.Cryptography;
 
-namespace CompactCryptoGroupAlgebra
+namespace CompactCryptoGroupAlgebra.Multiplicative
 {
     /// <summary>
     /// Algebraic group operations based on multiplications in the finite field of a prime number <c>P</c>.

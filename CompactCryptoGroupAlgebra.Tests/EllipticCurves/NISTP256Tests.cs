@@ -4,9 +4,7 @@ using System.Globalization;
 
 using NUnit.Framework;
 
-using CompactCryptoGroupAlgebra;
-
-namespace CompactCryptoGroupAlgebra.Tests
+namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
 {
 
     [TestFixture]

@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Numerics;
-using System.Security.Cryptography;
 
-namespace CompactCryptoGroupAlgebra
+namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
     /// <summary>
     /// A set of parameters of an elliptic curve with prime order over the
     /// finite field defined by prime P.
     /// </summary>
-    public class CurveParameters // todo: consider CurveParameters as name
+    public class CurveParameters
     {
         /// <summary>
         /// The prime P definining the finite field underlying the elliptic curve.

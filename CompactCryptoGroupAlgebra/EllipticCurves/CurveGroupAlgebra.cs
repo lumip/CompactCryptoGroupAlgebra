@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Security.Cryptography;
 
-namespace CompactCryptoGroupAlgebra
+namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
     /// <summary>
     /// CurveGroupAlgebra provides algebraic operations for groups based on elliptic curves
