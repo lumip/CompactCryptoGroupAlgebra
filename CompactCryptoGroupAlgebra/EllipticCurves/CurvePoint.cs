@@ -26,7 +26,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <summary>
         /// Whether this point is a point at infinity.
         /// </summary>
-        public bool IsAtInfinity { get; } // todo: consider just doing Equals with PointAtInfinity
+        public bool IsAtInfinity { get; }
 
         /// <summary>
         /// X-coordinate of this point.
@@ -58,7 +58,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// </summary>
         /// <param name="x">X-coordinate of the point.</param>
         /// <param name="y">Y-coordinate of the point.</param>
-        public CurvePoint(BigInteger x, BigInteger y) // todo: consider making this a static factory method
+        public CurvePoint(BigInteger x, BigInteger y)
             : this(x, y, false)
         { }
 

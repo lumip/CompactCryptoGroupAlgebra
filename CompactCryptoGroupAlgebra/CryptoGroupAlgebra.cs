@@ -136,7 +136,7 @@ namespace CompactCryptoGroupAlgebra
         public T MultiplyScalar(T e, BigInteger k)
         {
             if (k < BigInteger.Zero)
-                throw new ArgumentOutOfRangeException(nameof(k), "The given factor must be non-negative."); // todo: check other occurrences for argument order
+                throw new ArgumentOutOfRangeException(nameof(k), "The given factor must be non-negative.");
             k = k % Order; // k * e is at least periodic in Order
             return MultiplyScalarUnchecked(e, k, OrderBitLength);
         }
@@ -211,7 +211,7 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="other">The <see cref="CryptoGroupAlgebra{T}"/> to compare with the current <see cref="CryptoGroupAlgebra{T}"/>.</param>
         /// <returns><c>true</c> if the specified <see cref="CryptoGroupAlgebra{T}"/> is equal to the current
-        /// <see cref="CompactCryptoGroupAlgebra.MultiplicativeGroupAlgebra"/>; otherwise, <c>false</c>.</returns>
+        /// <see cref="CryptoGroupAlgebra{T}"/>; otherwise, <c>false</c>.</returns>
         public abstract bool Equals(CryptoGroupAlgebra<T>? other);
 
         /// <inheritdoc/>

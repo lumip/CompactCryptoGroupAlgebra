@@ -28,7 +28,7 @@ namespace CompactCryptoGroupAlgebra
             _baseAlgebra = baseAlgebra;
 
             if (fixedFactorBitLength <= 0 || fixedFactorBitLength > _baseAlgebra.OrderBitLength)
-                throw new ArgumentOutOfRangeException("Factor bit length must be a positive integer not larger than the group order.", nameof(fixedFactorBitLength));
+                throw new ArgumentOutOfRangeException(nameof(fixedFactorBitLength), "Factor bit length must be a positive integer not larger than the group order.");
             FactorBitLength = fixedFactorBitLength;
         }
 

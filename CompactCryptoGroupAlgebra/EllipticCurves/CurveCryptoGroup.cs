@@ -21,7 +21,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         { }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="MultiplicativeCryptoGroup"/>
+        /// Initializes a new instance of <see cref="CurveCryptoGroup"/>
         /// given the curve's parameters.
         /// </summary>
         /// <param name="curveParameters">A <see cref="CurveParameters"/> instance holding valid curve parameters.</param>
