@@ -43,7 +43,7 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="order">Order of the group's generator.</param>
         protected CryptoGroupAlgebra(T generator, BigPrime order)
         {
-            // todo: would be nice to do IsValid(generator) here - but that is virtual
+            // todo: would be nice to do IsElement(generator) here - but that is virtual
             Generator = generator;
             Order = order;
         }
@@ -168,10 +168,10 @@ namespace CompactCryptoGroupAlgebra
         public abstract T Add(T left, T right);
 
         /// <inheritdoc/>
-        public bool IsValid(T element)
+        public bool IsElement(T element)
         {
             // implementation specific checks
-            if (!IsValidDerived(element)) return false;
+            if (!IsElementDerived(element)) return false;
 
             // verifying that the point is not from a small subgroup of the whole curve (and thus outside
             // of the safe subgroup over which operations are considered)
@@ -188,16 +188,16 @@ namespace CompactCryptoGroupAlgebra
         /// Implementation specific checks for validity of group elements.
         /// 
         /// Must be provided by inheriting classes and is called by
-        /// <see cref="IsValid"/>.
+        /// <see cref="IsElement"/>.
         /// </summary>
         /// <param name="element">The group element candidate to be checked for validity.</param>
         /// <returns><c>true</c>, if the candidate is valid, <c>false</c> otherwise.</returns>
         /// <remarks>
-        /// Implementations of <see cref="IsValidDerived(T)"/> do not need to
+        /// Implementations of <see cref="IsElementDerived(T)"/> do not need to
         /// check whether the element candidate has too small order, as that
-        /// check is performed in <see cref="IsValid(T)"/>.
+        /// check is performed in <see cref="IsElement(T)"/>.
         /// </remarks>
-        protected abstract bool IsValidDerived(T element);
+        protected abstract bool IsElementDerived(T element);
 
         /// <inheritdoc/>
         public abstract T FromBytes(byte[] buffer);

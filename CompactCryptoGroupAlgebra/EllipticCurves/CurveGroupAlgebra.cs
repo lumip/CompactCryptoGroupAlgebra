@@ -44,7 +44,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         {
             _parameters = parameters;
             _ring = new BigIntegerRing(_parameters.P);
-            if (!IsValid(Generator))
+            if (!IsElement(Generator))
                 throw new ArgumentException("The point given as generator is" +
                 	"not a valid point on the curve.", nameof(parameters));
         }
@@ -146,7 +146,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         }
 
         /// <inheritdocs/>
-        protected override bool IsValidDerived(CurvePoint point)
+        protected override bool IsElementDerived(CurvePoint point)
         {
             if (!(BigInteger.Zero <= point.X && point.X < _parameters.P))
                 return false;

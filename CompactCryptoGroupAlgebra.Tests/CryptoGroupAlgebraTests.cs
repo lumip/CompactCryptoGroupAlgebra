@@ -12,7 +12,7 @@ namespace CompactCryptoGroupAlgebra.Tests
     {
         int Multiplex(BigInteger selection, int left, int right);
         int MultiplyScalarUnchecked(int e, BigInteger k, int factorBitLength);
-        bool IsValidDerived(int e);
+        bool IsElementDerived(int e);
     }
 
     [TestFixture]

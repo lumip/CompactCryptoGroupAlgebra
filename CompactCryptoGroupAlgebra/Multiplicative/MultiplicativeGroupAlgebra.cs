@@ -45,7 +45,7 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
             : base(generator, order)
         {
             Prime = prime;
-            if (!IsValid(generator))
+            if (!IsElement(generator))
                 throw new ArgumentException("The generator must be an element of the group.", nameof(generator));
         }
 
@@ -69,7 +69,7 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         }
 
         /// <inheritdoc/>
-        protected override bool IsValidDerived(BigInteger element)
+        protected override bool IsElementDerived(BigInteger element)
         {
             return (element > BigInteger.Zero && element < Prime);
         }

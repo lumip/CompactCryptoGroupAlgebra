@@ -45,7 +45,7 @@ namespace CompactCryptoGroupAlgebra
         {
             Algebra = groupAlgebra;
             
-            if (!Algebra.IsValid(value))
+            if (!Algebra.IsElement(value))
                 throw new ArgumentException("The provided value is not a valid element of the group.", nameof(value));
             Value = value;
         }
@@ -62,7 +62,7 @@ namespace CompactCryptoGroupAlgebra
             Algebra = groupAlgebra;
 
             T value = Algebra.FromBytes(valueBuffer);
-            if (!Algebra.IsValid(value))
+            if (!Algebra.IsElement(value))
                 throw new ArgumentException("The provided value is not a valid element of the group.", nameof(value));
             Value = value;
         }

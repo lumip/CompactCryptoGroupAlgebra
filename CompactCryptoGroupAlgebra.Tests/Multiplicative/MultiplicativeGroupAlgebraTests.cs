@@ -66,10 +66,10 @@ namespace CompactCryptoGroupAlgebra.Multiplicative.Tests
         [TestCase(2)]
         [TestCase(5)]
         [TestCase(10)]
-        public void TestIsValidAcceptsValidElements(int elementInt)
+        public void TestIsElementAcceptsValidElements(int elementInt)
         {
             var element = new BigInteger(elementInt);
-            Assert.IsTrue(groupAlgebra!.IsValid(element));
+            Assert.IsTrue(groupAlgebra!.IsElement(element));
         }
 
         [Test]
@@ -77,19 +77,19 @@ namespace CompactCryptoGroupAlgebra.Multiplicative.Tests
         [TestCase(-3)]
         [TestCase(23)]
         [TestCase(136)]
-        public void TestIsValidRejectsInvalidElementsOutOfBounds(int elementInt)
+        public void TestIsElementRejectsInvalidElementsOutOfBounds(int elementInt)
         {
             var element = new BigInteger(elementInt);
-            Assert.IsFalse(groupAlgebra!.IsValid(element));
+            Assert.IsFalse(groupAlgebra!.IsElement(element));
         }
 
         [Test]
         [TestCase(1)]
         [TestCase(22)]
-        public void TestIsValidRejectsUnsafeElements(int elementInt)
+        public void TestIsElementRejectsUnsafeElements(int elementInt)
         {
             var element = new BigInteger(elementInt);
-            Assert.IsFalse(groupAlgebra!.IsValid(element));
+            Assert.IsFalse(groupAlgebra!.IsElement(element));
         }
 
         [Test]

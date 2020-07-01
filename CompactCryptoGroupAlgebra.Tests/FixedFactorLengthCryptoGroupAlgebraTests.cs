@@ -238,7 +238,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         }
 
         [Test]
-        public void TestIsValidCallsBaseAlgebra()
+        public void TestIsElementCallsBaseAlgebra()
         {
             var generator = 3;
             int element = 9;
@@ -249,16 +249,16 @@ namespace CompactCryptoGroupAlgebra.Tests
 
             var baseAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order);
             baseAlgebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
-                .Setup(alg => alg.IsValidDerived(It.IsAny<int>())).Returns(true);
+                .Setup(alg => alg.IsElementDerived(It.IsAny<int>())).Returns(true);
             baseAlgebraMock.Setup(alg => alg.Cofactor).Returns(1);
             Debug.Assert(orderBitLength == baseAlgebraMock.Object.OrderBitLength);
 
             var fixedAlgebra = new FixedFactorLengthCryptoGroupAlgebra<int>(baseAlgebraMock.Object, factorBitLength);
-            Assert.IsTrue(fixedAlgebra.IsValid(element));
+            Assert.IsTrue(fixedAlgebra.IsElement(element));
 
             baseAlgebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
                 .Verify(
-                    alg => alg.IsValidDerived(It.Is<int>(x => x == element)),
+                    alg => alg.IsElementDerived(It.Is<int>(x => x == element)),
                     Times.Once()
             );
         }

@@ -75,9 +75,9 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <inheritdoc/>
-        public bool IsValid(E element)
+        public bool IsElement(E element)
         {
-            return _baseAlgebra.IsValid(element);
+            return _baseAlgebra.IsElement(element);
         }
 
         /// <inheritdoc/>

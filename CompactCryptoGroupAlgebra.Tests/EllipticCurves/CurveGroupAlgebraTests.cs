@@ -160,14 +160,14 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         {
             var curve = new CurveGroupAlgebra(ecParams);
             var point = new CurvePoint(xRaw, yRaw);
-            Assert.IsTrue(curve.IsValid(point));
+            Assert.IsTrue(curve.IsElement(point));
         }
 
         [Test]
-        public void TestIsValidFalseForPointAtInfinity()
+        public void TestIsElementFalseForPointAtInfinity()
         {
             var curve = new CurveGroupAlgebra(ecParams);
-            Assert.IsFalse(curve.IsValid(CurvePoint.PointAtInfinity));
+            Assert.IsFalse(curve.IsElement(CurvePoint.PointAtInfinity));
         }
 
         [Test]
@@ -177,20 +177,20 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCase(16, -15)]
         [TestCase(78, 4)]
         [TestCase(4, 78)]
-        public void TestIsValidFalseForPointNotOnCurve(int xRaw, int yRaw)
+        public void TestIsElementFalseForPointNotOnCurve(int xRaw, int yRaw)
         {
             var curve = new CurveGroupAlgebra(ecParams);
             var point = new CurvePoint(xRaw, yRaw);
-            Assert.IsFalse(curve.IsValid(point));
+            Assert.IsFalse(curve.IsElement(point));
         }
 
         [Test]
         [TestCase(10, 0)]
-        public void TestIsValidFalseForLowOrderCurvePoint(int xRaw, int yRaw)
+        public void TestIsElementFalseForLowOrderCurvePoint(int xRaw, int yRaw)
         {
             var curve = new CurveGroupAlgebra(ecParams);
             var point = new CurvePoint(xRaw, yRaw);
-            Assert.IsFalse(curve.IsValid(point));
+            Assert.IsFalse(curve.IsElement(point));
         }
 
         [Test]
