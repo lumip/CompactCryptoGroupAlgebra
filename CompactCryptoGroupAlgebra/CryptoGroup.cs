@@ -109,7 +109,7 @@ namespace CompactCryptoGroupAlgebra
         public CryptoGroupElement<T> Add(CryptoGroupElement<T> left, CryptoGroupElement<T> right)
         {
             if (!left.Algebra.Equals(Algebra))
-                throw new ArgumentException("The arugment is not an element of the group.", nameof(left));
+                throw new ArgumentException("The argument is not an element of the group.", nameof(left));
             if (!right.Algebra.Equals(Algebra))
                 throw new ArgumentException("The argument is not an element of the group.", nameof(right));
             return CreateGroupElement(Algebra.Add(left.Value, right.Value));
@@ -154,7 +154,7 @@ namespace CompactCryptoGroupAlgebra
         public CryptoGroupElement<T> MultiplyScalar(CryptoGroupElement<T> element, BigInteger k)
         {
             if (!element.Algebra.Equals(Algebra))
-                throw new ArgumentException("The arugment is not an element of the group.", nameof(element));
+                throw new ArgumentException("The argument is not an element of the group.", nameof(element));
             return CreateGroupElement(Algebra.MultiplyScalar(element.Value, k));
         }
 
@@ -168,7 +168,7 @@ namespace CompactCryptoGroupAlgebra
         public CryptoGroupElement<T> Negate(CryptoGroupElement<T> element)
         {
             if (!element.Algebra.Equals(Algebra))
-                throw new ArgumentException("The arugment is not an element of the group.", nameof(element));
+                throw new ArgumentException("The argument is not an element of the group.", nameof(element));
             return CreateGroupElement(Algebra.Negate(element.Value));
         }
 
@@ -181,13 +181,13 @@ namespace CompactCryptoGroupAlgebra
         ///
         /// To obtain a group element for a given index, see <see cref="Generate(BigInteger)"/>.
         /// </summary>
-        /// <param name="rng">A (cryptographically strong) random number generator instance from
+        /// <param name="randomNumberGenerator">A (cryptographically strong) random number generator instance from
         /// which the index will be drawn.
         /// </param>
         /// <returns>A tuple of the random index and the corresponding group element.</returns>
-        public (BigInteger, CryptoGroupElement<T>) GenerateRandom(RandomNumberGenerator rng)
+        public (BigInteger, CryptoGroupElement<T>) GenerateRandom(RandomNumberGenerator randomNumberGenerator)
         {
-            BigInteger index = rng.RandomBetween(1, Order - 1);
+            BigInteger index = randomNumberGenerator.RandomBetween(1, Order - 1);
             CryptoGroupElement<T> element = Generate(index);
             return (index, element);
         }
