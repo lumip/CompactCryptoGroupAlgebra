@@ -21,7 +21,7 @@ namespace Example
             BigInteger generator = 4;
 
             // Creating the group instance
-            var group = new MultiplicativeCryptoGroup(prime, order, generator);
+            var group = MultiplicativeGroupAlgebra.CreateCryptoGroup(prime, order, generator);
             DoDiffieHelman(group, randomNumberGenerator);
         }
 

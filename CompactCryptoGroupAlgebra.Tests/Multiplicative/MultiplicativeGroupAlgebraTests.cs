@@ -223,5 +223,14 @@ namespace CompactCryptoGroupAlgebra.Multiplicative.Tests
             Assert.AreEqual(groupAlgebra!.GetHashCode(), otherAlgebra.GetHashCode());
         }
 
+        [Test]
+        public void TestCreateCryptoGroup()
+        {
+            var group = MultiplicativeGroupAlgebra.CreateCryptoGroup(
+                groupAlgebra!.Prime, groupAlgebra!.Order, groupAlgebra!.Generator
+            );
+            Assert.AreEqual(groupAlgebra, group.Algebra);
+        }
+
     }
 }

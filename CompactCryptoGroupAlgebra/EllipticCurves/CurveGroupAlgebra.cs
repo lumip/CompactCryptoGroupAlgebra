@@ -5,10 +5,13 @@ using System.Numerics;
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
     /// <summary>
-    /// CurveGroupAlgebra provides algebraic operations for groups based on elliptic curves
-    /// in Weierstrass form, i.e., <c>y² = x³ + Ax + B</c> over the finite field defined by a prime number <c>P</c>.
+    /// Cryptographic group based on point addition in elliptic curves in Weierstrass form.
+    /// 
+    /// Weierstrass curves are of form <c>y² = x³ + Ax + B</c>, with all numbers from finite field defined
+    /// by a prime number <c>P</c>. Elements of the groups are all points (<c>x mod P</c>, <c>y mod P</c>) that satisfy
+    /// the curve equation (and the addtional "point at infinity" as neutral element).
     ///
-    /// The exact parameters of the curve (A, B, P) are encoded in a <see cref="CurveParameters"/> object.
+    /// The exact parameters of the curve (<c>A</c>, <c>B</c>, <c>P</c>) are encoded in a <see cref="CurveParameters"/> object.
     /// </summary>
     public sealed class CurveGroupAlgebra : CryptoGroupAlgebra<CurvePoint>
     {
@@ -210,6 +213,16 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public override int GetHashCode()
         {
             return -1453010210 + EqualityComparer<CurveParameters>.Default.GetHashCode(_parameters);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CryptoGroup{CurvePoint}" /> instance using a <see cref="CurveGroupAlgebra" />
+        /// instance with the given parameters.
+        /// </summary>
+        /// <param name="curveParameters">The prime modulo of the group.</param>
+        public static CryptoGroup<CurvePoint> CreateCryptoGroup(CurveParameters curveParameters)
+        {
+            return new CryptoGroup<CurvePoint>(new CurveGroupAlgebra(curveParameters));
         }
     }
 }

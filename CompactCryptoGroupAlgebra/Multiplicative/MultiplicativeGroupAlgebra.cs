@@ -105,5 +105,20 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
             hashCode = hashCode * -1521134295 + EqualityComparer<BigInteger>.Default.GetHashCode(Generator);
             return hashCode;
         }
+
+        /// <summary>
+        /// Creates a <see cref="CryptoGroup{BigInteger}" /> instance using a <see cref="MultiplicativeGroupAlgebra" />
+        /// instance with the given parameters.
+        /// </summary>
+        /// <param name="prime">The prime modulo of the group.</param>
+        /// <param name="order">The order of the group</param>
+        /// <param name="generator">The generator of the group.</param>
+        public static CryptoGroup<BigInteger> CreateCryptoGroup(BigPrime prime, BigPrime order, BigInteger generator)
+        {
+            return new CryptoGroup<BigInteger>(new MultiplicativeGroupAlgebra(
+                prime, order, generator
+            ));
+        }
+        
     }
 }

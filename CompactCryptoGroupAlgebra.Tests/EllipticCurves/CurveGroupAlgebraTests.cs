@@ -421,5 +421,13 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
 
             Assert.AreEqual(groupAlgebra.GetHashCode(), otherAlgebra.GetHashCode());
         }
+
+        [Test]
+        public void TestCreateCryptoGroup()
+        {
+            var groupAlgebra = new CurveGroupAlgebra(ecParams);
+            var group = CurveGroupAlgebra.CreateCryptoGroup(ecParams);
+            Assert.AreEqual(groupAlgebra, group.Algebra);
+        }
     }
 }

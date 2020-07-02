@@ -23,32 +23,26 @@ namespace CompactCryptoGroupAlgebra
     /// </summary>
     /// <typeparam name="T">The data type used for raw group elements the algebraic operations operate on.</typeparam>
     /// <remarks>
-    /// Implementers of <see cref="CryptoGroup{T}"/> should provide an implementation of
-    /// <see cref="ICryptoGroupAlgebra{T}"/> (preferrably by extending <see cref="CryptoGroupAlgebra{T}"/>)
-    /// to realize basic algebraic operations and an extension of <see cref="CryptoGroupElement{T}"/> 
-    /// which can then be employed in a specialization of <see cref="CryptoGroup{T}"/>.
-    /// 
-    /// All these classes are designed to have a minimum of fully virtual/abstract methods
-    /// in need of implementation to provide full algebraic group functionality.
+    /// <see cref="CryptoGroup{T}"/> provides a high-level API of algebraic operations
+    /// implemented in a <see cref="ICryptoGroupAlgebra{T}"/> instance, wrapping all
+    /// basic element type values in <see cref="CryptoGroupElement{T}" /> instances that
+    /// offer operator overloading.
     /// </remarks>
-    public abstract class CryptoGroup<T> where T: notnull
+    public class CryptoGroup<T> where T: notnull
     {
         /// <summary>
-        /// Subclass accessor for the <see cref="ICryptoGroupAlgebra{T}"/> that provides
-        /// implementations of underlying group operatiosn on raw group element type
+        /// The <see cref="ICryptoGroupAlgebra{T}"/> that provides
+        /// implementations of underlying group operations on raw group element type
         /// <typeparamref name="T"/>.
         /// </summary>
-        /// <value>The <see cref="ICryptoGroupAlgebra{T}"/> that provides
-        /// implementations of underlying group operatiosn on raw group element type
-        /// <typeparamref name="T"/>.</value>
-        protected ICryptoGroupAlgebra<T> Algebra { get; }
+        public ICryptoGroupAlgebra<T> Algebra { get; }
 
         /// <summary>
         /// Initializes a <see cref="CryptoGroup{T}"/> instance using a given <see cref="ICryptoGroupAlgebra{T}"/> instance
         /// for algebraic operations.
         /// </summary>
         /// <param name="algebra">Group algebra implementation on raw data type <typeparamref name="T"/></param>
-        protected CryptoGroup(ICryptoGroupAlgebra<T> algebra)
+        public CryptoGroup(ICryptoGroupAlgebra<T> algebra)
         {
             Algebra = algebra;
         }
@@ -87,20 +81,21 @@ namespace CompactCryptoGroupAlgebra
         /// <remarks>
         /// Used to convert outputs of <see cref="ICryptoGroupAlgebra{T}"/> operations to <see cref="CryptoGroupElement{T}"/>
         /// instances by methods within this class.
-        /// 
-        /// Needs to be implemented by specializations.
         /// </remarks>
-        protected abstract CryptoGroupElement<T> CreateGroupElement(T value);
+        protected virtual CryptoGroupElement<T> CreateGroupElement(T value)
+        {
+            return new CryptoGroupElement<T>(value, Algebra);
+        }
 
         /// <summary>
         /// Creates a new <see cref="CryptoGroupElement{T}"/> instance from a byte representation of the group element.
         /// </summary>
         /// <param name="buffer">Byte representation of the group elements.</param>
         /// <returns>An <see cref="CryptoGroupElement{T}"/>instance representing the given value.</returns>
-        /// <remarks>
-        /// Needs to be implemented by specializations.
-        /// </remarks>
-        protected abstract CryptoGroupElement<T> CreateGroupElement(byte[] buffer);
+        protected virtual CryptoGroupElement<T> CreateGroupElement(byte[] buffer)
+        {
+            return new CryptoGroupElement<T>(buffer, Algebra);
+        }
 
         /// <summary>
         /// Adds two group elements according to the addition semantics
