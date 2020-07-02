@@ -16,7 +16,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     public sealed class CurveGroupAlgebra : CryptoGroupAlgebra<CurvePoint>
     {
         private readonly CurveParameters _parameters;
-        private readonly BigIntegerRing _ring;
+        private readonly BigIntegerField _field;
 
         /// <summary>
         /// The neutral element of the group i.e., the point at infinity of the elliptic curve.
@@ -36,7 +36,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// 
         /// This is the number of bits required to represent any element of the group.
         /// </summary>
-        public override int ElementBitLength { get { return 2 * NumberLength.GetLength(_ring.Modulo).InBits; } }
+        public override int ElementBitLength { get { return 2 * NumberLength.GetLength(_field.Modulo).InBits; } }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CurveGroupAlgebra"/> class.
@@ -46,7 +46,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             : base(parameters.Generator, parameters.Order)
         {
             _parameters = parameters;
-            _ring = new BigIntegerRing(_parameters.P);
+            _field = new BigIntegerField(_parameters.P);
             if (!IsElement(Generator))
                 throw new ArgumentException("The point given as generator is" +
                 	"not a valid point on the curve.", nameof(parameters));
@@ -85,8 +85,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             BigInteger y1 = left.Y;
             BigInteger y2 = right.Y;
 
-            BigInteger lambdaSame = _ring.Mod((3 * _ring.Square(x1) + _parameters.A) * _ring.InvertMult(2 * y1));
-            BigInteger lambdaDiff = _ring.Mod((y2 - y1) * _ring.InvertMult(x2 - x1));
+            BigInteger lambdaSame = _field.Mod((3 * _field.Square(x1) + _parameters.A) * _field.InvertMult(2 * y1));
+            BigInteger lambdaDiff = _field.Mod((y2 - y1) * _field.InvertMult(x2 - x1));
             BigInteger lambda;
             // note: branching is side-channel vulnerable
             if (left.Equals(right)) // Equals probably not constant time
@@ -97,8 +97,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             {
                 lambda = lambdaDiff;
             }
-            BigInteger x3 = _ring.Mod(_ring.Square(lambda) - x1 - x2);
-            BigInteger y3 = _ring.Mod(lambda * (x1 - x3) - y1);
+            BigInteger x3 = _field.Mod(_field.Square(lambda) - x1 - x2);
+            BigInteger y3 = _field.Mod(lambda * (x1 - x3) - y1);
 
             CurvePoint result = CurvePoint.PointAtInfinity;
             bool pointsAreNegations = AreNegations(left, right);
@@ -128,7 +128,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         {
             if (p.Equals(CurvePoint.PointAtInfinity))
                 return p;
-            return new CurvePoint(p.X, _ring.Mod(-p.Y));
+            return new CurvePoint(p.X, _field.Mod(-p.Y));
         }
 
         /// <summary>
@@ -157,8 +157,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 return false;
 
             // verifying that the point satisfies the curve equation
-            BigInteger r = _ring.Mod(_ring.Pow(point.X, 3) + _parameters.A * point.X + _parameters.B);
-            BigInteger ySquared = _ring.Square(point.Y);
+            BigInteger r = _field.Mod(_field.Pow(point.X, 3) + _parameters.A * point.X + _parameters.B);
+            BigInteger ySquared = _field.Square(point.Y);
             return (r == ySquared);
         }
 
@@ -169,14 +169,14 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <returns>The loaded curve point.</returns>
         public override CurvePoint FromBytes(byte[] buffer)
         {
-            if (buffer.Length < 2 * _ring.ElementByteLength)
+            if (buffer.Length < 2 * _field.ElementByteLength)
                 throw new ArgumentException("The given buffer is too short to contain a valid element representation.", nameof(buffer));
 
-            byte[] xBytes = new byte[_ring.ElementByteLength];
-            byte[] yBytes = new byte[_ring.ElementByteLength];
+            byte[] xBytes = new byte[_field.ElementByteLength];
+            byte[] yBytes = new byte[_field.ElementByteLength];
 
-            Buffer.BlockCopy(buffer, 0, xBytes, 0, _ring.ElementByteLength);
-            Buffer.BlockCopy(buffer, _ring.ElementByteLength, yBytes, 0, _ring.ElementByteLength);
+            Buffer.BlockCopy(buffer, 0, xBytes, 0, _field.ElementByteLength);
+            Buffer.BlockCopy(buffer, _field.ElementByteLength, yBytes, 0, _field.ElementByteLength);
 
             BigInteger x = new BigInteger(xBytes);
             BigInteger y = new BigInteger(yBytes);
@@ -193,12 +193,12 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             byte[] xBytes = element.X.ToByteArray();
             byte[] yBytes = element.Y.ToByteArray();
 
-            Debug.Assert(xBytes.Length <= _ring.ElementByteLength);
-            Debug.Assert(yBytes.Length <= _ring.ElementByteLength);
+            Debug.Assert(xBytes.Length <= _field.ElementByteLength);
+            Debug.Assert(yBytes.Length <= _field.ElementByteLength);
 
-            byte[] result = new byte[2 * _ring.ElementByteLength];
+            byte[] result = new byte[2 * _field.ElementByteLength];
             Buffer.BlockCopy(xBytes, 0, result, 0, xBytes.Length);
-            Buffer.BlockCopy(yBytes, 0, result, _ring.ElementByteLength, yBytes.Length);
+            Buffer.BlockCopy(yBytes, 0, result, _field.ElementByteLength, yBytes.Length);
             return result;
         }
 
