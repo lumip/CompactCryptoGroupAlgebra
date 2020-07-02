@@ -27,40 +27,47 @@ using CompactCryptoGroupAlgebra;
 using System.Numerics;
 using System.Security.Cryptography;
 
-// Choosing parameters for multiplicative group:
-// order 11 subgroup with generator 4 of characteristic 23 multiplicative group 
-BigInteger prime = 23;
-BigInteger order = 11;
-BigInteger generator = 4;
+public static void Main(string[] args)
+{
+    // Instantiating a strong random number generator
+    RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
 
-// Creating the group instance
-ICryptoGroup group = new MultiplicativeCryptoGroup(prime, order, generator);
-// Instantiating a strong random number generator
-RandomNumberGenerator rng = RandomNumberGenerator.Create();
+    // Choosing parameters for multiplicative group
+    // order 11 subgroup with generator 4 of characteristic 23 multiplicative group 
+    BigPrime prime = BigPrime.Create(23, randomNumberGenerator);
+    BigPrime order = BigPrime.Create(11, randomNumberGenerator);
+    BigInteger generator = 4;
 
-// Generating DH secret and public key for Alice
-Tuple<BigInteger, ICryptoGroupElement> dhElementAlice = group.GenerateRandom(rng);
-BigInteger dhSecretAlice = dhElementAlice.Item1;
-ICryptoGroupElement dhPublicAlice = dhElementAlice.Item2;
+    // Creating the group instance
+    var group = MultiplicativeGroupAlgebra.CreateCryptoGroup(prime, order, generator);
+    DoDiffieHelman(group, randomNumberGenerator);
+}
 
-// Generating DH secret and public key for Bob
-Tuple<BigInteger, ICryptoGroupElement> dhElementBob = group.GenerateRandom(rng);
-BigInteger dhSecretBob = dhElementBob.Item1;
-ICryptoGroupElement dhPublicBob = dhElementBob.Item2;
+public static void DoDiffieHelman<T>(
+    CryptoGroup<T> group, RandomNumberGenerator randomNumberGenerator
+) where T : notnull
+{
+    // Generating DH secret and public key for Alice
+    (BigInteger dhSecretAlice, CryptoGroupElement<T> dhPublicAlice) = 
+        group.GenerateRandom(randomNumberGenerator);
 
-// Computing shared secret for Alice and Bob
-ICryptoGroupElement sharedSecretBob = group.MultiplyScalar(dhPublicAlice, dhSecretBob);
-ICryptoGroupElement sharedSecretAlice = group.MultiplyScalar(dhPublicBob, dhSecretAlice);
+    // Generating DH secret and public key for Bob
+    (BigInteger dhSecretBob, CryptoGroupElement<T> dhPublicBob) =
+        group.GenerateRandom(randomNumberGenerator);
 
-// Confirm that it's the same
-Debug.Assert(sharedSecretAlice.Equals(sharedSecretBob));
+    // Computing shared secret for Alice and Bob
+    CryptoGroupElement<T> sharedSecretBob = dhPublicAlice * dhSecretBob;
+    CryptoGroupElement<T> sharedSecretAlice = dhPublicBob * dhSecretAlice;
 
-// Print the results
-Console.WriteLine("Alice - Secret: {0}, Public: {1}", dhSecretAlice, dhPublicAlice);
-Console.WriteLine("Bob   - Secret: {0}, Public: {1}", dhSecretBob, dhPublicBob);
+    // Confirm that it's the same
+    Debug.Assert(sharedSecretAlice.Equals(sharedSecretBob));
 
-Console.WriteLine("Alice - Result: {0}", sharedSecretAlice);
-Console.WriteLine("Bob   - Result: {0}", sharedSecretBob);
+    Console.WriteLine($"Alice - Secret: {dhSecretAlice}, Public: {dhPublicAlice}");
+    Console.WriteLine($"Bob   - Secret: {dhSecretBob}, Public: {dhPublicBob}");
+
+    Console.WriteLine($"Alice - Result: {sharedSecretAlice}");
+    Console.WriteLine($"Bob   - Result: {sharedSecretBob}");
+}
 ```
 
 Note that all operations specific to the DH key exchange only use the abstract interfaces. By instantiating them using `new CurveCryptoGroup(...)` we can make replace the multiplicative group with elliptic curves in our key exchange without changing anything about else about the implementation.
