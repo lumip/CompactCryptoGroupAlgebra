@@ -151,9 +151,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <inheritdocs/>
         protected override bool IsElementDerived(CurvePoint point)
         {
-            if (!(BigInteger.Zero <= point.X && point.X < _parameters.P))
-                return false;
-            if (!(BigInteger.Zero <= point.Y && point.Y < _parameters.P))
+            if (!_field.IsElement(point.X) || !_field.IsElement(point.Y))
                 return false;
 
             // verifying that the point satisfies the curve equation

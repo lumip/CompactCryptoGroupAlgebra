@@ -1,34 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Security.Cryptography;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
-    public readonly struct MontgomeryPoint
-    {
-        public BigInteger X { get; }
-        public BigInteger Z { get; }
-        public bool IsAtInfinity { get { return Z.IsZero; } }
 
-        public MontgomeryPoint(BigInteger x, BigInteger z)
-        {
-            X = x;
-            Z = z;
-        }
-
-        public MontgomeryPoint(BigInteger x)
-            : this(x, BigInteger.One) { }
-
-        public static MontgomeryPoint AtInfinity = new MontgomeryPoint();
-
-        public bool Equals(MontgomeryPoint other)
-        {
-            return X == other.X && Z == other.Z;
-        }
-
-        public bool IsNormalized { get { return Z.IsOne; } }
-    }
     /// <summary>
     /// An implementation of <see cref="ICryptoGroupAlgebra{E}"/> for
     /// Montgomery curves using x-only arithmetic on projected coordinates.
