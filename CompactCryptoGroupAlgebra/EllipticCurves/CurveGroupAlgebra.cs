@@ -131,23 +131,6 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             return new CurvePoint(p.X, _field.Mod(-p.Y));
         }
 
-        /// <summary>
-        /// Selects one of two given curve points.
-        /// 
-        /// This allows side-channel resistant selection by avoiding branching.
-        /// The selection is made based on the value of the parameter
-        /// <paramref name="selection"/>. A value of <c>BigInteger.Zero</c>selects the curve point
-        /// given as <paramref name="first"/>, a value of <c>BigInteger.One</c> selects <paramref name="second"/>.
-        /// </summary>
-        /// <returns>The selected curve point.</returns>
-        /// <param name="selection">Selection indicator.</param>
-        /// <param name="first">First selection option.</param>
-        /// <param name="second">First selection option.</param>
-        protected override CurvePoint Multiplex(BigInteger selection, CurvePoint first, CurvePoint second)
-        {
-            return CurvePoint.Multiplex(selection, first, second);
-        }
-
         /// <inheritdocs/>
         protected override bool IsElementDerived(CurvePoint point)
         {

@@ -56,10 +56,9 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         }
 
         /// <inheritdoc/>
-        protected override BigInteger Multiplex(BigInteger selection, BigInteger left, BigInteger right)
+        protected override BigInteger Select(bool selectSecond, BigInteger left, BigInteger right)
         {
-            Debug.Assert(selection == BigInteger.Zero || selection == BigInteger.One);
-            return left + selection * (right - left);
+            return left + new BigInteger(Convert.ToInt32(selectSecond)) * (right - left);
         }
 
         /// <inheritdoc/>

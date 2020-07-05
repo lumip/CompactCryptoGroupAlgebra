@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Security.Cryptography;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
@@ -130,29 +129,6 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             BigInteger r = _field.Mod(_field.Pow(point.X, 3) + _parameters.A * _field.Square(point.X) + point.X);
             BigInteger ySquared = _field.Mod(_parameters.B * _field.Square(point.Y));
             return (r == ySquared);
-        }
-
-        /// <summary>
-        /// Selects one of two given curve points.
-        /// 
-        /// This allows side-channel resistant selection by avoiding branching.
-        /// The selection is made based on the value of the parameter
-        /// <paramref name="selection"/>. A value of <c>BigInteger.Zero</c>selects the curve point
-        /// given as <paramref name="first"/>, a value of <c>BigInteger.One</c> selects <paramref name="second"/>.
-        /// </summary>
-        /// <returns>The selected boolean.</returns>
-        /// <param name="selection">Selection indicator.</param>
-        /// <param name="first">First selection option.</param>
-        /// <param name="second">First selection option.</param>
-        protected override CurvePoint Multiplex(BigInteger selection, CurvePoint first, CurvePoint second)
-        {
-            return CurvePoint.Multiplex(selection, first, second);
-        }
-
-        /// <inheritdoc/>
-        protected override CurvePoint MultiplyScalarUnchecked(CurvePoint e, BigInteger k, int factorBitLength)
-        {
-            return base.MultiplyScalarUnchecked(e, k, factorBitLength);
         }
 
         /// <inheritdoc/>

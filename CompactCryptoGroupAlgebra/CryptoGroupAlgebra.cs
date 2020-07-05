@@ -64,16 +64,18 @@ namespace CompactCryptoGroupAlgebra
         /// Internal implementation of scalar multiplication.
         /// 
         /// Uses a double-and-add approach relying on the <see cref="Add(T, T)"/>
-        /// method. Since no data dependent branching occurs, the implementation
-        /// can be considered reasonably safe against timing/power/branch prediction
-        /// side channel attacks if the same is true for implementations of
-        /// <see cref="Add(T, T)"/> and <see cref="Multiplex(BigInteger, T, T)"/>.
+        /// method.
         /// 
-        /// To ensure this, the double-and-add implementation assumes that the scalar
+        /// To achieve some resistance against side channel attacks, the
+        /// double-and-add implementation assumes that the scalar
         /// factor's bit length is limited by a given upper bound and always executes
-        /// exactly that many iterations. To ensure resilience against side channel
-        /// attacks, this bit length should therefore be held constant over subsequent
-        /// invocations.
+        /// exactly that many iterations. <paramref name="factorBitLength"/>
+        /// should therefore be held constant over subsequent invocations.
+        ///
+        /// Note that true side channel resistance cannot be guaranteed at this level.
+        /// That would require all underlying implementations to be side channel resistant,
+        /// which is not the case e.g. for <see cref="BigInteger"/>, which is often
+        /// used throughout implementations.
         /// </summary>
         /// <remarks>
         /// This method is intended to be overriden with more specific implementations
@@ -100,10 +102,26 @@ namespace CompactCryptoGroupAlgebra
                 r0 = Add(r0, r0);
                 T r1 = Add(r0, e);
 
-                r0 = Multiplex(bitI, r0, r1);
+                r0 = Select(bitI.IsOne, r0, r1);
             }
             Debug.Assert(i == -1);
             return r0;
+        }
+
+        /// <summary>
+        /// Selects one of two elements based on a selection bit.
+        /// </summary>
+        /// <param name="selectSecond">Whether to select the second choice or not.</param>
+        /// <param name="first">The first selection choice.</param>
+        /// <param name="second">The second selection choice.</param>
+        /// <returns>
+        /// <paramref name="second"/> if <paramref name="selectSecond"/> is
+        /// <c>true</c>; otherwise <paramref name="first"/>
+        /// </returns>
+        protected virtual T Select(bool selectSecond, T first, T second)
+        {
+            if (selectSecond) return second;
+            return first;
         }
 
         /// <summary>
@@ -114,8 +132,9 @@ namespace CompactCryptoGroupAlgebra
         ///
         /// The optional parameter factorBitLength allows to specify the bit length
         /// of the scalar, which increases performance if it is significantly below
-        /// that of the order. However, to be resistant against side channel attacks,
-        /// this value should be held constant over subsequent calls to this method.
+        /// that of the order. However, this value should be held constant over
+        /// subsequent calls to this method to discourage timing and other side channel
+        /// attacks.
         /// </summary>
         /// <param name="e">A group element.</param>
         /// <param name="k">A scalar.</param>
@@ -141,30 +160,10 @@ namespace CompactCryptoGroupAlgebra
             return MultiplyScalarUnchecked(e, k, OrderBitLength);
         }
 
-        /// <summary>
-        /// Multiplexes two elements based on a selection bit.
-        /// 
-        /// Returns the second given group element (right) if the selection bit is 1, and the first
-        /// given element (left) otherwise.
-        /// </summary>
-        /// <remarks>
-        /// Implementers should take care to provide a data-independent, branch-free
-        /// implementation to be resistant to side channel attacks.
-        /// </remarks>
-        /// <param name="selection">Selection bit (as <see cref="BigInteger"/>). Takes values 0 or 1.</param>
-        /// <param name="left">Element to be returned when the selection bit is 0.</param>
-        /// <param name="right">Element to be returned when the selection bit is 1.</param>
-        /// <returns>The element determined by the selection bit.</returns>
-        protected abstract T Multiplex(BigInteger selection, T left, T right);
-
         /// <inheritdoc/>
         public abstract T NeutralElement { get; }
 
         /// <inheritdoc/>
-        /// <remarks>
-        /// Implementers should take care to provide a data-independent, branch-free
-        /// implementation to be resistant to side channel attacks.
-        /// </remarks>
         public abstract T Add(T left, T right);
 
         /// <inheritdoc/>

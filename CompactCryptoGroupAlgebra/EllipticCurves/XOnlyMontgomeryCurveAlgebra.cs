@@ -9,7 +9,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// An implementation of <see cref="ICryptoGroupAlgebra{E}"/> for
     /// Montgomery curves using x-only arithmetic on projected coordinates.
     /// 
-    /// Note: Does not implements the standard addition of <see cref="ICryptoGroupAlgebra{E}.Add(E, E)"/>
+    /// Note: Does not implement the standard addition of <see cref="ICryptoGroupAlgebra{E}.Add(E, E)"/>
     /// but only <see cref="ICryptoGroupAlgebra{E}.MultiplyScalar(E, BigInteger)"/>.
     /// </summary>
     /// <remarks>
@@ -178,73 +178,28 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         }
 
         /// <summary>
-        /// Selects one of two given BigInteger scalars.
-        /// 
-        /// This allows side-channel resistant selection by avoiding branching.
-        /// The selection is made based on the value of the parameter
-        /// <paramref name="selection"/>. A value of <c>BigInteger.Zero</c> selects the BigInteger
-        /// given as <paramref name="first"/>, a value of <c>BigInteger.One</c> selects <paramref name="second"/>.
-        /// </summary>
-        /// <returns>The selected BigInteger.</returns>
-        /// <param name="selection">Selection indicator.</param>
-        /// <param name="first">First selection option.</param>
-        /// <param name="second">Second selection option.</param>
-        protected override BigInteger Multiplex(BigInteger selection, BigInteger first, BigInteger second)
-        {
-            Debug.Assert(selection.IsOne || selection.IsZero);
-            return first + selection * (second - first);
-        }
-
-        /// <summary>
-        /// Selects one of two given curve points.
-        /// 
-        /// This allows side-channel resistant selection by avoiding branching.
-        /// The selection is made based on the value of the parameter
-        /// <paramref name="selection"/>. A value of <c>BigInteger.Zero</c> selects the curve point
-        /// given as <paramref name="first"/>, a value of <c>BigInteger.One</c> selects <paramref name="second"/>.
-        /// </summary>
-        /// <returns>The selected boolean.</returns>
-        /// <param name="selection">Selection indicator.</param>
-        /// <param name="first">First selection option.</param>
-        /// <param name="second">First selection option.</param>
-        private MontgomeryCurvePoint Multiplex(
-            BigInteger selection, MontgomeryCurvePoint first, MontgomeryCurvePoint second
-        )
-        {
-            Debug.Assert(selection.IsOne || selection.IsZero);
-            var sel = !selection.IsZero;
-            return new MontgomeryCurvePoint(
-                Multiplex(selection, first.X, second.X),
-                Multiplex(selection, first.Z, second.Z)
-            );
-        }
-
-        /// <summary>
         /// Conditionally swaps the two given curve points.
         /// 
         /// This allows side-channel resistant selection by avoiding branching.
         /// The swap is made based on the value of the parameter
-        /// <paramref name="selector"/>. A value of <c>BigInteger.Zero</c> means
+        /// <paramref name="swap"/>. A value of <c>BigInteger.Zero</c> means
         /// no swapping takes place, a value of <c>BigInteger.One</c> causes
         /// a swap.
         /// </summary>
         /// <returns>
         /// <c>(<paramref name="first"/>, <paramref name="second"/>)</c>
-        /// if <paramref name="selector"/> is <c>0</c>; otherwise
+        /// if <paramref name="swap"/> is <c>false</c>; otherwise
         /// <c>(<paramref name="second"/>, <paramref name="first"/>)</c>
         /// </returns>
-        /// <param name="selector">Swapping indicator.</param>
+        /// <param name="swap">Swapping indicator.</param>
         /// <param name="first">Curve point.</param>
         /// <param name="second">Curve point.</param>
         private (MontgomeryCurvePoint, MontgomeryCurvePoint) ConditionalSwap(
-            BigInteger selector, MontgomeryCurvePoint first, MontgomeryCurvePoint second
+            bool swap, MontgomeryCurvePoint first, MontgomeryCurvePoint second
         )
         {
-            Debug.Assert(selector.IsOne || selector.IsZero);
-            return (
-                Multiplex(selector, first, second),
-                Multiplex(selector, second, first)
-            );
+            if (swap) return (second, first);
+            return (first, second);
         }
 
         /// <inheritdoc/>
@@ -263,10 +218,10 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             {
                 BigInteger bitI = (k & mask) >> i;
 
-                (r0, r1) = ConditionalSwap(bitI, r0, r1);
+                (r0, r1) = ConditionalSwap(bitI.IsOne, r0, r1);
                 r1 = XOnlyAdd(r0, r1, point);
                 r0 = XOnlyDouble(r0);
-                (r0, r1) = ConditionalSwap(bitI, r0, r1);
+                (r0, r1) = ConditionalSwap(bitI.IsOne, r0, r1);
                 //if (bitI.IsZero)
                 //{
                 //    r1 = AddInternal(r0, r1, e);
