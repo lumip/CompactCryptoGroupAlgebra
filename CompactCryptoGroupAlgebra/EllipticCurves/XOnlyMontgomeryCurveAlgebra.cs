@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
-
+    
     /// <summary>
     /// An implementation of <see cref="ICryptoGroupAlgebra{E}"/> for
     /// Montgomery curves using x-only arithmetic on projected coordinates.
@@ -15,20 +15,20 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// <remarks>
     /// Implementation based on https://eprint.iacr.org/2017/212.pdf .
     /// </remarks>
-    public class ProjectedMontgomeryCurveAlgebra : CryptoGroupAlgebra<MontgomeryPoint>
+    public class XOnlyMontgomeryCurveAlgebra : CryptoGroupAlgebra<BigInteger>
     {
         private readonly CurveParameters _parameters;
         private BigIntegerField _field;
         private BigInteger _aConstant;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="ProjectedMontgomeryCurveAlgebra"/> 
+        /// Initializes a new instance of <see cref="XOnlyMontgomeryCurveAlgebra"/> 
         /// with given curve parameters.
         /// </summary>
         /// <param name="parameters">Curve parameters.</param>
-        public ProjectedMontgomeryCurveAlgebra(CurveParameters parameters)
+        public XOnlyMontgomeryCurveAlgebra(CurveParameters parameters)
             : base(
-                new MontgomeryPoint(parameters.Generator.X),
+                parameters.Generator.X,
                 parameters.Order
             )
         {
@@ -44,7 +44,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public override int ElementBitLength { get { return NumberLength.GetLength(_parameters.P).InBits; } }
 
         /// <inheritdoc/>
-        public override MontgomeryPoint NeutralElement { get { return MontgomeryPoint.AtInfinity; } }
+        public override BigInteger NeutralElement { get { return BigInteger.Zero; } }
 
         /// <summary>
         /// Sums two projected Montgomery point using only x- and z-coordinates and knowledge of 
@@ -56,7 +56,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <param name="right">Curve point to add.</param>
         /// <param name="diff">Difference of <paramref name="left"/> and
         /// <paramref name="right"/>.</param>
-        private MontgomeryPoint AddInternal(MontgomeryPoint left, MontgomeryPoint right, MontgomeryPoint diff)
+        private MontgomeryCurvePoint XOnlyAdd(MontgomeryCurvePoint left, MontgomeryCurvePoint right, MontgomeryCurvePoint diff)
         {
             if (right.IsAtInfinity)
                 return left;
@@ -85,22 +85,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 firstProduct - secondProduct
             ));
 
-            //var v0 = _ring.Mod(xp + zp);
-            //var v1 = _ring.Mod(xq - zq);
-            //v1 = _ring.Mod(v0 * v1);
-            //v0 = _ring.Mod(xp - zp);
-            //var v2 = _ring.Mod(xq + zq);
-            //v2 = _ring.Mod(v2 * v0);
-            //var v3 = _ring.Mod(v1 + v2);
-
-            //v3 = _ring.Square(v3);
-            //var v4 = _ring.Mod(v1 - v2);
-            //v4 = _ring.Square(v4);
-
-            //var xNew = _ring.Mod(diff.Z * v3);
-            //var zNew = _ring.Mod(diff.X * v4);
-
-            return new MontgomeryPoint(xNew, zNew);
+            return new MontgomeryCurvePoint(xNew, zNew);
         }
 
         /// <summary>
@@ -108,7 +93,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// </summary>
         /// <returns>The curve point.</returns>
         /// <param name="point">The doubled curve point.</param>
-        private MontgomeryPoint DoubleInternal(MontgomeryPoint point)
+        private MontgomeryCurvePoint XOnlyDouble(MontgomeryCurvePoint point)
         {
             BigInteger xp = point.X;
             BigInteger zp = point.Z;
@@ -120,19 +105,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var xNew = _field.Mod(xpPlusZpSquared * xpMinusZpSquared);
             var zNew = _field.Mod(xpzp4 * (xpMinusZpSquared + _aConstant * xpzp4));
 
-            //var v1 = _ring.Mod(xp + zp);
-            //v1 = _ring.Square(v1);
-            //var v2 = _ring.Mod(xp - zp);
-            //v2 = _ring.Square(v2);
-            //var xNew = _ring.Mod(v1 * v2);
-
-
-
-            //v1 = _ring.Mod(v1 - v2);
-            //var v3 = _ring.Mod((_parameters.A + 2) * _ring.InvertMult(4) * v1);
-            //v3 = _ring.Mod(v3 + v2);
-            //var zNew = _ring.Mod(v1 * v3);
-            return new MontgomeryPoint(xNew, zNew);
+            return new MontgomeryCurvePoint(xNew, zNew);
         }
 
         /// <summary>
@@ -141,39 +114,23 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// </summary>
         /// <returns>The curve point point.</returns>
         /// <param name="point">The renormalized curve point.</param>
-        public MontgomeryPoint RenormalizePoint(MontgomeryPoint point)
+        private MontgomeryCurvePoint RenormalizePoint(MontgomeryCurvePoint point)
         {
-            return new MontgomeryPoint(
+            return new MontgomeryCurvePoint(
                 _field.Mod(_field.InvertMult(point.Z) * point.X)
             );
         }
 
         /// <inheritdoc/>
-        public override MontgomeryPoint Add(MontgomeryPoint left, MontgomeryPoint right)
+        public override BigInteger Add(BigInteger left,BigInteger right)
         {
             throw new NotSupportedException("A projected Montgomery curve" +
             	"has no definition for the standard addition. Use the" +
             	"standard Montgomery curve implementation instead.");
         }
 
-        /// <summary>
-        /// Checks whether two given points are negations of each other, i.e.,
-        /// adding them results in the zero element (point at infinity).
-        /// </summary>
-        /// <returns>
-        /// <c>true</c>, if the given points are negations of each other;
-        /// <c>false</c> otherwise.
-        /// </returns>
-        /// <param name="left">Curve point</param>
-        /// <param name="right">Curve point</param>
-        public bool AreNegations(MontgomeryPoint left, MontgomeryPoint right)
-        {
-            var inv = Negate(right);
-            return left.Equals(inv);
-        }
-
         /// <inheritdoc/>
-        public override MontgomeryPoint FromBytes(byte[] buffer)
+        public override BigInteger FromBytes(byte[] buffer)
         {
             if (buffer == null)
                 throw new ArgumentNullException(nameof(buffer));
@@ -186,16 +143,13 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             Buffer.BlockCopy(buffer, 0, xBytes, 0, _field.ElementByteLength);
 
             BigInteger x = new BigInteger(xBytes);
-            return new MontgomeryPoint(x);
+            return x;
         }
 
         /// <inheritdoc/>
-        public override byte[] ToBytes(MontgomeryPoint element)
+        public override byte[] ToBytes(BigInteger element)
         {
-            if (!element.IsNormalized)
-                element = RenormalizePoint(element);
-
-            byte[] xBytes = element.X.ToByteArray();
+            byte[] xBytes = element.ToByteArray();
 
             Debug.Assert(xBytes.Length <= _field.ElementByteLength);
 
@@ -203,19 +157,16 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         }
 
         /// <inheritdoc/>
-        public override MontgomeryPoint Negate(MontgomeryPoint point)
+        public override BigInteger Negate(BigInteger point)
         {
             return point;
         }
 
         /// <inheritdoc/>
-        protected override bool IsElementDerived(MontgomeryPoint point)
+        protected override bool IsElementDerived(BigInteger point)
         {
-            if (!_field.IsElement(point.X))
-                return false;
-            if (!_field.IsElement(point.Z))
-                return false;
-
+            return _field.IsElement(point);
+            
             // In Montgomery form, every x coordinate corresponds to a valid
             // point either on the curve or on its twist, i.e., another valid
             // curve. We do not really care about which of these two we compute
@@ -224,7 +175,6 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             // here.
             // Note that subgroup attacks could be problematic, but those
             // are caught already in CryptoGroupAlgebra's IsElement implementation.
-            return true;
         }
 
         /// <summary>
@@ -239,7 +189,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <param name="selection">Selection indicator.</param>
         /// <param name="first">First selection option.</param>
         /// <param name="second">Second selection option.</param>
-        protected BigInteger Multiplex(BigInteger selection, BigInteger first, BigInteger second)
+        protected override BigInteger Multiplex(BigInteger selection, BigInteger first, BigInteger second)
         {
             Debug.Assert(selection.IsOne || selection.IsZero);
             return first + selection * (second - first);
@@ -257,13 +207,13 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <param name="selection">Selection indicator.</param>
         /// <param name="first">First selection option.</param>
         /// <param name="second">First selection option.</param>
-        protected override MontgomeryPoint Multiplex(
-            BigInteger selection, MontgomeryPoint first, MontgomeryPoint second
+        private MontgomeryCurvePoint Multiplex(
+            BigInteger selection, MontgomeryCurvePoint first, MontgomeryCurvePoint second
         )
         {
             Debug.Assert(selection.IsOne || selection.IsZero);
             var sel = !selection.IsZero;
-            return new MontgomeryPoint(
+            return new MontgomeryCurvePoint(
                 Multiplex(selection, first.X, second.X),
                 Multiplex(selection, first.Z, second.Z)
             );
@@ -286,8 +236,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <param name="selector">Swapping indicator.</param>
         /// <param name="first">Curve point.</param>
         /// <param name="second">Curve point.</param>
-        private (MontgomeryPoint, MontgomeryPoint) ConditionalSwap(
-            BigInteger selector, MontgomeryPoint first, MontgomeryPoint second
+        private (MontgomeryCurvePoint, MontgomeryCurvePoint) ConditionalSwap(
+            BigInteger selector, MontgomeryCurvePoint first, MontgomeryCurvePoint second
         )
         {
             Debug.Assert(selector.IsOne || selector.IsZero);
@@ -298,13 +248,14 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         }
 
         /// <inheritdoc/>
-        protected override MontgomeryPoint MultiplyScalarUnchecked(MontgomeryPoint e, BigInteger k, int factorBitLength)
+        protected override BigInteger MultiplyScalarUnchecked(BigInteger e, BigInteger k, int factorBitLength)
         {
             BigInteger maxFactor = BigInteger.One << factorBitLength;
             int i = factorBitLength - 1;
 
-            MontgomeryPoint r0 = NeutralElement;
-            MontgomeryPoint r1 = e;
+            MontgomeryCurvePoint point = new MontgomeryCurvePoint(e);
+            MontgomeryCurvePoint r0 = MontgomeryCurvePoint.PointAtInfinity;
+            MontgomeryCurvePoint r1 = point;
 
             // Montgomery ladder maintains invariant r1 = r0 + e
             // and can thus use x-only addition that requires knowledge of r1-r0 (= e)
@@ -313,8 +264,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 BigInteger bitI = (k & mask) >> i;
 
                 (r0, r1) = ConditionalSwap(bitI, r0, r1);
-                r1 = AddInternal(r0, r1, e);
-                r0 = DoubleInternal(r0);
+                r1 = XOnlyAdd(r0, r1, point);
+                r0 = XOnlyDouble(r0);
                 (r0, r1) = ConditionalSwap(bitI, r0, r1);
                 //if (bitI.IsZero)
                 //{
@@ -328,13 +279,13 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 //}
             }
             Debug.Assert(i == -1);
-            return r0;
+            return RenormalizePoint(r0).X;
         }
 
         /// <inheritdoc/>
-        public override bool Equals(CryptoGroupAlgebra<MontgomeryPoint>? other)
+        public override bool Equals(CryptoGroupAlgebra<BigInteger>? other)
         {
-            var algebra = other as ProjectedMontgomeryCurveAlgebra;
+            var algebra = other as XOnlyMontgomeryCurveAlgebra;
             return other != null &&
                    EqualityComparer<CurveParameters>.Default.Equals(_parameters, algebra!._parameters);
         }

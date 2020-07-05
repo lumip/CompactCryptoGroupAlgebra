@@ -7,7 +7,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// A point on a Montgomery elliptic curve in projected coordinates
     /// and without y-coordinate.
     /// 
-    /// Raw group element of <see cref="ProjectedMontgomeryCurveAlgebra"/>. This struct
+    /// Raw group element of <see cref="XOnlyMontgomeryCurveAlgebra"/>. This struct
     /// is mainly a information container and implements no algebraic operations.
     /// </summary>
     public readonly struct MontgomeryCurvePoint

@@ -81,13 +81,33 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <inheritdoc/>
         public override CurvePoint FromBytes(byte[] buffer)
         {
-            throw new NotImplementedException();
+            if (buffer.Length < 2 * _field.ElementByteLength)
+                throw new ArgumentException("The given buffer is too short to contain a valid element representation.", nameof(buffer));
+
+            byte[] xBytes = new byte[_field.ElementByteLength];
+            byte[] yBytes = new byte[_field.ElementByteLength];
+
+            Buffer.BlockCopy(buffer, 0, xBytes, 0, _field.ElementByteLength);
+            Buffer.BlockCopy(buffer, _field.ElementByteLength, yBytes, 0, _field.ElementByteLength);
+
+            BigInteger x = new BigInteger(xBytes);
+            BigInteger y = new BigInteger(yBytes);
+            return new CurvePoint(x, y);
         }
 
         /// <inheritdoc/>
         public override byte[] ToBytes(CurvePoint element)
         {
-            throw new NotImplementedException();
+            byte[] xBytes = element.X.ToByteArray();
+            byte[] yBytes = element.Y.ToByteArray();
+
+            Debug.Assert(xBytes.Length <= _field.ElementByteLength);
+            Debug.Assert(yBytes.Length <= _field.ElementByteLength);
+
+            byte[] result = new byte[2 * _field.ElementByteLength];
+            Buffer.BlockCopy(xBytes, 0, result, 0, xBytes.Length);
+            Buffer.BlockCopy(yBytes, 0, result, _field.ElementByteLength, yBytes.Length);
+            return result;
         }
 
         /// <inheritdoc/>

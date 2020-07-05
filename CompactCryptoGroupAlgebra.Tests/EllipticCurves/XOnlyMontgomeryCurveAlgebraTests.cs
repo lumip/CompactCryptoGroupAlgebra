@@ -6,11 +6,11 @@ using NUnit.Framework;
 namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
 {
     [TestFixture]
-    public class ProjectedMontgomeryCurveAlgebraTests
+    public class XOnlyMontgomeryCurveAlgebraTests
     {
         private CurveParameters ecParams;
 
-        public ProjectedMontgomeryCurveAlgebraTests()
+        public XOnlyMontgomeryCurveAlgebraTests()
         {
             ecParams = new CurveParameters(
                 p: BigPrime.CreateWithoutChecks(41),
@@ -80,26 +80,13 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCase(11, 2, 0)]
         public void TestMultiplyScalar(int k, int x, int expectedX)
         {
-            var algebra = new ProjectedMontgomeryCurveAlgebra(ecParams);
+            var algebra = new XOnlyMontgomeryCurveAlgebra(ecParams);
 
-            var p = new MontgomeryPoint(new BigInteger(x));
+            var p = new BigInteger(x);
             var result = algebra.MultiplyScalar(p, k);
-            result = algebra.RenormalizePoint(result);
 
-            Assert.AreEqual(new BigInteger(expectedX), result.X);
+            Assert.AreEqual(new BigInteger(expectedX), result);
         }
 
-        [Test]
-        [TestCase(3, 17, 5)]
-        [TestCase(4, 1, 4)]
-        [TestCase(1, 40, 40)]
-        public void TestRenormalizePoint(int x, int z, int expectedX)
-        {
-            var algebra = new ProjectedMontgomeryCurveAlgebra(ecParams);
-            var p = new MontgomeryPoint(new BigInteger(x), new BigInteger(z));
-            var result = algebra.RenormalizePoint(p);
-
-            Assert.AreEqual(new BigInteger(expectedX), result.X);
-        }
     }
 }
