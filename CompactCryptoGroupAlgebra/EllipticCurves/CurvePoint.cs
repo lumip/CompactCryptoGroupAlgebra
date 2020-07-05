@@ -92,7 +92,6 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             return (IsAtInfinity && other.IsAtInfinity) || (!IsAtInfinity && !other.IsAtInfinity && (X == other.X) && (Y == other.Y));
         }
 
-
         /// <summary>
         /// Selects one of two given <see cref="BigInteger"/> scalars.
         /// 
