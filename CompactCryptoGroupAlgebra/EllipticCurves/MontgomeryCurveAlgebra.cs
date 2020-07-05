@@ -10,7 +10,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// 
     /// Montgomery curves are of form <c>By² = x³ + Ax² + x</c>, with all numbers from the finite field with
     /// characteristic <c>P</c>. Elements of the groups are all points (<c>x mod P</c>, <c>y mod P</c>) that satisfy
-    /// the curve equation (and the addtional "point at infinity" as neutral element).
+    /// the curve equation (and the additional "point at infinity" as neutral element).
     ///
     /// The exact parameters of the curve (<c>A</c>, <c>B</c>, <c>P</c>) are encoded in a <see cref="CurveParameters"/> object.
     /// </summary>
