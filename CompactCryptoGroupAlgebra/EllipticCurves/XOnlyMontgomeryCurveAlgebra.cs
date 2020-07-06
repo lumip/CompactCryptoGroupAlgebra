@@ -21,6 +21,12 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// are therefore not implemented (however, 
     /// <see cref="ICryptoGroupAlgebra{E}.MultiplyScalar(E, BigInteger)"/> is).
     /// If you require full addition on arbitrary points, use <see cref="MontgomeryCurveAlgebra"/>.
+    /// 
+    /// <see cref="XOnlyMontgomeryCurveAlgebra"/> returns <c>0</c> as its neutral element.
+    /// This is not technically correct as a point with x-coordinate <c>0</c> exists on the curve,
+    /// but that point is of low order and thus not admittable as safe curve element. For
+    /// all implementation related considerations, <c>0</c> serves as representation of 
+    /// the neutral element.
     /// </summary>
     /// <remarks>
     /// Implementation based on https://eprint.iacr.org/2017/212.pdf .
