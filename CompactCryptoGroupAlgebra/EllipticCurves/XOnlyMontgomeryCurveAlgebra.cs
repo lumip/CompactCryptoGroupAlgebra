@@ -17,9 +17,10 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     ///
     /// The x-coordinate-only specification is computationally more efficient (and elements require less
     /// storage) but does not have a well-defined addition for arbitrary points.
-    /// <see cref="ICryptoGroupAlgebra{E}.Add(E, E)"/> is therefore not implemented (however,
-    /// <see cref="ICryptoGroupAlgebra{E}.MultiplyScalar(E, BigInteger)"/> is). If you require full
-    /// addition on arbitrary points, use <see cref="MontgomeryCurveAlgebra"/>.
+    /// <see cref="ICryptoGroupAlgebra{E}.Add(E, E)"/> and <see cref="ICryptoGroupAlgebra{E}.Negate(E)"/>
+    /// are therefore not implemented (however, 
+    /// <see cref="ICryptoGroupAlgebra{E}.MultiplyScalar(E, BigInteger)"/> is).
+    /// If you require full addition on arbitrary points, use <see cref="MontgomeryCurveAlgebra"/>.
     /// </summary>
     /// <remarks>
     /// Implementation based on https://eprint.iacr.org/2017/212.pdf .
@@ -133,42 +134,29 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <inheritdoc/>
         public override BigInteger Add(BigInteger left,BigInteger right)
         {
-            throw new NotSupportedException("A projected Montgomery curve" +
-            	"has no definition for the standard addition. Use the" +
+            throw new NotSupportedException("An x-only Montgomery curve " +
+            	"has no definition for the standard addition. Use the " +
             	"standard Montgomery curve implementation instead.");
         }
 
         /// <inheritdoc/>
         public override BigInteger FromBytes(byte[] buffer)
         {
-            if (buffer == null)
-                throw new ArgumentNullException(nameof(buffer));
-            if (buffer.Length < _field.ElementByteLength)
-                throw new ArgumentException("The given buffer is too short to" +
-                	"contain a valid element representation.", nameof(buffer));
-
-            byte[] xBytes = new byte[_field.ElementByteLength];
-
-            Buffer.BlockCopy(buffer, 0, xBytes, 0, _field.ElementByteLength);
-
-            BigInteger x = new BigInteger(xBytes);
-            return x;
+            return new BigInteger(buffer);
         }
 
         /// <inheritdoc/>
         public override byte[] ToBytes(BigInteger element)
         {
-            byte[] xBytes = element.ToByteArray();
-
-            Debug.Assert(xBytes.Length <= _field.ElementByteLength);
-
-            return xBytes;
+            return element.ToByteArray();
         }
 
         /// <inheritdoc/>
         public override BigInteger Negate(BigInteger point)
         {
-            return point;
+            throw new NotSupportedException("An x-only Montgomery curve " +
+            	"has no definition for the standard negation. Use the " +
+            	"standard Montgomery curve implementation instead.");
         }
 
         /// <inheritdoc/>
@@ -295,14 +283,13 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public override bool Equals(CryptoGroupAlgebra<BigInteger>? other)
         {
             var algebra = other as XOnlyMontgomeryCurveAlgebra;
-            return other != null &&
-                   EqualityComparer<CurveParameters>.Default.Equals(_parameters, algebra!._parameters);
+            return other != null && _parameters.Equals(algebra!._parameters);
         }
 
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            var hashCode = -2051777468 + EqualityComparer<CurveParameters>.Default.GetHashCode(_parameters);
+            var hashCode = -2051777468 + _parameters.GetHashCode();
             return hashCode;
         }
     }

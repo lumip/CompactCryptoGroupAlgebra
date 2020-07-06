@@ -8,7 +8,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
     [TestFixture]
     public class XOnlyMontgomeryCurveAlgebraTests
     {
-        private CurveParameters ecParams;
+        private readonly CurveParameters ecParams;
+        private readonly CurveParameters largeParams;
 
         public XOnlyMontgomeryCurveAlgebraTests()
         {
@@ -62,7 +63,12 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
             //  (39, (array([17, 24]),))]
             //)
 
-
+            largeParams = new CurveParameters(
+                p: BigPrime.CreateWithoutChecks(18392027), // 25 bits
+                generator: CurvePoint.PointAtInfinity,
+                order: BigPrime.CreateWithoutChecks(3),
+                a: 0, b: 0, cofactor: 1
+            );
         }
 
         [Test]
@@ -87,6 +93,140 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
 
             Assert.AreEqual(new BigInteger(expectedX), result);
         }
+
+        [Test]
+        public void TestConstructorAndProperties()
+        {
+            var algebra = new XOnlyMontgomeryCurveAlgebra(ecParams);
+
+            Assert.AreEqual(ecParams.Generator.X, algebra.Generator);
+            Assert.AreEqual(ecParams.Order, algebra.Order);
+            Assert.AreEqual(ecParams.Cofactor, algebra.Cofactor);
+            Assert.AreEqual(NumberLength.GetLength(ecParams.P).InBits, algebra.ElementBitLength);
+        }
+
+        [Test]
+        public void TestAddThrowsNotSupported()
+        {
+            var point = new BigInteger(2);
+            var otherPoint = new BigInteger(6);
+            var algebra = new XOnlyMontgomeryCurveAlgebra(ecParams);
+
+            Assert.Throws<NotSupportedException>(
+                () => algebra.Add(point, otherPoint)
+            );
+        }
+
+        [Test]
+        public void TestNegateThrowsNotSupported()
+        {
+            var point = new BigInteger(2);
+            var algebra = new XOnlyMontgomeryCurveAlgebra(ecParams);
+
+            Assert.Throws<NotSupportedException>(
+                () => algebra.Negate(point)
+            );
+        }
+
+
+        [Test]
+        public void TestFromBytes()
+        {
+            var curve = new XOnlyMontgomeryCurveAlgebra(largeParams);
+            var expected = new BigInteger(5);
+            var buffer = new byte[] { 5 };
+
+            var result = curve.FromBytes(buffer);
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void TestToBytes()
+        {
+            var curve = new XOnlyMontgomeryCurveAlgebra(largeParams);
+            var p = new BigInteger(5);
+            var expected = new byte[] { 5 };
+
+            var result = curve.ToBytes(p);
+            CollectionAssert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void TestFromBytesWithLessThanOneByteLargeElements()
+        {
+            var curve = new XOnlyMontgomeryCurveAlgebra(ecParams);
+            var expected = new BigInteger(5);
+            var buffer = new byte[] { 5 };
+
+            var result = curve.FromBytes(buffer);
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void TestToBytesWithLessThanOneByteLargeElements()
+        {
+            var curve = new XOnlyMontgomeryCurveAlgebra(ecParams);
+            var p = new BigInteger(5);
+            var expected = new byte[] { 5 };
+
+            var result = curve.ToBytes(p);
+            CollectionAssert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void TestIsElement()
+        {
+            var curve = new XOnlyMontgomeryCurveAlgebra(ecParams);
+            var p = new BigInteger(7);
+
+            Assert.IsTrue(curve.IsElement(p));
+        }
+
+        [Test]
+        public void TestIsElementFalseForLowOrderElements()
+        {
+            var curve = new XOnlyMontgomeryCurveAlgebra(ecParams);
+            var p = new BigInteger(0);
+            
+            Assert.IsFalse(curve.IsElement(p));
+        }
+
+        [Test]
+        public void TestEqualsTrueForEqual()
+        {
+            var curve = new XOnlyMontgomeryCurveAlgebra(ecParams);
+            var otherCurve = new XOnlyMontgomeryCurveAlgebra(ecParams);
+
+            Assert.IsTrue(curve.Equals(otherCurve));
+        }
+
+        [Test]
+        public void TestEqualsFalseForDifferent()
+        {
+            var curve = new XOnlyMontgomeryCurveAlgebra(ecParams);
+            var otherCurve = new XOnlyMontgomeryCurveAlgebra(largeParams);
+
+            Assert.IsFalse(curve.Equals(otherCurve));
+        }
+
+        [Test]
+        public void TestEqualsFalseForNull()
+        {
+            var curve = new XOnlyMontgomeryCurveAlgebra(ecParams);
+
+            Assert.IsFalse(curve.Equals(null));
+        }
+
+        [Test]
+        public void TestGetHashCodeSameForEqual()
+        {
+            var curve = new XOnlyMontgomeryCurveAlgebra(ecParams);
+            var otherCurve = new XOnlyMontgomeryCurveAlgebra(ecParams);
+
+            Assert.AreEqual(curve.GetHashCode(), otherCurve.GetHashCode());
+        }
+
+        
 
     }
 }
