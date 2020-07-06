@@ -72,13 +72,13 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         }
 
         /// <summary>
-        /// Creates a parameter set for the NIST P-256 elliptic curve
+        /// A parameter set for the NIST P-256 elliptic curve
         /// of form <c>y² = x³ + Ax + B</c>.
         /// </summary>
         /// <remarks>
         /// As defined in https://csrc.nist.gov/csrc/media/publications/fips/186/2/archive/2000-01-27/documents/fips186-2.pdf , p. 34.
         /// </remarks>
-        /// <returns>An instance of CurveParameters for the NIST P-256 curve.</returns>
+        /// <returns><see cref="CurveParameters"/> for the NIST P-256 curve.</returns>
         public static CurveParameters NISTP256 = new CurveParameters(
             p:  BigPrime.CreateWithoutChecks(BigInteger.Parse(
                     "115792089210356248762697446949407573530086143415290314195533631308867097853951"
@@ -108,6 +108,28 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                     "115792089210356248762697446949407573529996955224135760342422259061068512044369")
                 ),
             cofactor: 1
+        );
+
+        /// <summary>
+        /// A parameter set for the Curve25519 elliptic curve.
+        /// of form <c>By² = x³ + Ax² + x</c>.
+        /// </summary>
+        /// <remarks>
+        /// As defined in https://tools.ietf.org/html/rfc7748#section-4.1 .
+        /// </remarks>
+        /// <returns><see cref="CurveParameters"/> for the curve25519 curve.</returns>
+        public static CurveParameters Curve25519 = new CurveParameters(
+            p:  BigPrime.CreateWithoutChecks(BigInteger.Pow(2, 255) - 19),
+            a:  new BigInteger(486662),
+            b:  BigInteger.One,
+            generator: new CurvePoint(
+                    new BigInteger(9),
+                    BigInteger.Parse("14781619447589544791020593568409986887264606134616475288964881837755586237401")
+                ),
+            order: BigPrime.CreateWithoutChecks(
+                    BigInteger.Parse("7237005577332262213973186563042994240857116359379907606001950938285454250989")
+                ),
+            cofactor: 8
         );
 
         /// <inheritdoc/>

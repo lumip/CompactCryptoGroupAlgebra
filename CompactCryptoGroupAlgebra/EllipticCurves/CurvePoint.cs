@@ -18,9 +18,9 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     public readonly struct CurvePoint : IEquatable<CurvePoint>
     {
         /// <summary>
-        /// Creates a point at infninity.
+        /// Creates a point at infinity.
         /// </summary>
-        /// <returns>A CurvePoint instance representing a point at infinity.</returns>
+        /// <returns>A <see cref="CurvePoint" /> instance representing a point at infinity.</returns>
         public static readonly CurvePoint PointAtInfinity = new CurvePoint(0, 0, true);
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public BigInteger Y { get; }
 
         /// <summary>
-        /// Instantiates a new CurvePoint with the given values.
+        /// Instantiates a new <see cref="CurvePoint" /> with the given values.
         /// 
         /// The integer coordinates are only relevant is the point is not at infinity.
         /// </summary>
@@ -54,7 +54,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         }
 
         /// <summary>
-        /// Instantiates a new CurvePoint with the given coordinates.
+        /// Instantiates a new <see cref="CurvePoint" /> with the given coordinates.
         /// </summary>
         /// <param name="x">X-coordinate of the point.</param>
         /// <param name="y">Y-coordinate of the point.</param>
@@ -65,7 +65,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <summary>
         /// Clones this point.
         /// </summary>
-        /// <returns>A new CurvePoint instance that is an identical copy of the original instance.</returns>
+        /// <returns>A new <see cref="CurvePoint" /> instance that is an identical copy of the original instance.</returns>
         public CurvePoint Clone()
         {
             return new CurvePoint(X, Y, IsAtInfinity);
@@ -91,7 +91,6 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         {
             return (IsAtInfinity && other.IsAtInfinity) || (!IsAtInfinity && !other.IsAtInfinity && (X == other.X) && (Y == other.Y));
         }
-
 
         /// <summary>
         /// Selects one of two given <see cref="BigInteger"/> scalars.

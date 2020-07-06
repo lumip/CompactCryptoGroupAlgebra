@@ -82,5 +82,10 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         {
             return (x % Modulo + Modulo) % Modulo; // to prevent negative results of BigInteger modulo
         }
+
+        public bool IsElement(BigInteger x)
+        {
+            return x >= 0 && x < Modulo;
+        }
     }
 }

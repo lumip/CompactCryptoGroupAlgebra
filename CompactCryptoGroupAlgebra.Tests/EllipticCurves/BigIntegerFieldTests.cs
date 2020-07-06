@@ -75,5 +75,25 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
             var expected = new BigInteger(expectedRaw);
             Assert.AreEqual(expected, result);
         }
+
+        [Test]
+        public void TestIsElementTrue()
+        {
+            var prime = BigPrime.CreateWithoutChecks(11);
+            var field = new BigIntegerField(prime);
+
+            Assert.IsTrue(field.IsElement(7));
+        }
+
+        [Test]
+        [TestCase(-2)]
+        [TestCase(12)]
+        public void TestIsElementFalse(int value)
+        {
+            var prime = BigPrime.CreateWithoutChecks(11);
+            var field = new BigIntegerField(prime);
+
+            Assert.IsFalse(field.IsElement(new BigInteger(value)));
+        }
     }
 }

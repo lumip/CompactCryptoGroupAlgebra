@@ -156,7 +156,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCase(13, 8)]
         [TestCase(18, 3)]
         [TestCase(0, 20)]
-        public void TestPointValidTrueForValidPoint(int xRaw, int yRaw)
+        public void TestIsElementTrueForValidPoint(int xRaw, int yRaw)
         {
             var curve = new CurveGroupAlgebra(ecParams);
             var point = new CurvePoint(xRaw, yRaw);
