@@ -12,8 +12,8 @@ install:
   - nuget install coveralls.net -Version 0.7.0 -OutputDirectory testPackages
 script:
   - msbuild /p:Configuration=Debug CompactCryptoGroupAlgebra.sln
-  - mono testPackages/altcover.7.0.773/tools/net45/AltCover.exe -i CompactCryptoGroupAlgebra.Tests/bin/Debug/ --localSource -e CompactCryptoGroupAlgebra.Tests
-  - mono testPackages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe CompactCryptoGroupAlgebra.Tests/bin/Debug/__Instrumented/CompactCryptoGroupAlgebra.Tests.dll
+  - mono testPackages/altcover.7.0.773/tools/net45/AltCover.exe -i CompactCryptoGroupAlgebra.Tests/bin/Debug/net46/ --localSource -e CompactCryptoGroupAlgebra.Tests
+  - mono testPackages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe CompactCryptoGroupAlgebra.Tests/bin/Debug/net46/__Instrumented/CompactCryptoGroupAlgebra.Tests.dll
 after_success:
   - mono testPackages/coveralls.net.0.7.0/tools/csmacnz.Coveralls.exe --opencover -i coverage.xml --serviceName travis-ci --jobId $TRAVIS_JOB_ID --commitId $TRAVIS_COMMIT --commitBranch $TRAVIS_BRANCH --commitAuthor "$AUTHOR_NAME" --commitEmail "$COMMITTER_EMAIL" --commitMessage "$TRAVIS_COMMIT_MESSAGE" --pullRequest $TRAVIS_PULL_REQUEST
 #  - mono testPackages/ReportGenerator.4.6.1/tools/net47/ReportGenerator.exe -reports:coverage.xml -targetdir:CoverageReport  
