@@ -27,6 +27,9 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// but that point is of low order and thus not admittable as safe curve element. For
     /// all implementation related considerations, <c>0</c> serves as representation of 
     /// the neutral element.
+    ///
+    /// Note that <see cref="XOnlyMontgomeryCurveAlgebra"/> does not implement RFC 7748 ( https://tools.ietf.org/html/rfc7748 )
+    /// due to different handling/encoding of scalars.
     /// </summary>
     /// <remarks>
     /// Implementation based on https://eprint.iacr.org/2017/212.pdf .

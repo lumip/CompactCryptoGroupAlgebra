@@ -13,6 +13,9 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// the curve equation (and the additional "point at infinity" as neutral element).
     ///
     /// The exact parameters of the curve (<c>A</c>, <c>B</c>, <c>P</c>) are encoded in a <see cref="CurveParameters"/> object.
+    /// 
+    /// Note that <see cref="MontgomeryCurveAlgebra"/> does not implement RFC 7748 ( https://tools.ietf.org/html/rfc7748 )
+    /// due to different handling/encoding of scalars.
     /// </summary>
     public class MontgomeryCurveAlgebra : CryptoGroupAlgebra<CurvePoint>
     {
