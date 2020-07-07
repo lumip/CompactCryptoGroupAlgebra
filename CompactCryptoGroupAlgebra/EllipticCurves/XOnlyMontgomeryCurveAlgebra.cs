@@ -6,11 +6,30 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
     
     /// <summary>
-    /// An implementation of <see cref="ICryptoGroupAlgebra{E}"/> for
-    /// Montgomery curves using x-only arithmetic on projected coordinates.
+    /// Cryptographic group based on point addition in elliptic curves in Montgomery form
+    /// using x-coordinate-only arithmetics on projected coordinates.
     /// 
-    /// Note: Does not implement the standard addition of <see cref="ICryptoGroupAlgebra{E}.Add(E, E)"/>
-    /// but only <see cref="ICryptoGroupAlgebra{E}.MultiplyScalar(E, BigInteger)"/>.
+    /// Montgomery curves are of form <c>By² = x³ + Ax² + x</c>, with all numbers from the finite field with
+    /// characteristic <c>P</c>. Elements of the groups are all points (<c>x mod P</c>, <c>y mod P</c>) that satisfy
+    /// the curve equation (and the additional "point at infinity" as neutral element).
+    ///
+    /// The exact parameters of the curve (<c>A</c>, <c>B</c>, <c>P</c>) are encoded in a <see cref="CurveParameters"/> object.
+    ///
+    /// The x-coordinate-only specification is computationally more efficient (and elements require less
+    /// storage) but does not have a well-defined addition for arbitrary points.
+    /// <see cref="ICryptoGroupAlgebra{E}.Add(E, E)"/> and <see cref="ICryptoGroupAlgebra{E}.Negate(E)"/>
+    /// are therefore not implemented (however, 
+    /// <see cref="ICryptoGroupAlgebra{E}.MultiplyScalar(E, BigInteger)"/> is).
+    /// If you require full addition on arbitrary points, use <see cref="MontgomeryCurveAlgebra"/>.
+    /// 
+    /// <see cref="XOnlyMontgomeryCurveAlgebra"/> returns <c>0</c> as its neutral element.
+    /// This is not technically correct as a point with x-coordinate <c>0</c> exists on the curve,
+    /// but that point is of low order and thus not admittable as safe curve element. For
+    /// all implementation related considerations, <c>0</c> serves as representation of 
+    /// the neutral element.
+    ///
+    /// Note that <see cref="XOnlyMontgomeryCurveAlgebra"/> does not implement RFC 7748 ( https://tools.ietf.org/html/rfc7748 )
+    /// due to different handling/encoding of scalars.
     /// </summary>
     /// <remarks>
     /// Implementation based on https://eprint.iacr.org/2017/212.pdf .
@@ -124,42 +143,29 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <inheritdoc/>
         public override BigInteger Add(BigInteger left,BigInteger right)
         {
-            throw new NotSupportedException("A projected Montgomery curve" +
-            	"has no definition for the standard addition. Use the" +
+            throw new NotSupportedException("An x-only Montgomery curve " +
+            	"has no definition for the standard addition. Use the " +
             	"standard Montgomery curve implementation instead.");
         }
 
         /// <inheritdoc/>
         public override BigInteger FromBytes(byte[] buffer)
         {
-            if (buffer == null)
-                throw new ArgumentNullException(nameof(buffer));
-            if (buffer.Length < _field.ElementByteLength)
-                throw new ArgumentException("The given buffer is too short to" +
-                	"contain a valid element representation.", nameof(buffer));
-
-            byte[] xBytes = new byte[_field.ElementByteLength];
-
-            Buffer.BlockCopy(buffer, 0, xBytes, 0, _field.ElementByteLength);
-
-            BigInteger x = new BigInteger(xBytes);
-            return x;
+            return new BigInteger(buffer);
         }
 
         /// <inheritdoc/>
         public override byte[] ToBytes(BigInteger element)
         {
-            byte[] xBytes = element.ToByteArray();
-
-            Debug.Assert(xBytes.Length <= _field.ElementByteLength);
-
-            return xBytes;
+            return element.ToByteArray();
         }
 
         /// <inheritdoc/>
         public override BigInteger Negate(BigInteger point)
         {
-            return point;
+            throw new NotSupportedException("An x-only Montgomery curve " +
+            	"has no definition for the standard negation. Use the " +
+            	"standard Montgomery curve implementation instead.");
         }
 
         /// <inheritdoc/>
@@ -241,14 +247,13 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public override bool Equals(CryptoGroupAlgebra<BigInteger>? other)
         {
             var algebra = other as XOnlyMontgomeryCurveAlgebra;
-            return other != null &&
-                   EqualityComparer<CurveParameters>.Default.Equals(_parameters, algebra!._parameters);
+            return other != null && _parameters.Equals(algebra!._parameters);
         }
 
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            var hashCode = -2051777468 + EqualityComparer<CurveParameters>.Default.GetHashCode(_parameters);
+            var hashCode = -2051777468 + _parameters.GetHashCode();
             return hashCode;
         }
     }

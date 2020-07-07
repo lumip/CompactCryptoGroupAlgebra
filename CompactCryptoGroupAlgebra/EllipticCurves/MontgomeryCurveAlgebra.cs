@@ -4,16 +4,35 @@ using System.Numerics;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
+    /// <summary>
+    /// Cryptographic group based on point addition in elliptic curves in Montgomery form.
+    /// 
+    /// Montgomery curves are of form <c>By² = x³ + Ax² + x</c>, with all numbers from the finite field with
+    /// characteristic <c>P</c>. Elements of the groups are all points (<c>x mod P</c>, <c>y mod P</c>) that satisfy
+    /// the curve equation (and the additional "point at infinity" as neutral element).
+    ///
+    /// The exact parameters of the curve (<c>A</c>, <c>B</c>, <c>P</c>) are encoded in a <see cref="CurveParameters"/> object.
+    /// 
+    /// Note that <see cref="MontgomeryCurveAlgebra"/> does not implement RFC 7748 ( https://tools.ietf.org/html/rfc7748 )
+    /// due to different handling/encoding of scalars.
+    /// </summary>
     public class MontgomeryCurveAlgebra : CryptoGroupAlgebra<CurvePoint>
     {
         private readonly CurveParameters _parameters;
         private readonly BigIntegerField _field;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MontgomeryCurveAlgebra"/> class.
+        /// </summary>
+        /// <param name="parameters">Parameters for the curve.</param>
         public MontgomeryCurveAlgebra(CurveParameters parameters)
             : base(parameters.Generator, parameters.Order)
         {
             _parameters = parameters;
             _field = new BigIntegerField(_parameters.P);
+            if (!IsElement(Generator))
+                throw new ArgumentException("The point given as generator is " +
+                	"not a valid point on the curve.", nameof(parameters));
         }
 
         /// <inheritdoc/>
@@ -114,7 +133,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         {
             if (e.IsAtInfinity)
                 return e;
-            return new CurvePoint(e.X, -e.Y);
+            return new CurvePoint(e.X, _field.Mod(-e.Y));
         }
 
         /// <inheritdoc/>
@@ -143,6 +162,16 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public override int GetHashCode()
         {
             return -2051777468 + EqualityComparer<CurveParameters>.Default.GetHashCode(_parameters);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CryptoGroup{CurvePoint}" /> instance using a <see cref="MontgomeryCurveAlgebra" />
+        /// instance with the given parameters.
+        /// </summary>
+        /// <param name="curveParameters">Parameters for the curve.</param>
+        public static CryptoGroup<CurvePoint> CreateCryptoGroup(CurveParameters curveParameters)
+        {
+            return new CryptoGroup<CurvePoint>(new MontgomeryCurveAlgebra(curveParameters));
         }
     }
 }
