@@ -10,7 +10,6 @@ namespace CompactCryptoGroupAlgebra.Tests
 {
     interface CryptoGroupAlgebraProtectedMembers
     {
-        int Multiplex(BigInteger selection, int left, int right);
         int MultiplyScalarUnchecked(int e, BigInteger k, int factorBitLength);
         bool IsElementDerived(int e);
     }
@@ -25,11 +24,31 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             var order = BigPrime.CreateWithoutChecks(orderInt);
             var generatorStub = 1;
+            var cofactor = BigInteger.One;
+            var neutralElement = 0;
+            var elementBitLength = 8;
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generatorStub, order);
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generatorStub, order, cofactor, neutralElement, elementBitLength);
             var result = algebraMock.Object.OrderBitLength;
 
             Assert.AreEqual(expectedBitLength, result);
+        }
+
+        [Test]
+        public void TestProperties()
+        {
+            var order = BigPrime.CreateWithoutChecks(13);
+            var generatorStub = 1;
+            var cofactor = BigInteger.One;
+            var neutralElement = 0;
+            var elementBitLength = 8;
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generatorStub, order, cofactor, neutralElement, elementBitLength);
+
+            Assert.AreEqual(generatorStub, algebraMock.Object.Generator);
+            Assert.AreEqual(cofactor, algebraMock.Object.Cofactor);
+            Assert.AreEqual(neutralElement, algebraMock.Object.NeutralElement);
+            Assert.AreEqual(elementBitLength, algebraMock.Object.ElementBitLength);
         }
         
         [Test]
@@ -48,24 +67,15 @@ namespace CompactCryptoGroupAlgebra.Tests
             var k = new BigInteger(scalarInt);
             var order = BigPrime.CreateWithoutChecks(5);
             var generatorStub = 1;
+            var cofactor = BigInteger.One;
+            var neutralElement = 0;
+            var elementBitLength = 8;
+
             int element = 3;
             int expected = 3 * (scalarInt % 5);
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order) { CallBase = true };
-            algebraMock.Setup(alg => alg.NeutralElement).Returns(0);
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, cofactor, neutralElement, elementBitLength) { CallBase = true };
             algebraMock.Setup(alg => alg.Add(It.IsAny<int>(), It.IsAny<int>())).Returns((int x, int y) => x + y);
-
-            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
-                .Setup(alg => alg.Multiplex(
-                    It.Is<BigInteger>(s => s.IsZero), It.IsAny<int>(), It.IsAny<int>())
-                )
-                .Returns((BigInteger s, int x, int y) => x);
-
-            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
-                .Setup(alg => alg.Multiplex(
-                    It.Is<BigInteger>(s => s.IsOne), It.IsAny<int>(), It.IsAny<int>())
-                )
-                .Returns((BigInteger s, int x, int y) => y);
 
             var result = algebraMock.Object.MultiplyScalar(element, k);
 
@@ -79,8 +89,11 @@ namespace CompactCryptoGroupAlgebra.Tests
             var index = BigInteger.MinusOne;
             var order = BigPrime.CreateWithoutChecks(5);
             var generatorStub = 1;
+            var cofactor = BigInteger.One;
+            var neutralElement = 0;
+            var elementBitLength = 8;
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generatorStub, order);
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generatorStub, order, cofactor, neutralElement, elementBitLength);
 
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => algebraMock.Object.MultiplyScalar(element, index)
@@ -98,27 +111,17 @@ namespace CompactCryptoGroupAlgebra.Tests
             int element = 5;
             var k = new BigInteger(factorInt);
 
-            var order = BigPrime.CreateWithoutChecks(5);
+            var order = BigPrime.CreateWithoutChecks(11);
             var generatorStub = 1;
+            var cofactor = BigInteger.One;
+            var neutralElement = 0;
+            var elementBitLength = 8;
 
             int factorBitLength = 3;
             int expected = 5 * factorInt;
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order) { CallBase = true };
-            algebraMock.Setup(alg => alg.NeutralElement).Returns(0);
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, cofactor, neutralElement, elementBitLength) { CallBase = true };
             algebraMock.Setup(alg => alg.Add(It.IsAny<int>(), It.IsAny<int>())).Returns((int x, int y) => x + y);
-
-            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
-                .Setup(alg => alg.Multiplex(
-                    It.Is<BigInteger>(s => s.IsZero), It.IsAny<int>(), It.IsAny<int>())
-                )
-                .Returns((BigInteger s, int x, int y) => x);
-
-            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
-                .Setup(alg => alg.Multiplex(
-                    It.Is<BigInteger>(s => s.IsOne), It.IsAny<int>(), It.IsAny<int>())
-                )
-                .Returns((BigInteger s, int x, int y) => y);
 
             var result = algebraMock.Object.MultiplyScalar(element, k, factorBitLength);
 
@@ -134,8 +137,12 @@ namespace CompactCryptoGroupAlgebra.Tests
 
             var order = BigPrime.CreateWithoutChecks(5);
             var generatorStub = 1;
+            var cofactor = BigInteger.One;
+            var neutralElement = 0;
+            var elementBitLength = 8;
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generatorStub, order);
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generatorStub, order, cofactor, neutralElement, elementBitLength);
 
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => algebraMock.Object.MultiplyScalar(element, index, factorBitLength)
@@ -154,8 +161,11 @@ namespace CompactCryptoGroupAlgebra.Tests
 
             var order = BigPrime.CreateWithoutChecks(5);
             var generatorStub = 1;
+            var cofactor = BigInteger.One;
+            var neutralElement = 0;
+            var elementBitLength = 8;
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generatorStub, order);
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generatorStub, order, cofactor, neutralElement, elementBitLength);
 
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => algebraMock.Object.MultiplyScalar(element, k, factorBitLength)
@@ -168,11 +178,14 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             var order = BigPrime.CreateWithoutChecks(7);
             int orderBitLength = 3;
+            var cofactor = BigInteger.One;
+            var neutralElement = 0;
+            var elementBitLength = 8;
             int generator = 2;
             var index = new BigInteger(3);
             int expected = 3 * generator;
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order);
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, cofactor, neutralElement, elementBitLength);
             algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
                 .Setup(alg => alg.MultiplyScalarUnchecked(
                     It.IsAny<int>(), It.Is<BigInteger>(i => i == index), It.Is<int>(i => i == orderBitLength))
@@ -196,8 +209,11 @@ namespace CompactCryptoGroupAlgebra.Tests
 
             var order = BigPrime.CreateWithoutChecks(5);
             var generatorStub = 1;
+            var cofactor = BigInteger.One;
+            var neutralElement = 0;
+            var elementBitLength = 8;
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order) { CallBase = true };
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, cofactor, neutralElement, elementBitLength) { CallBase = true };
 
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => algebraMock.Object.GenerateElement(index)
@@ -212,8 +228,11 @@ namespace CompactCryptoGroupAlgebra.Tests
             int expected = -7;
 
             var generatorStub = 1;
+            var cofactor = BigInteger.One;
+            var neutralElement = 0;
+            var elementBitLength = 8;
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order) { CallBase = true };
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, cofactor, neutralElement, elementBitLength) { CallBase = true };
             algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
                 .Setup(alg => alg.MultiplyScalarUnchecked(
                     It.IsAny<int>(), It.Is<BigInteger>(i => i == order - 1), It.Is<int>(i => i == 5))
@@ -235,11 +254,14 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             var order = BigPrime.CreateWithoutChecks(5);
             var generatorStub = 1;
+            var cofactor = BigInteger.One;
+            var neutralElement = 0;
+            var elementBitLength = 8;
 
-            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order) { CallBase = true };
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, cofactor, neutralElement, elementBitLength) { CallBase = true };
             algebraMock.Setup(alg => alg.Equals(It.IsAny<CryptoGroupAlgebra<int>>())).Returns(true);
 
-            var otherAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order);
+            var otherAlgebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, cofactor, neutralElement, elementBitLength);
 
             Assert.IsTrue(algebraMock.Object.Equals((object)(otherAlgebraMock.Object)));
 

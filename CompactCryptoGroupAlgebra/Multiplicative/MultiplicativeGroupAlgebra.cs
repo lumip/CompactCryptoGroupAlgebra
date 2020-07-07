@@ -19,21 +19,6 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         /// <value>The prime modulo of the group.</value>
         public BigPrime Prime { get; }
 
-        /// <inheritdoc/>
-        public override BigInteger NeutralElement { get { return BigInteger.One; } }
-
-        /// <inheritdoc/>
-        public override BigInteger Cofactor
-        {
-            get
-            {
-                return (Prime - 1) / Order;
-            }
-        }
-
-        /// <inheritdoc/>
-        public override int ElementBitLength { get { return NumberLength.GetLength(Prime).InBits; } }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiplicativeGroupAlgebra"/> class
         /// given the group's parameters.
@@ -42,7 +27,7 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         /// <param name="order">The order of the group</param>
         /// <param name="generator">The generator of the group.</param>
         public MultiplicativeGroupAlgebra(BigPrime prime, BigPrime order, BigInteger generator)
-            : base(generator, order)
+            : base(generator, order, (prime - 1) / order, BigInteger.One, NumberLength.GetLength(prime).InBits)
         {
             Prime = prime;
             if (!IsElement(generator))

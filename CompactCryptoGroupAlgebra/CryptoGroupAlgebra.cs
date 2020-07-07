@@ -24,13 +24,16 @@ namespace CompactCryptoGroupAlgebra
         public T Generator { get; }
 
         /// <inheritdoc/>
-        public abstract BigInteger Cofactor { get; }
+        public BigInteger Cofactor { get; }
 
         /// <inheritdoc/>
-        public abstract int ElementBitLength { get; }
+        public int ElementBitLength { get; }
 
         /// <inheritdoc/>
         public int OrderBitLength { get { return NumberLength.GetLength(Order).InBits; } }
+
+        /// <inheritdoc/>
+        public T NeutralElement { get; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="CryptoGroupAlgebra{T}"/>
@@ -41,11 +44,17 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="generator">Generator of the group.</param>
         /// <param name="order">Order of the group's generator.</param>
-        protected CryptoGroupAlgebra(T generator, BigPrime order)
+        /// <param name="cofactor">Cofactor of the group's generator.</param>
+        /// <param name="neutralElement">The neutral element of the group.</param>
+        /// <param name="elementBitLength">The maximum bit length of any group element.</param>
+        protected CryptoGroupAlgebra(T generator, BigPrime order, BigInteger cofactor, T neutralElement, int elementBitLength)
         {
             // todo: would be nice to do IsElement(generator) here - but that is virtual
             Generator = generator;
             Order = order;
+            Cofactor = cofactor;
+            NeutralElement = neutralElement;
+            ElementBitLength = elementBitLength;
         }
 
         /// <inheritdoc/>
@@ -161,12 +170,6 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <inheritdoc/>
-        public abstract T NeutralElement { get; }
-
-        /// <inheritdoc/>
-        public abstract T Add(T left, T right);
-
-        /// <inheritdoc/>
         public bool IsElement(T element)
         {
             // implementation specific checks
@@ -182,6 +185,9 @@ namespace CompactCryptoGroupAlgebra
             }
             return true;
         }
+
+        /// <inheritdoc/>
+        public abstract T Add(T left, T right);
 
         /// <summary>
         /// Implementation specific checks for validity of group elements.

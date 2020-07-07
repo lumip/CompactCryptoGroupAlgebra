@@ -26,7 +26,13 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// </summary>
         /// <param name="parameters">Parameters for the curve.</param>
         public MontgomeryCurveAlgebra(CurveParameters parameters)
-            : base(parameters.Generator, parameters.Order)
+            : base(
+                parameters.Generator,
+                parameters.Order,
+                parameters.Cofactor,
+                CurvePoint.PointAtInfinity,
+                2 * NumberLength.GetLength(parameters.P).InBits
+            )
         {
             _parameters = parameters;
             _field = new BigIntegerField(_parameters.P);
@@ -34,15 +40,6 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 throw new ArgumentException("The point given as generator is " +
                 	"not a valid point on the curve.", nameof(parameters));
         }
-
-        /// <inheritdoc/>
-        public override BigInteger Cofactor { get { return _parameters.Cofactor; } }
-
-        /// <inheritdoc/>
-        public override int ElementBitLength { get { return 2 * NumberLength.GetLength(_parameters.P).InBits; } }
-
-        /// <inheritdoc/>
-        public override CurvePoint NeutralElement { get { return CurvePoint.PointAtInfinity; } }
 
         /// <inheritdoc/>
         public override CurvePoint Add(CurvePoint left, CurvePoint right)

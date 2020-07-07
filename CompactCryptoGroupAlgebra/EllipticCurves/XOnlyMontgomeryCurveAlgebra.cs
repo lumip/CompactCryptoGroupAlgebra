@@ -48,22 +48,16 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public XOnlyMontgomeryCurveAlgebra(CurveParameters parameters)
             : base(
                 parameters.Generator.X,
-                parameters.Order
+                parameters.Order,
+                parameters.Cofactor,
+                BigInteger.Zero,
+                NumberLength.GetLength(parameters.P).InBits
             )
         {
             _parameters = parameters;
             _field = new BigIntegerField(_parameters.P);
             _aConstant = _field.Mod((_parameters.A + 2) * _field.InvertMult(4));
         }
-
-        /// <inheritdoc/>
-        public override BigInteger Cofactor { get { return _parameters.Cofactor; } }
-
-        /// <inheritdoc/>
-        public override int ElementBitLength { get { return NumberLength.GetLength(_parameters.P).InBits; } }
-
-        /// <inheritdoc/>
-        public override BigInteger NeutralElement { get { return BigInteger.Zero; } }
 
         /// <summary>
         /// Sums two projected Montgomery point using only x- and z-coordinates and knowledge of 
