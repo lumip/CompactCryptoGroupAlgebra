@@ -1,0 +1,198 @@
+using System;
+using System.Numerics;
+
+using NUnit.Framework;
+
+namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
+{
+    [TestFixture]
+    public class WeierstrassCurveEquationTests
+    {
+
+        private readonly CurveParameters curveParameters = TestCurveParameters.WeierstrassParameters;
+
+
+        [Test]
+        public void TestAddDoublePoint()
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            var p = new CurvePoint(5, 5);
+            var other = p.Clone();
+
+            var expectedQ = new CurvePoint(15, 14);
+            var q = curve.Add(p, other);
+
+            Assert.AreEqual(expectedQ, q);
+        }
+
+        [Test]
+        public void TestAddDoublePointAtInfinity()
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            var p = CurvePoint.PointAtInfinity;
+            var other = p.Clone();
+
+            var expectedQ = CurvePoint.PointAtInfinity;
+            var q = curve.Add(p, other);
+
+            Assert.AreEqual(expectedQ, q);
+        }
+
+        [Test]
+        public void TestAddDifferentPoints()
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            var p = new CurvePoint(5, 5);
+            var other = new CurvePoint(15, 14);
+
+            var expected = new CurvePoint(16, 15);
+            var result = curve.Add(p, other);
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void TestAddPointAtInfinityLeft()
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            var p = new CurvePoint(5, 5);
+            var other = CurvePoint.PointAtInfinity;
+
+            var result = curve.Add(other, p);
+
+            Assert.AreEqual(p, result);
+            Assert.AreNotSame(p, result);
+        }
+
+        [Test]
+        public void TestAddPointAtInfinityRight()
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            var p = new CurvePoint(5, 5);
+            var other = CurvePoint.PointAtInfinity;
+
+            var result = curve.Add(p, other);
+
+            Assert.AreEqual(p, result);
+            Assert.AreNotSame(p, result);
+        }
+
+        [Test]
+        public void TestAddNegated()
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            var p = new CurvePoint(5, 5);
+            var other = curve.Negate(p);
+
+            var expected = CurvePoint.PointAtInfinity;
+            var result = curve.Add(p, other);
+
+            Assert.AreEqual(expected, result);
+        }
+        
+
+        [Test]
+        public void TestAddAffine()
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            var p = new CurvePoint(11, 0);
+
+            var q = curve.Add(p, p);
+
+            Assert.AreEqual(CurvePoint.PointAtInfinity, q);
+        }
+
+        [Test]
+        [TestCase(1, 10)]
+        [TestCase(2, 17)]
+        [TestCase(6, 11)]
+        [TestCase(13, 8)]
+        [TestCase(18, 3)]
+        [TestCase(0, 20)]
+        public void TestIsElementTrueForValidPoint(int xRaw, int yRaw)
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            var point = new CurvePoint(xRaw, yRaw);
+            Assert.IsTrue(curve.IsPointOnCurve(point));
+        }
+
+        [Test]
+        public void TestIsElementFalseForPointAtInfinity()
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            Assert.IsFalse(curve.IsPointOnCurve(CurvePoint.PointAtInfinity));
+        }
+
+        [Test]
+        [TestCase(16, 1)]
+        [TestCase(5, 2)]
+        [TestCase(-2, 1)]
+        [TestCase(16, -15)]
+        [TestCase(78, 4)]
+        [TestCase(4, 78)]
+        public void TestIsElementFalseForPointNotOnCurve(int xRaw, int yRaw)
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            var point = new CurvePoint(xRaw, yRaw);
+            Assert.IsFalse(curve.IsPointOnCurve(point));
+        }
+
+        [Test]
+        [TestCase(10, 0)]
+        public void TestIsElementTrueForLowOrderCurvePoint(int xRaw, int yRaw)
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            var point = new CurvePoint(xRaw, yRaw);
+            Assert.IsTrue(curve.IsPointOnCurve(point));
+        }
+
+        [Test]
+        public void TestEqualsTrue()
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            var otherCurve = new WeierstrassCurveEquation(curveParameters);
+
+            bool result = curve.Equals(otherCurve);
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void TestEqualsFalseForNull()
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+
+            bool result = curve.Equals(null);
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void TestEqualsFalseForUnrelatedObject()
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            var otherCurve = new object { };
+
+            bool result = curve.Equals(otherCurve);
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void TestEqualsFalseForOtherAlgebra()
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            var otherCurve = new WeierstrassCurveEquation(TestCurveParameters.LargeParameters);
+
+            bool result = curve.Equals(otherCurve);
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void TestGetHashCodeSameForEqual()
+        {
+            var curve = new WeierstrassCurveEquation(curveParameters);
+            var otherCurve = new WeierstrassCurveEquation(curveParameters);
+
+            Assert.AreEqual(curve.GetHashCode(), otherCurve.GetHashCode());
+        }
+
+    }
+}

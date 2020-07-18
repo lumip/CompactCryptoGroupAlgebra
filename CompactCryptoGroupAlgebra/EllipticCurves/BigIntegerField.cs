@@ -9,7 +9,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// <remarks>
     /// Used by elliptic curve implementations in <see cref="CurveGroupAlgebra"/>.
     /// </remarks>
-    class BigIntegerField
+    public class BigIntegerField
     {
         /// <summary>
         /// The prime that serves as module for operations.
@@ -83,6 +83,11 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             return (x % Modulo + Modulo) % Modulo; // to prevent negative results of BigInteger modulo
         }
 
+        /// <summary>
+        /// Tests whether a given <see cref="BigInteger"/> is an element of the field.
+        /// </summary>
+        /// <param name="x">The <see cref="BigInteger"/> to test.</param>
+        /// <returns><c>true</c> if <paramref name="x"/> is a member of the field; otherwise <c>false</c></returns>
         public bool IsElement(BigInteger x)
         {
             return x >= 0 && x < Modulo;

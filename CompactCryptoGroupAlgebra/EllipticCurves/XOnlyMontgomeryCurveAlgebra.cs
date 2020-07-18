@@ -20,7 +20,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// <see cref="ICryptoGroupAlgebra{E}.Add(E, E)"/> and <see cref="ICryptoGroupAlgebra{E}.Negate(E)"/>
     /// are therefore not implemented (however, 
     /// <see cref="ICryptoGroupAlgebra{E}.MultiplyScalar(E, BigInteger)"/> is).
-    /// If you require full addition on arbitrary points, use <see cref="MontgomeryCurveAlgebra"/>.
+    /// If you require full addition on arbitrary points, use <see cref="CurveGroupAlgebra"/> with
+    /// a <see cref="MontgomeryCurveEquation"/> instance.
     /// 
     /// <see cref="XOnlyMontgomeryCurveAlgebra"/> returns <c>0</c> as its neutral element.
     /// This is not technically correct as a point with x-coordinate <c>0</c> exists on the curve,
