@@ -24,6 +24,15 @@ namespace CompactCryptoGroupAlgebra.Multiplicative.Tests
         }
 
         [Test]
+        public void TestAdd()
+        {
+            var result = groupAlgebra!.Add(4, 18);
+            var expected = new BigInteger(3);
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
         [TestCase(0, 1)]
         [TestCase(1, 3)]
         [TestCase(2, 9)]

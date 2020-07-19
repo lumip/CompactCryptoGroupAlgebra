@@ -41,18 +41,6 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         }
 
         /// <inheritdoc/>
-        protected override BigInteger Select(bool selectSecond, BigInteger left, BigInteger right)
-        {
-            return left + new BigInteger(Convert.ToInt32(selectSecond)) * (right - left);
-        }
-
-        /// <inheritdoc/>
-        public override BigInteger Negate(BigInteger e)
-        {
-            return BigInteger.ModPow(e, Order - 1, Prime);
-        }
-
-        /// <inheritdoc/>
         protected override bool IsElementDerived(BigInteger element)
         {
             return (element > BigInteger.Zero && element < Prime);
