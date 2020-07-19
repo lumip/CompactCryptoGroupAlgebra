@@ -22,10 +22,10 @@ namespace Example
 
             // Creating the group instance
             var group = MultiplicativeGroupAlgebra.CreateCryptoGroup(prime, order, generator);
-            DoDiffieHelman(group, randomNumberGenerator);
+            DoDiffieHellman(group, randomNumberGenerator);
         }
 
-        public static void DoDiffieHelman<T>(
+        public static void DoDiffieHellman<T>(
             CryptoGroup<T> group, RandomNumberGenerator randomNumberGenerator
         ) where T : notnull
         {
