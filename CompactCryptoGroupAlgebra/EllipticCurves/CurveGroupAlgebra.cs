@@ -22,6 +22,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <summary>
         /// Initializes a new instance of the <see cref="CurveGroupAlgebra"/> class.
         /// </summary>
+        /// <param name="parameters">The parameters of the elliptic curve.</param>
         public CurveGroupAlgebra(CurveParameters parameters)
             : base(
                 parameters.Generator,
@@ -133,8 +134,9 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
 
         /// <summary>
         /// Creates a <see cref="CryptoGroup{CurvePoint}" /> instance using a <see cref="CurveGroupAlgebra" />
-        /// instance with the given <see cref="CurveEquation"/>.
+        /// instance with the given <see cref="CurveParameters"/>.
         /// </summary>
+        /// <param name="parameters">The parameters of the elliptic curve.</param>
         public static CryptoGroup<CurvePoint> CreateCryptoGroup(CurveParameters parameters)
         {
             return new CryptoGroup<CurvePoint>(new CurveGroupAlgebra(parameters));

@@ -75,12 +75,10 @@ namespace CompactCryptoGroupAlgebra.Tests
         [Test]
         public void TestDiffieHellmanWithXOnlyCurve25519Curve()
         {
-            var group = new CryptoGroup<BigInteger>(
-                new EllipticCurves.XOnlyMontgomeryCurveAlgebra(
-                    EllipticCurves.CurveParameters.Curve25519
-                )
+            var group = EllipticCurves.XOnlyMontgomeryCurveAlgebra.CreateCryptoGroup(
+                EllipticCurves.CurveParameters.Curve25519
             );
-
+            
             DoDiffieHellman(group);
         }
     }

@@ -45,7 +45,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// Initializes a new instance of <see cref="XOnlyMontgomeryCurveAlgebra"/> 
         /// with given curve parameters.
         /// </summary>
-        /// <param name="parameters">Curve parameters.</param>
+        /// <param name="parameters">The parameters of the elliptic curve.</param>
         public XOnlyMontgomeryCurveAlgebra(CurveParameters parameters)
             : base(
                 parameters.Generator.X,
@@ -249,6 +249,18 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         {
             var hashCode = -2051777468 + _parameters.GetHashCode();
             return hashCode;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CryptoGroup{BigInteger}" /> instance using a <see cref="XOnlyMontgomeryCurveAlgebra" />
+        /// instance with the given <see cref="CurveParameters"/>.
+        /// </summary>
+        /// <param name="parameters">The parameters of the elliptic curve.</param>
+        public static CryptoGroup<BigInteger> CreateCryptoGroup(CurveParameters parameters)
+        {
+            return new CryptoGroup<BigInteger>(
+                new XOnlyMontgomeryCurveAlgebra(parameters)
+            );
         }
     }
 }

@@ -179,7 +179,13 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
             Assert.AreEqual(curve.GetHashCode(), otherCurve.GetHashCode());
         }
 
-        
+        [Test]
+        public void TestCreateCryptoGroup()
+        {
+            var expectedGroupAlgebra = new XOnlyMontgomeryCurveAlgebra(curveParameters);
+            var group = XOnlyMontgomeryCurveAlgebra.CreateCryptoGroup(curveParameters);
+            Assert.AreEqual(expectedGroupAlgebra, group.Algebra);
+        }        
 
     }
 }
