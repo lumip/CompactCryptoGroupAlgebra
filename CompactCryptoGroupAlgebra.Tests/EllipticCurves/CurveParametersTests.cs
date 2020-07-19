@@ -2,28 +2,44 @@
 using System.Numerics;
 
 using NUnit.Framework;
+using Moq;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
 {
     [TestFixture]
-    public class DefaultECParrameterTests
+    public class CurveParametersTests
     {
+
+        private readonly Mock<CurveEquation> equationMock;
+
+        public CurveParametersTests()
+        {
+            equationMock = new Mock<CurveEquation>(
+                BigPrime.CreateWithoutChecks(11),
+                new BigInteger(2),
+                new BigInteger(-3)
+            );
+        }
+
+        [SetUp]
+        public void Setup()
+        {
+            equationMock.Reset();
+            equationMock.Setup(eq => eq.Equals(It.IsAny<CurveEquation>())).Returns(true);
+        }
 
         [Test]
         public void TestEqualsIsTrueForEqualObjects()
         {
-            var p = BigPrime.CreateWithoutChecks(11);
             var order = BigPrime.CreateWithoutChecks(7);
-            var a = new BigInteger(2);
-            var b = new BigInteger(-3);
             var cofactor = new BigInteger(2);
             var generator = CurvePoint.PointAtInfinity;
             CurveParameters parameters = new CurveParameters(
-                p, a, b, generator, order, cofactor
+                equationMock.Object, generator, order, cofactor
             );
 
             CurveParameters otherParameters = new CurveParameters(
-                p, a, b, generator, order, cofactor
+                equationMock.Object, generator, order, cofactor
             );
 
             Assert.AreEqual(parameters, otherParameters);
@@ -32,43 +48,37 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestEqualsIsFalseForDifferentObjects()
         {
-            var p = BigPrime.CreateWithoutChecks(11);
+            var equation = equationMock.Object;
+            equationMock.Reset();
+            equationMock.Setup(eq => eq.Equals(It.IsAny<CurveEquation>())).Returns(false);
+
             var order = BigPrime.CreateWithoutChecks(7);
-            var a = new BigInteger(2);
-            var b = new BigInteger(-3);
             var cofactor = new BigInteger(2);
             var generator = CurvePoint.PointAtInfinity;
             CurveParameters parameters = new CurveParameters(
-                p, a, b, generator, order, cofactor
+                equation, generator, order, cofactor
             );
 
             CurveParameters otherParameters = new CurveParameters(
-                BigPrime.CreateWithoutChecks(7), a, b, generator, order, cofactor
+                equation, generator, order, cofactor
+            );
+            Assert.AreNotEqual(parameters, otherParameters);
+
+            equationMock.Reset();
+            equationMock.Setup(eq => eq.Equals(It.IsAny<CurveEquation>())).Returns(true);
+
+            otherParameters = new CurveParameters(
+                equation, new CurvePoint(1, 1), order, cofactor
             );
             Assert.AreNotEqual(parameters, otherParameters);
 
             otherParameters = new CurveParameters(
-                p, new BigInteger(3), b, generator, order, cofactor
+                equation, generator, BigPrime.CreateWithoutChecks(3), cofactor
             );
             Assert.AreNotEqual(parameters, otherParameters);
 
             otherParameters = new CurveParameters(
-                p, a, new BigInteger(5), generator, order, cofactor
-            );
-            Assert.AreNotEqual(parameters, otherParameters);
-
-            otherParameters = new CurveParameters(
-                p, a, b, new CurvePoint(1, 1), order, cofactor
-            );
-            Assert.AreNotEqual(parameters, otherParameters);
-
-            otherParameters = new CurveParameters(
-                p, a, b, generator, BigPrime.CreateWithoutChecks(3), cofactor
-            );
-            Assert.AreNotEqual(parameters, otherParameters);
-
-            otherParameters = new CurveParameters(
-                p, a, b, generator, order, BigInteger.One
+                equation, generator, order, BigInteger.One
             );
             Assert.AreNotEqual(parameters, otherParameters);
         }
@@ -76,14 +86,11 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestEqualsIsFalseForNull()
         {
-            var p = BigPrime.CreateWithoutChecks(11);
             var order = BigPrime.CreateWithoutChecks(7);
-            var a = new BigInteger(2);
-            var b = new BigInteger(-3);
             var cofactor = new BigInteger(2);
             var generator = CurvePoint.PointAtInfinity;
             CurveParameters parameters = new CurveParameters(
-                p, a, b, generator, order, cofactor
+                equationMock.Object, generator, order, cofactor
             );
 
             Assert.AreNotEqual(parameters, null);
@@ -92,14 +99,11 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestEqualsIsFalseForUnrelatedObject()
         {
-            var p = BigPrime.CreateWithoutChecks(11);
             var order = BigPrime.CreateWithoutChecks(7);
-            var a = new BigInteger(2);
-            var b = new BigInteger(-3);
             var cofactor = new BigInteger(2);
             var generator = CurvePoint.PointAtInfinity;
             CurveParameters parameters = new CurveParameters(
-                p, a, b, generator, order, cofactor
+                equationMock.Object, generator, order, cofactor
             );
 
             Assert.AreNotEqual(parameters, new object { });
@@ -108,18 +112,15 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestHashCodeIsSameForEqualObjects()
         {
-            var p = BigPrime.CreateWithoutChecks(11);
             var order = BigPrime.CreateWithoutChecks(7);
-            var a = new BigInteger(2);
-            var b = new BigInteger(-3);
             var cofactor = new BigInteger(2);
             var generator = CurvePoint.PointAtInfinity;
             CurveParameters parameters = new CurveParameters(
-                p, a, b, generator, order, cofactor
+                equationMock.Object, generator, order, cofactor
             );
 
             CurveParameters otherParameters = new CurveParameters(
-                p, a, b, generator, order, cofactor
+                equationMock.Object, generator, order, cofactor
             );
 
             Assert.AreEqual(parameters.GetHashCode(), otherParameters.GetHashCode());

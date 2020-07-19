@@ -15,21 +15,21 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// Initializes a new instance of <see cref="WeierstrassCurveEquation"/>
         /// with the given parameters.
         /// </summary>
-        /// <param name="parameters">Parameters for the curve.</param>
-        public WeierstrassCurveEquation(CurveParameters parameters)
-            : base(parameters) { }
+        /// <param name="prime">Prime characteristic of the underlying scalar field.</param>
+        /// <param name="a">The parameter A in the curve equation.</param>
+        /// <param name="b">The parameter B in the curve equation.</param>
+        public WeierstrassCurveEquation(BigPrime prime, BigInteger a, BigInteger b)
+            : base(prime, a, b) { }
 
         /// <inheritdoc/>
         public override CurvePoint Add(CurvePoint left, CurvePoint right)
         {
-            CurveParameters parameters = CurveParameters;
-
             BigInteger x1 = left.X;
             BigInteger x2 = right.X;
             BigInteger y1 = left.Y;
             BigInteger y2 = right.Y;
 
-            BigInteger lambdaSame = Field.Mod((3 * Field.Square(x1) + parameters.A) * Field.InvertMult(2 * y1));
+            BigInteger lambdaSame = Field.Mod((3 * Field.Square(x1) + A) * Field.InvertMult(2 * y1));
             BigInteger lambdaDiff = Field.Mod((y2 - y1) * Field.InvertMult(x2 - x1));
             BigInteger lambda;
             // note: branching is side-channel vulnerable
@@ -63,9 +63,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <inheritdoc/>
         public override bool IsPointOnCurve(CurvePoint point)
         {
-            CurveParameters parameters = CurveParameters;
-            
-            BigInteger r = Field.Mod(Field.Pow(point.X, 3) + parameters.A * point.X + parameters.B);
+            BigInteger r = Field.Mod(Field.Pow(point.X, 3) + A * point.X + B);
             BigInteger ySquared = Field.Square(point.Y);
             return (r == ySquared);
         }
@@ -74,13 +72,13 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public override bool Equals(object? obj)
         {
             WeierstrassCurveEquation? other = obj as WeierstrassCurveEquation;
-            return other != null && CurveParameters.Equals(other.CurveParameters);
+            return other != null && base.Equals(other);
         }
 
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            return -986235350 + CurveParameters.GetHashCode();
+            return -986235350 + base.GetHashCode();
         }
     }
 }

@@ -34,7 +34,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCaseSource(nameof(Curve25519GenerateTestVectors))]
         public void TestGenerate(BigInteger k, BigInteger expectedX)
         {
-            var curve25519Algebra = new CurveGroupAlgebra(CurveEquation.Curve25519);
+            var curve25519Algebra = new CurveGroupAlgebra(CurveParameters.Curve25519);
 
             var point = curve25519Algebra.GenerateElement(k);
             Assert.AreEqual(point.X, expectedX);

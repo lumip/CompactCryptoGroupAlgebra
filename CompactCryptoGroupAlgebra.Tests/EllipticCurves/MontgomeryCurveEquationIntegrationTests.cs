@@ -19,11 +19,11 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCase(10, 2, 6, 28, 7)]
         public void TestMultiplyScalar(int k, int x, int y, int expectedX, int expectedY)
         {
-            var algebra = new CurveGroupAlgebra(new MontgomeryCurveEquation(curveParameters));
+            var curveAlgebra = new CurveGroupAlgebra(curveParameters);
             var expected = new CurvePoint(new BigInteger(expectedX), new BigInteger(expectedY));
 
             var p = new CurvePoint(new BigInteger(x), new BigInteger(y));
-            var result = algebra.MultiplyScalar(p, k);
+            var result = curveAlgebra.MultiplyScalar(p, k);
 
             Assert.AreEqual(expected, result);
         }
@@ -31,11 +31,11 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestMultiplyScalarOrderResultsInNeutralElement()
         {
-            var curve = new CurveGroupAlgebra(new MontgomeryCurveEquation(curveParameters));
+            var curveAlgebra = new CurveGroupAlgebra(curveParameters);
             var p = new CurvePoint(2, 6);
-            var result = curve.MultiplyScalar(p, 11);
+            var result = curveAlgebra.MultiplyScalar(p, 11);
 
-            Assert.AreEqual(curve.NeutralElement, result);
+            Assert.AreEqual(curveAlgebra.NeutralElement, result);
         }
 
         [Test]
@@ -44,16 +44,16 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCase(18, 39)]
         public void TestIsElementTrueForValidPoint(int xRaw, int yRaw)
         {
-            var curve = new CurveGroupAlgebra(new MontgomeryCurveEquation(curveParameters));
+            var curveAlgebra = new CurveGroupAlgebra(curveParameters);
             var point = new CurvePoint(xRaw, yRaw);
-            Assert.IsTrue(curve.IsElement(point));
+            Assert.IsTrue(curveAlgebra.IsElement(point));
         }
 
         [Test]
         public void TestIsElementFalseForPointAtInfinity()
         {
-            var curve = new CurveGroupAlgebra(new MontgomeryCurveEquation(curveParameters));
-            Assert.IsFalse(curve.IsElement(CurvePoint.PointAtInfinity));
+            var curveAlgebra = new CurveGroupAlgebra(curveParameters);
+            Assert.IsFalse(curveAlgebra.IsElement(CurvePoint.PointAtInfinity));
         }
 
         [Test]
@@ -64,18 +64,18 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCase(25, 7)]
         public void TestIsElementFalseForPointNotOnCurve(int xRaw, int yRaw)
         {
-            var curve = new CurveGroupAlgebra(new MontgomeryCurveEquation(curveParameters));
+            var curveAlgebra = new CurveGroupAlgebra(curveParameters);
             var point = new CurvePoint(xRaw, yRaw);
-            Assert.IsFalse(curve.IsElement(point));
+            Assert.IsFalse(curveAlgebra.IsElement(point));
         }
 
         [Test]
         [TestCase(0, 0)]
         public void TestIsElementFalseForLowOrderCurvePoint(int xRaw, int yRaw)
         {
-            var curve = new CurveGroupAlgebra(new MontgomeryCurveEquation(curveParameters));
+            var curveAlgebra = new CurveGroupAlgebra(curveParameters);
             var point = new CurvePoint(xRaw, yRaw);
-            Assert.IsFalse(curve.IsElement(point));
+            Assert.IsFalse(curveAlgebra.IsElement(point));
         }
 
         [Test]
@@ -83,16 +83,14 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         {
             var invalidGenerator = new CurvePoint(0, 0);
             CurveParameters invalidParameters = new CurveParameters(
+                curveEquation: curveParameters.Equation,
                 generator: invalidGenerator,
-                p: curveParameters.P,
-                a: curveParameters.A,
-                b: curveParameters.B,
                 order: curveParameters.Order,
                 cofactor: curveParameters.Cofactor
             );
                 
             Assert.Throws<ArgumentException>(
-                () => new CurveGroupAlgebra(new MontgomeryCurveEquation(invalidParameters))
+                () => new CurveGroupAlgebra(invalidParameters)
             );
         }
     }

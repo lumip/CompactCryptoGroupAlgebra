@@ -8,20 +8,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
     [TestFixture]
     public class WeierstrassCurveEquationIntegrationTests
     {
-        private readonly CurveParameters curveParameters;
-
-        public WeierstrassCurveEquationIntegrationTests()
-        {
-            curveParameters = new CurveParameters(
-                p: BigPrime.CreateWithoutChecks(23),
-                a: -2,
-                b: 9,
-                generator: new CurvePoint(5, 3),
-                order: BigPrime.CreateWithoutChecks(11),
-                cofactor: 2
-            );            
-        }
-
+        private readonly CurveParameters curveParameters = TestCurveParameters.WeierstrassParameters;
 
         [Test]
         [TestCase(1, 10)]
@@ -32,7 +19,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCase(0, 20)]
         public void TestIsElementTrueForValidPoint(int rawX, int rawY)
         {
-            var curve = new CurveGroupAlgebra(new WeierstrassCurveEquation(curveParameters));
+            var curve = new CurveGroupAlgebra(curveParameters);
             var point = new CurvePoint(rawX, rawY);
             Assert.IsTrue(curve.IsElement(point));
         }
@@ -40,7 +27,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestIsElementFalseForPointAtInfinity()
         {
-            var curve = new CurveGroupAlgebra(new WeierstrassCurveEquation(curveParameters));
+            var curve = new CurveGroupAlgebra(curveParameters);
             Assert.IsFalse(curve.IsElement(CurvePoint.PointAtInfinity));
         }
 
@@ -53,7 +40,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCase(4, 78)]
         public void TestIsElementFalseForPointNotOnCurve(int rawX, int rawY)
         {
-            var curve = new CurveGroupAlgebra(new WeierstrassCurveEquation(curveParameters));
+            var curve = new CurveGroupAlgebra(curveParameters);
             var point = new CurvePoint(rawX, rawY);
             Assert.IsFalse(curve.IsElement(point));
         }
@@ -61,7 +48,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestIsElementFalseForLowOrderCurvePoint()
         {
-            var curve = new CurveGroupAlgebra(new WeierstrassCurveEquation(curveParameters));
+            var curve = new CurveGroupAlgebra(curveParameters);
             var point = new CurvePoint(10, 0);
             Assert.IsFalse(curve.IsElement(point));
         }
@@ -74,7 +61,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         public void TestMultiplyScalar(int kRaw, int expectedX, int expectedY)
         {
             var k = new BigInteger(kRaw);
-            var curve = new CurveGroupAlgebra(new WeierstrassCurveEquation(curveParameters));
+            var curve = new CurveGroupAlgebra(curveParameters);
             var p = new CurvePoint(5, 5);
 
             var q = curve.MultiplyScalar(p, k);
@@ -85,7 +72,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestMultiplyScalarOrderResultsInNeutralElement()
         {
-            var curve = new CurveGroupAlgebra(new WeierstrassCurveEquation(curveParameters));
+            var curve = new CurveGroupAlgebra(curveParameters);
             var p = new CurvePoint(5, 3);
             var result = curve.MultiplyScalar(p, 11);
 
@@ -97,16 +84,14 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         {
             var invalidGenerator = new CurvePoint(16, 1);
             CurveParameters invalidParameters = new CurveParameters(
+                curveEquation: TestCurveParameters.WeierstrassParameters.Equation,
                 generator: invalidGenerator,
-                p: curveParameters.P,
-                a: curveParameters.A,
-                b: curveParameters.B,
                 order: curveParameters.Order,
                 cofactor: curveParameters.Cofactor
             );
                 
             Assert.Throws<ArgumentException>(
-                () => new CurveGroupAlgebra(new WeierstrassCurveEquation(invalidParameters))
+                () => new CurveGroupAlgebra(invalidParameters)
             );
         }
 

@@ -38,7 +38,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     public class XOnlyMontgomeryCurveAlgebra : CryptoGroupAlgebra<BigInteger>
     {
         private readonly CurveParameters _parameters;
-        private BigIntegerField _field;
+        private BigIntegerField Field { get { return _parameters.Equation.Field; } }
         private BigInteger _aConstant;
 
         /// <summary>
@@ -52,12 +52,11 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 parameters.Order,
                 parameters.Cofactor,
                 BigInteger.Zero,
-                NumberLength.GetLength(parameters.P).InBits
+                NumberLength.GetLength(parameters.Equation.Field.Modulo).InBits
             )
         {
             _parameters = parameters;
-            _field = new BigIntegerField(_parameters.P);
-            _aConstant = _field.Mod((_parameters.A + 2) * _field.InvertMult(4));
+            _aConstant = Field.Mod((_parameters.Equation.A + 2) * Field.InvertMult(4));
         }
 
         /// <summary>
@@ -82,20 +81,20 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             BigInteger zp = left.Z;
             BigInteger zq = right.Z;
 
-            var xpPlusZp = _field.Mod(xp + zp);
-            var xpMinusZp = _field.Mod(xp - zp);
+            var xpPlusZp = Field.Mod(xp + zp);
+            var xpMinusZp = Field.Mod(xp - zp);
 
-            var xqPlusZq = _field.Mod(xq + zq);
-            var xqMinusZq = _field.Mod(xq - zq);
+            var xqPlusZq = Field.Mod(xq + zq);
+            var xqMinusZq = Field.Mod(xq - zq);
 
-            var firstProduct = _field.Mod(xpMinusZp * xqPlusZq);
-            var secondProduct = _field.Mod(xpPlusZp * xqMinusZq);
+            var firstProduct = Field.Mod(xpMinusZp * xqPlusZq);
+            var secondProduct = Field.Mod(xpPlusZp * xqMinusZq);
 
-            var xNew = _field.Mod(diff.Z * _field.Square(
+            var xNew = Field.Mod(diff.Z * Field.Square(
                 firstProduct + secondProduct
             ));
 
-            var zNew = _field.Mod(diff.X * _field.Square(
+            var zNew = Field.Mod(diff.X * Field.Square(
                 firstProduct - secondProduct
             ));
 
@@ -112,12 +111,12 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             BigInteger xp = point.X;
             BigInteger zp = point.Z;
 
-            var xpPlusZpSquared = _field.Square(xp + zp);
-            var xpMinusZpSquared = _field.Square(xp - zp);
+            var xpPlusZpSquared = Field.Square(xp + zp);
+            var xpMinusZpSquared = Field.Square(xp - zp);
             var xpzp4 = xpPlusZpSquared - xpMinusZpSquared;
 
-            var xNew = _field.Mod(xpPlusZpSquared * xpMinusZpSquared);
-            var zNew = _field.Mod(xpzp4 * (xpMinusZpSquared + _aConstant * xpzp4));
+            var xNew = Field.Mod(xpPlusZpSquared * xpMinusZpSquared);
+            var zNew = Field.Mod(xpzp4 * (xpMinusZpSquared + _aConstant * xpzp4));
 
             return new MontgomeryCurvePoint(xNew, zNew);
         }
@@ -131,7 +130,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         private MontgomeryCurvePoint RenormalizePoint(MontgomeryCurvePoint point)
         {
             return new MontgomeryCurvePoint(
-                _field.Mod(_field.InvertMult(point.Z) * point.X)
+                Field.Mod(Field.InvertMult(point.Z) * point.X)
             );
         }
 
@@ -166,7 +165,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <inheritdoc/>
         protected override bool IsElementDerived(BigInteger point)
         {
-            return _field.IsElement(point);
+            return Field.IsElement(point);
             
             // In Montgomery form, every x coordinate corresponds to a valid
             // point either on the curve or on its twist, i.e., another valid
@@ -242,7 +241,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public override bool Equals(CryptoGroupAlgebra<BigInteger>? other)
         {
             var algebra = other as XOnlyMontgomeryCurveAlgebra;
-            return other != null && _parameters.Equals(algebra!._parameters);
+            return algebra != null && _parameters.Equals(algebra._parameters);
         }
 
         /// <inheritdoc/>

@@ -15,27 +15,26 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// </summary>
     public sealed class CurveGroupAlgebra : CryptoGroupAlgebra<CurvePoint>
     {
+        
         private readonly CurveEquation _curveEquation;
-        private CurveParameters CurveParameters { get { return _curveEquation.CurveParameters; } }
         private BigIntegerField Field { get { return _curveEquation.Field; } }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CurveGroupAlgebra"/> class.
         /// </summary>
-        /// <param name="curveEquation">Equation of the curve.</param>
-        public CurveGroupAlgebra(CurveEquation curveEquation)
+        public CurveGroupAlgebra(CurveParameters parameters)
             : base(
-                curveEquation.CurveParameters.Generator,
-                curveEquation.CurveParameters.Order,
-                curveEquation.CurveParameters.Cofactor,
+                parameters.Generator,
+                parameters.Order,
+                parameters.Cofactor,
                 CurvePoint.PointAtInfinity,
-                2 * NumberLength.GetLength(curveEquation.CurveParameters.P).InBits
+                2 * NumberLength.GetLength(parameters.Equation.Field.Modulo).InBits
             )
         {
-            _curveEquation = curveEquation;
+            _curveEquation = parameters.Equation;
             if (!IsElement(Generator))
                 throw new ArgumentException("The point given as generator is " +
-                	"not a valid point on the curve.", nameof(curveEquation));
+                	"not a valid point on the curve.", nameof(parameters));
         }
 
         /// <summary>
@@ -136,10 +135,9 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// Creates a <see cref="CryptoGroup{CurvePoint}" /> instance using a <see cref="CurveGroupAlgebra" />
         /// instance with the given <see cref="CurveEquation"/>.
         /// </summary>
-        /// <param name="curveEquation">Equation of the curve.</param>
-        public static CryptoGroup<CurvePoint> CreateCryptoGroup(CurveEquation curveEquation)
+        public static CryptoGroup<CurvePoint> CreateCryptoGroup(CurveParameters parameters)
         {
-            return new CryptoGroup<CurvePoint>(new CurveGroupAlgebra(curveEquation));
+            return new CryptoGroup<CurvePoint>(new CurveGroupAlgebra(parameters));
         }
     }
 }

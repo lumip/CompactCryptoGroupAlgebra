@@ -15,7 +15,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestAddDoublePoint()
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
             var p = new CurvePoint(5, 5);
             var other = p.Clone();
 
@@ -28,7 +28,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestAddDoublePointAtInfinity()
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
             var p = CurvePoint.PointAtInfinity;
             var other = p.Clone();
 
@@ -41,7 +41,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestAddDifferentPoints()
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
             var p = new CurvePoint(5, 5);
             var other = new CurvePoint(15, 14);
 
@@ -54,7 +54,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestAddPointAtInfinityLeft()
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
             var p = new CurvePoint(5, 5);
             var other = CurvePoint.PointAtInfinity;
 
@@ -67,7 +67,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestAddPointAtInfinityRight()
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
             var p = new CurvePoint(5, 5);
             var other = CurvePoint.PointAtInfinity;
 
@@ -80,7 +80,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestAddNegated()
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
             var p = new CurvePoint(5, 5);
             var other = curve.Negate(p);
 
@@ -94,7 +94,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestAddAffine()
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
             var p = new CurvePoint(11, 0);
 
             var q = curve.Add(p, p);
@@ -111,7 +111,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCase(0, 20)]
         public void TestIsElementTrueForValidPoint(int xRaw, int yRaw)
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
             var point = new CurvePoint(xRaw, yRaw);
             Assert.IsTrue(curve.IsPointOnCurve(point));
         }
@@ -119,7 +119,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestIsElementFalseForPointAtInfinity()
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
             Assert.IsFalse(curve.IsPointOnCurve(CurvePoint.PointAtInfinity));
         }
 
@@ -132,7 +132,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCase(4, 78)]
         public void TestIsElementFalseForPointNotOnCurve(int xRaw, int yRaw)
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
             var point = new CurvePoint(xRaw, yRaw);
             Assert.IsFalse(curve.IsPointOnCurve(point));
         }
@@ -141,7 +141,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCase(10, 0)]
         public void TestIsElementTrueForLowOrderCurvePoint(int xRaw, int yRaw)
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
             var point = new CurvePoint(xRaw, yRaw);
             Assert.IsTrue(curve.IsPointOnCurve(point));
         }
@@ -149,8 +149,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestEqualsTrue()
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
-            var otherCurve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
+            var otherCurve = TestCurveParameters.WeierstrassParameters.Equation;
 
             bool result = curve.Equals(otherCurve);
             Assert.IsTrue(result);
@@ -159,7 +159,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestEqualsFalseForNull()
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
 
             bool result = curve.Equals(null);
             Assert.IsFalse(result);
@@ -168,7 +168,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestEqualsFalseForUnrelatedObject()
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
             var otherCurve = new object { };
 
             bool result = curve.Equals(otherCurve);
@@ -178,8 +178,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestEqualsFalseForOtherAlgebra()
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
-            var otherCurve = new WeierstrassCurveEquation(TestCurveParameters.LargeParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
+            var otherCurve = new WeierstrassCurveEquation(prime: BigPrime.CreateWithoutChecks(11), 0, 0);
 
             bool result = curve.Equals(otherCurve);
             Assert.IsFalse(result);
@@ -188,8 +188,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestGetHashCodeSameForEqual()
         {
-            var curve = new WeierstrassCurveEquation(curveParameters);
-            var otherCurve = new WeierstrassCurveEquation(curveParameters);
+            var curve = TestCurveParameters.WeierstrassParameters.Equation;
+            var otherCurve = TestCurveParameters.WeierstrassParameters.Equation;
 
             Assert.AreEqual(curve.GetHashCode(), otherCurve.GetHashCode());
         }

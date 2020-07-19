@@ -9,20 +9,6 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// </summary>
     public class CurveParameters
     {
-        /// <summary>
-        /// The prime P definining the finite field underlying the elliptic curve.
-        /// </summary>
-        public BigPrime P { get; }
-
-        /// <summary>
-        /// The parameter A in the curve equation.
-        /// </summary>
-        public BigInteger A { get; }
-
-        /// <summary>
-        /// The parameter B in the curve equation.
-        /// </summary>
-        public BigInteger B { get; }
 
         /// <summary>
         /// The order of the generator for the defined elliptic curve.
@@ -43,29 +29,28 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public BigInteger Cofactor { get; }
 
         /// <summary>
+        /// The equation characterizing the shape of the curve.
+        /// </summary>
+        public CurveEquation Equation { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CurveParameters"/> struct
         /// with the given values.
         /// </summary>
         /// <returns><see cref="CurveParameters"/> instance with the given
         /// parameters.</returns>
-        /// <param name="p">Prime of the underlying field.</param>
-        /// <param name="a">Curve parameter A.</param>
-        /// <param name="b">Curve parameter B.</param>
+        /// <param name="curveEquation">The <see cref="CurveEquation"/> describing the curve.</param>
         /// <param name="generator">Curve generator point.</param>
         /// <param name="order">Generator order.</param>
         /// <param name="cofactor">Curve cofactor.</param>
         public CurveParameters(
-            BigPrime p,
-            BigInteger a,
-            BigInteger b,
+            CurveEquation curveEquation,
             CurvePoint generator,
             BigPrime order,
             BigInteger cofactor
         )
         {
-            P = p;
-            A = a;
-            B = b;
+            Equation = curveEquation;
             Generator = generator;
             Order = order;
             Cofactor = cofactor;
@@ -80,16 +65,18 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// </remarks>
         /// <returns><see cref="CurveParameters"/> for the NIST P-256 curve.</returns>
         public static CurveParameters NISTP256 = new CurveParameters(
-            p:  BigPrime.CreateWithoutChecks(BigInteger.Parse(
-                    "115792089210356248762697446949407573530086143415290314195533631308867097853951"
-                )),
-            a:  new BigInteger(-3),
-            b:  new BigInteger(new byte[] {
-                    0x4b, 0x60, 0xd2, 0x27, 0x3e, 0x3c, 0xce, 0x3b,
-                    0xf6, 0xb0, 0x53, 0xcc, 0xb0, 0x06, 0x1d, 0x65,
-                    0xbc, 0x86, 0x98, 0x76, 0x55, 0xbd, 0xeb, 0xb3,
-                    0xe7, 0x93, 0x3a, 0xaa, 0xd8, 0x35, 0xc6, 0x5a,
-                }),
+            curveEquation: new WeierstrassCurveEquation(
+                    prime:  BigPrime.CreateWithoutChecks(BigInteger.Parse(
+                            "115792089210356248762697446949407573530086143415290314195533631308867097853951"
+                        )),
+                    a:  new BigInteger(-3),
+                    b:  new BigInteger(new byte[] {
+                            0x4b, 0x60, 0xd2, 0x27, 0x3e, 0x3c, 0xce, 0x3b,
+                            0xf6, 0xb0, 0x53, 0xcc, 0xb0, 0x06, 0x1d, 0x65,
+                            0xbc, 0x86, 0x98, 0x76, 0x55, 0xbd, 0xeb, 0xb3,
+                            0xe7, 0x93, 0x3a, 0xaa, 0xd8, 0x35, 0xc6, 0x5a,
+                        })
+                ),
             generator: new CurvePoint(
                     new BigInteger(new byte[] {
                         0x96, 0xc2, 0x98, 0xd8, 0x45, 0x39, 0xa1, 0xf4,
@@ -117,11 +104,13 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <remarks>
         /// As defined in https://tools.ietf.org/html/rfc7748#section-4.1 .
         /// </remarks>
-        /// <returns><see cref="CurveParameters"/> for the curve25519 curve.</returns>
+        /// <returns><see cref="CurveParameters"/> for the Curve25519 curve.</returns>
         public static CurveParameters Curve25519 = new CurveParameters(
-            p:  BigPrime.CreateWithoutChecks(BigInteger.Pow(2, 255) - 19),
-            a:  new BigInteger(486662),
-            b:  BigInteger.One,
+            curveEquation: new MontgomeryCurveEquation(
+                    prime: BigPrime.CreateWithoutChecks(BigInteger.Pow(2, 255) - 19),
+                    a:  new BigInteger(486662),
+                    b:  BigInteger.One
+                ),
             generator: new CurvePoint(
                     new BigInteger(9),
                     BigInteger.Parse("14781619447589544791020593568409986887264606134616475288964881837755586237401")
@@ -137,9 +126,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         {
             var parameters = obj as CurveParameters;
             return parameters != null &&
-                   P.Equals(parameters.P) &&
-                   A.Equals(parameters.A) &&
-                   B.Equals(parameters.B) &&
+                   Equation.Equals(parameters.Equation) &&
                    Order.Equals(parameters.Order) &&
                    Generator.Equals(parameters.Generator) &&
                    Cofactor.Equals(parameters.Cofactor);
@@ -149,9 +136,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public override int GetHashCode()
         {
             var hashCode = -1791766799;
-            hashCode = hashCode * -1521134295 + P.GetHashCode();
-            hashCode = hashCode * -1521134295 + A.GetHashCode();
-            hashCode = hashCode * -1521134295 + B.GetHashCode();
+            hashCode = hashCode * -1521134295 + Equation.GetHashCode();
             hashCode = hashCode * -1521134295 + Order.GetHashCode();
             hashCode = hashCode * -1521134295 + Generator.GetHashCode();
             hashCode = hashCode * -1521134295 + Cofactor.GetHashCode();

@@ -8,13 +8,12 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
     [TestFixture]
     public class MontgomeryCurveEquationTests
     {
-        private readonly CurveParameters curveParameters = TestCurveParameters.MontgomeryParameters;
 
         [Test]
         public void TestAddSame()
         {
             var point = new CurvePoint(2, 6);
-            var curve = new MontgomeryCurveEquation(curveParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
 
             var expected = new CurvePoint(6, 9);
             var result = curve.Add(point, point);
@@ -26,7 +25,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         {
             var point = new CurvePoint(2, 6);
             var otherPoint = new CurvePoint(8, 32);
-            var curve = new MontgomeryCurveEquation(curveParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
 
             var expected = new CurvePoint(15, 6);
             var result = curve.Add(otherPoint, point);
@@ -39,7 +38,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         {
             var point = new CurvePoint(2, 6);
             var otherPoint = CurvePoint.PointAtInfinity;
-            var curve = new MontgomeryCurveEquation(curveParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
 
             var expected = point;
             var result = curve.Add(point, otherPoint);
@@ -52,7 +51,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         {
             var point = new CurvePoint(2, 6);
             var otherPoint = CurvePoint.PointAtInfinity;
-            var curve = new MontgomeryCurveEquation(curveParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
 
             var expected = point;
             var result = curve.Add(otherPoint, point);
@@ -65,12 +64,12 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         {
             var point = CurvePoint.PointAtInfinity;
             var otherPoint = CurvePoint.PointAtInfinity;
-            var algebra = new MontgomeryCurveEquation(curveParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
 
             var expected = CurvePoint.PointAtInfinity;
-            var curve = algebra.Add(otherPoint, point);
+            var result = curve.Add(otherPoint, point);
             
-            Assert.AreEqual(expected, curve);
+            Assert.AreEqual(expected, result);
         }
 
         [Test]
@@ -78,7 +77,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         {
             var point = new CurvePoint(2, 6);
             var otherPoint = new CurvePoint(2, 41 - 6);
-            var curve = new MontgomeryCurveEquation(curveParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
 
             var expected = CurvePoint.PointAtInfinity;
             var result = curve.Add(otherPoint, point);
@@ -93,7 +92,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCase(18, 39)]
         public void TestIsElementTrueForValidPoint(int xRaw, int yRaw)
         {
-            var curve = new MontgomeryCurveEquation(curveParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
             var point = new CurvePoint(xRaw, yRaw);
             Assert.IsTrue(curve.IsPointOnCurve(point));
         }
@@ -101,7 +100,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestIsElementTrueForPointAtInfinity()
         {
-            var curve = new MontgomeryCurveEquation(curveParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
             Assert.IsTrue(curve.IsPointOnCurve(CurvePoint.PointAtInfinity));
         }
 
@@ -113,7 +112,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCase(25, 7)]
         public void TestIsElementFalseForPointNotOnCurve(int xRaw, int yRaw)
         {
-            var curve = new MontgomeryCurveEquation(curveParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
             var point = new CurvePoint(xRaw, yRaw);
             Assert.IsFalse(curve.IsPointOnCurve(point));
         }
@@ -122,7 +121,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [TestCase(0, 0)]
         public void TestIsElementTrueForLowOrderCurvePoint(int xRaw, int yRaw)
         {
-            var curve = new MontgomeryCurveEquation(curveParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
             var point = new CurvePoint(xRaw, yRaw);
             Assert.IsTrue(curve.IsPointOnCurve(point));
         }
@@ -130,8 +129,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestEqualsTrue()
         {
-            var curve = new MontgomeryCurveEquation(curveParameters);
-            var otherCurve = new MontgomeryCurveEquation(curveParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
+            var otherCurve = TestCurveParameters.MontgomeryParameters.Equation;
 
             bool result = curve.Equals(otherCurve);
             Assert.IsTrue(result);
@@ -140,7 +139,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestEqualsFalseForNull()
         {
-            var curve = new MontgomeryCurveEquation(curveParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
 
             bool result = curve.Equals(null);
             Assert.IsFalse(result);
@@ -149,7 +148,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestEqualsFalseForUnrelatedObject()
         {
-            var curve = new MontgomeryCurveEquation(curveParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
             var otherCurve = new object { };
 
             bool result = curve.Equals(otherCurve);
@@ -159,8 +158,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestEqualsFalseForOtherAlgebra()
         {
-            var curve = new MontgomeryCurveEquation(curveParameters);
-            var otherCurve = new MontgomeryCurveEquation(TestCurveParameters.LargeParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
+            var otherCurve = new MontgomeryCurveEquation(prime: BigPrime.CreateWithoutChecks(11), 0, 0);
 
             bool result = curve.Equals(otherCurve);
             Assert.IsFalse(result);
@@ -169,8 +168,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestGetHashCodeSameForEqual()
         {
-            var curve = new MontgomeryCurveEquation(curveParameters);
-            var otherCurve = new MontgomeryCurveEquation(curveParameters);
+            var curve = TestCurveParameters.MontgomeryParameters.Equation;
+            var otherCurve = TestCurveParameters.MontgomeryParameters.Equation;
 
             Assert.AreEqual(curve.GetHashCode(), otherCurve.GetHashCode());
         }

@@ -10,27 +10,48 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
     public class CurveGroupAlgebraTests
     {
 
-        private readonly CurveParameters curveParams = TestCurveParameters.WeierstrassParameters;
-        private readonly CurveParameters largeParams = TestCurveParameters.LargeParameters;
+        private readonly CurveParameters curveParameters;
+        private readonly CurveParameters largeParameters;
 
         private Mock<CurveEquation> curveEquationMock;
         private Mock<CurveEquation> largeCurveEquationMock;
 
         public CurveGroupAlgebraTests()
         {
-            curveEquationMock = new Mock<CurveEquation>(curveParams) { CallBase = true };
-            largeCurveEquationMock = new Mock<CurveEquation>(largeParams) { CallBase = true };
+            curveEquationMock = new Mock<CurveEquation>(
+                BigPrime.CreateWithoutChecks(23),
+                BigInteger.Zero,
+                BigInteger.One
+            ) { CallBase = true };
+            curveParameters = new CurveParameters(
+                curveEquation: curveEquationMock.Object,
+                generator: TestCurveParameters.WeierstrassParameters.Generator,
+                order: TestCurveParameters.WeierstrassParameters.Order,
+                cofactor: TestCurveParameters.WeierstrassParameters.Cofactor
+            );
+
+            largeCurveEquationMock = new Mock<CurveEquation>(
+                BigPrime.CreateWithoutChecks(18392027),
+                BigInteger.Zero,
+                BigInteger.One
+            ) { CallBase = true };  // 25 bits prime
+            largeParameters = new CurveParameters(
+                curveEquation: largeCurveEquationMock.Object,
+                generator: new CurvePoint(),
+                order: BigPrime.CreateWithoutChecks(2),
+                cofactor: BigInteger.Zero
+            );
         }
 
         [SetUp]
         public void Setup()
         {
-            curveEquationMock = new Mock<CurveEquation>(curveParams) { CallBase = true };
+            curveEquationMock.Reset();
             curveEquationMock.Setup(eq => eq.IsPointOnCurve(It.IsAny<CurvePoint>())).Returns(true);
             curveEquationMock.Setup(eq => eq.Add(It.IsAny<CurvePoint>(), It.IsAny<CurvePoint>()))
                 .Returns((CurvePoint p, CurvePoint q) => new CurvePoint(p.X + q.X, p.Y + q.Y));
 
-            largeCurveEquationMock = new Mock<CurveEquation>(largeParams) { CallBase = true };
+            largeCurveEquationMock.Reset();
             largeCurveEquationMock.Setup(eq => eq.IsPointOnCurve(It.IsAny<CurvePoint>())).Returns(true);
             largeCurveEquationMock.Setup(eq => eq.Add(It.IsAny<CurvePoint>(), It.IsAny<CurvePoint>()))
                 .Returns((CurvePoint p, CurvePoint q) => new CurvePoint(p.X + q.X, p.Y + q.Y));
@@ -39,7 +60,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestAdd()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(curveParameters);
 
             var p = new CurvePoint(5, 5);
             var other = new CurvePoint(15, 14);
@@ -57,7 +78,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestIsElementTrueForValidPoint()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(curveParameters);
             var point = new CurvePoint(2, 17);
             Assert.IsTrue(curve.IsElement(point));
         }
@@ -65,7 +86,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestIsElementFalseForPointAtInfinity()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(curveParameters);
             curveEquationMock.Setup(eq => eq.Add(It.IsAny<CurvePoint>(), It.IsAny<CurvePoint>())).Returns(CurvePoint.PointAtInfinity);
             Assert.IsFalse(curve.IsElement(CurvePoint.PointAtInfinity));
         }
@@ -73,7 +94,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestIsElementFalseForPointNotOnCurve()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(curveParameters);
             curveEquationMock.Setup(eq => eq.IsPointOnCurve(It.IsAny<CurvePoint>())).Returns(false);
             var point = new CurvePoint(16, 1);
             Assert.IsFalse(curve.IsElement(point));
@@ -82,7 +103,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestIsElementFalseForLowOrderCurvePoint()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(curveParameters);
             var point = new CurvePoint(10, 0);
 
             curveEquationMock.Setup(eq => eq.Add(It.IsAny<CurvePoint>(), It.IsAny<CurvePoint>())).Returns(CurvePoint.PointAtInfinity);
@@ -92,7 +113,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestNegate()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(curveParameters);
 
             var p = new CurvePoint(5, 5);
             var expected = new CurvePoint(5, 18);
@@ -104,7 +125,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestNegateForZeroYPoint()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(curveParameters);
             var p = new CurvePoint(11, 0);
 
             var result = curve.Negate(p);
@@ -115,7 +136,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestNegatePointAtInfinity()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(curveParameters);
             var p = CurvePoint.PointAtInfinity;
 
             var result = curve.Negate(p);
@@ -128,7 +149,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         {
             var k = new BigInteger(5);
             
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(curveParameters);
             var p = new CurvePoint(5, 5);
 
             curveEquationMock.Reset();
@@ -145,49 +166,49 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestGroupElementBitLength()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(curveParameters);
             Assert.AreEqual(2*5, curve.ElementBitLength);
         }
 
         [Test]
         public void TestOrderIsAsSet()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
-            Assert.AreEqual(curveParams.Order, curve.Order);
+            var curve = new CurveGroupAlgebra(curveParameters);
+            Assert.AreEqual(curveParameters.Order, curve.Order);
         }
 
         [Test]
         public void TestOrderBitLength()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(curveParameters);
             Assert.AreEqual(4, curve.OrderBitLength);
         }
         
         [Test]
         public void TestNeutralElement()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(curveParameters);
             Assert.AreEqual(CurvePoint.PointAtInfinity, curve.NeutralElement);
         }
 
         [Test]
         public void TestGeneratorIsAsSet()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
-            Assert.AreEqual(curveParams.Generator, curve.Generator);
+            var curve = new CurveGroupAlgebra(curveParameters);
+            Assert.AreEqual(curveParameters.Generator, curve.Generator);
         }
 
         [Test]
         public void TestCofactor()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
-            Assert.AreEqual(curveParams.Cofactor, curve.Cofactor);
+            var curve = new CurveGroupAlgebra(curveParameters);
+            Assert.AreEqual(curveParameters.Cofactor, curve.Cofactor);
         }
 
         [Test]
         public void TestFromBytes()
         {
-            var curve = new CurveGroupAlgebra(largeCurveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(largeParameters);
             var expected = new CurvePoint(5, 3);
             var buffer = new byte[] { 5, 0, 0, 0, 3, 0, 0, 0 };
 
@@ -198,7 +219,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestFromBytesRejectsTooShortBuffer()
         {
-            var curve = new CurveGroupAlgebra(largeCurveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(largeParameters);
             var buffer = new byte[7];
             Assert.Throws<ArgumentException>(
                 () => curve.FromBytes(buffer)
@@ -208,7 +229,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestToBytes()
         {
-            var curve = new CurveGroupAlgebra(largeCurveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(largeParameters);
             var p = new CurvePoint(5, 3);
             var expected = new byte[] { 5, 0, 0, 0, 3, 0, 0, 0 };
 
@@ -219,7 +240,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestFromBytesWithLessThanOneByteLargeElements()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(curveParameters);
             var expected = new CurvePoint(5, 3);
             var buffer = new byte[] { 5, 3 };
 
@@ -230,7 +251,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestToBytesWithLessThanOneByteLargeElements()
         {
-            var curve = new CurveGroupAlgebra(curveEquationMock.Object);
+            var curve = new CurveGroupAlgebra(curveParameters);
             var p = new CurvePoint(5, 5);
             var expected = new byte[] { 5, 5 };
 
@@ -244,15 +265,15 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
             curveEquationMock.Setup(eq => eq.IsPointOnCurve(It.IsAny<CurvePoint>())).Returns(false);
                 
             Assert.Throws<ArgumentException>(
-                () => new CurveGroupAlgebra(curveEquationMock.Object)
+                () => new CurveGroupAlgebra(curveParameters)
             );
         }
 
         [Test]
         public void TestEqualsTrue()
         {
-            var groupAlgebra = new CurveGroupAlgebra(curveEquationMock.Object);
-            var otherAlgebra = new CurveGroupAlgebra(curveEquationMock.Object);
+            var groupAlgebra = new CurveGroupAlgebra(curveParameters);
+            var otherAlgebra = new CurveGroupAlgebra(curveParameters);
 
             bool result = groupAlgebra.Equals(otherAlgebra);
             Assert.IsTrue(result);
@@ -261,7 +282,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestEqualsFalseForNull()
         {
-            var groupAlgebra = new CurveGroupAlgebra(curveEquationMock.Object);
+            var groupAlgebra = new CurveGroupAlgebra(curveParameters);
 
             bool result = groupAlgebra.Equals(null);
             Assert.IsFalse(result);
@@ -270,7 +291,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestEqualsFalseForUnrelatedObject()
         {
-            var groupAlgebra = new CurveGroupAlgebra(curveEquationMock.Object);
+            var groupAlgebra = new CurveGroupAlgebra(curveParameters);
             var otherAlgebra = new object { };
 
             bool result = groupAlgebra.Equals(otherAlgebra);
@@ -280,8 +301,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestEqualsFalseForOtherAlgebra()
         {
-            var groupAlgebra = new CurveGroupAlgebra(curveEquationMock.Object);
-            var otherAlgebra = new CurveGroupAlgebra(largeCurveEquationMock.Object);
+            var groupAlgebra = new CurveGroupAlgebra(curveParameters);
+            var otherAlgebra = new CurveGroupAlgebra(largeParameters);
 
             bool result = groupAlgebra.Equals(otherAlgebra);
             Assert.IsFalse(result);
@@ -290,8 +311,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestGetHashCodeSameForEqual()
         {
-            var groupAlgebra = new CurveGroupAlgebra(curveEquationMock.Object);
-            var otherAlgebra = new CurveGroupAlgebra(curveEquationMock.Object);
+            var groupAlgebra = new CurveGroupAlgebra(curveParameters);
+            var otherAlgebra = new CurveGroupAlgebra(curveParameters);
 
             Assert.AreEqual(groupAlgebra.GetHashCode(), otherAlgebra.GetHashCode());
         }
@@ -299,8 +320,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         [Test]
         public void TestCreateCryptoGroup()
         {
-            var expectedGroupAlgebra = new CurveGroupAlgebra(curveEquationMock.Object);
-            var group = CurveGroupAlgebra.CreateCryptoGroup(curveEquationMock.Object);
+            var expectedGroupAlgebra = new CurveGroupAlgebra(curveParameters);
+            var group = CurveGroupAlgebra.CreateCryptoGroup(curveParameters);
             Assert.AreEqual(expectedGroupAlgebra, group.Algebra);
         }
     }

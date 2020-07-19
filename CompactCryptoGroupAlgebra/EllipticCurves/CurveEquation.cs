@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
 
@@ -9,13 +11,20 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// </summary>
     public abstract class CurveEquation
     {
-        // todo: manage the split of CurveParameters and CurveEquation better. Right now they are weirdly interdependent (in code and conceptually)
-        // todo: could move all actually curve related parameters (A, B, P) into CurveEquation, keep Generator, Order, Cofactor in (Crypto)CurveParamaters which would also then know the CurveEquation instance
+        /// <summary>
+        /// The parameter A in the curve equation.
+        /// </summary>
+        public BigInteger A { get; }
 
         /// <summary>
-        /// The <see cref="CurveParameters"/> defining this <see cref="CurveEquation"/> instance.
+        /// The parameter B in the curve equation.
         /// </summary>
-        public CurveParameters CurveParameters { get; }
+        public BigInteger B { get; }
+
+        // /// <summary>
+        // /// The <see cref="CurveParameters"/> defining this <see cref="CurveEquation"/> instance.
+        // /// </summary>
+        // public CurveParameters CurveParameters { get; }
         
         /// <summary>
         /// The prime field over which the curve operates.
@@ -25,10 +34,14 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <summary>
         /// Initializes a new instance of <see cref="CurveEquation"/> with given parameters.
         /// </summary>
-        protected CurveEquation(CurveParameters parameters)
+        /// <param name="prime">Prime characteristic of the underlying scalar field.</param>
+        /// <param name="a">The parameter A in the curve equation.</param>
+        /// <param name="b">The parameter B in the curve equation.</param>
+        protected CurveEquation(BigPrime prime, BigInteger a, BigInteger b)
         {
-            CurveParameters = parameters;
-            Field = new BigIntegerField(CurveParameters.P);
+            A = a;
+            B = b;
+            Field = new BigIntegerField(prime);
         }
 
         /// <summary>
@@ -54,10 +67,9 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <returns><see cref="CurvePoint"/> instance of the negation of <paramref name="point"/> on the curve.</returns>
         public virtual CurvePoint Negate(CurvePoint point)
         {
-            BigIntegerField field = new BigIntegerField(CurveParameters.P);
             if (point.Equals(CurvePoint.PointAtInfinity))
                 return point;
-            return new CurvePoint(point.X, field.Mod(-point.Y));
+            return new CurvePoint(point.X, Field.Mod(-point.Y));
         }
 
         /// <summary>
@@ -71,15 +83,22 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             return Negate(right).Equals(left);
         }
 
-        /// <summary>
-        /// <see cref="CurveEquation"/> of the NIST P-256 Weierstrass-type curve.
-        /// </summary>
-        public static readonly CurveEquation NISTP256 = new WeierstrassCurveEquation(CurveParameters.NISTP256);
+        /// <inheritdoc/>
+        public override bool Equals(object? obj)
+        {
+            CurveEquation? other = obj as CurveEquation;
+            return other != null && A.Equals(other.A) && B.Equals(other.B) && Field.Modulo.Equals(other.Field.Modulo);
+        }
 
-        /// <summary>
-        /// <see cref="CurveEquation"/> of the Curve25519 Montgomery-type curve.
-        /// </summary>
-        public static readonly CurveEquation Curve25519 = new MontgomeryCurveEquation(CurveParameters.Curve25519);
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            int hashCode = -986235350;
+            hashCode = hashCode * -175131752 + A.GetHashCode();
+            hashCode = hashCode * -175131752 + B.GetHashCode();
+            hashCode = hashCode * -175131752 + Field.Modulo.GetHashCode();
+            return hashCode;
+        }
 
     }
 }

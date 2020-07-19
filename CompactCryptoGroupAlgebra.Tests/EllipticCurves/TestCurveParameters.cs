@@ -7,28 +7,23 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
     {
         /// <summary>Valid parameters for a small prime-order Weierstrass curve</summary>
         public static readonly CurveParameters WeierstrassParameters = new CurveParameters(
-            p: BigPrime.CreateWithoutChecks(23),
-            a: -2,
-            b: 9,
+            curveEquation:  new WeierstrassCurveEquation(
+                    prime: BigPrime.CreateWithoutChecks(23),
+                    a: -2,
+                    b: 9
+                ),
             generator: new CurvePoint(5, 3),
             order: BigPrime.CreateWithoutChecks(11),
             cofactor: 2
         );
 
-        /// <summary>A parameter set for testing serialization of elements larger than one byte;
-        /// not a valid set of a curve</summary>
-        public static readonly CurveParameters LargeParameters = new CurveParameters(
-            p: BigPrime.CreateWithoutChecks(18392027), // 25 bits
-            generator: CurvePoint.PointAtInfinity,
-            order: BigPrime.CreateWithoutChecks(3),
-            a: 0, b: 0, cofactor: 1
-        );
-
         /// <summary>Valid parameters for a small prime-order Montgomery curve</summary>
         public static readonly CurveParameters MontgomeryParameters = new CurveParameters(
-            p: BigPrime.CreateWithoutChecks(41),
-            a: 4,
-            b: 3,
+            curveEquation: new MontgomeryCurveEquation(
+                    prime: BigPrime.CreateWithoutChecks(41),
+                    a: 4,
+                    b: 3
+                ),
             generator: new CurvePoint(2, 6),
             order: BigPrime.CreateWithoutChecks(11),
             cofactor: 4
