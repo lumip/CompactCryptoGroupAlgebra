@@ -55,11 +55,11 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <returns><c>true</c>, if probably prime was ised, <c>false</c> otherwise.</returns>
         /// <param name="n">The number to check for primality.</param>
-        /// <param name="rng">Random number generator instance.</param>
+        /// <param name="randomNumberGenerator">Random number generator instance.</param>
         /// <param name="errorProbability">Acceptable probability of <c>true</c>
         ///     being returns if <paramref name="n"/> is composite.</param>
         public static bool IsProbablyPrime(
-            this BigInteger n, RandomNumberGenerator rng, double errorProbability = 1e-10
+            this BigInteger n, RandomNumberGenerator randomNumberGenerator, double errorProbability = 1e-10
         )
         {
             if (n.IsEven || n.IsPowerOfTwo) return false;
@@ -95,7 +95,7 @@ namespace CompactCryptoGroupAlgebra
             // actual Miller-Rabin test
             for (int i = 0; i < testCount; ++i)
             {
-                BigInteger a = rng.RandomBetween(2, n - 1);
+                BigInteger a = randomNumberGenerator.RandomBetween(2, n - 1);
                 if (IsCompositeWitness(a, q, k)) return false;
             }
             return true;

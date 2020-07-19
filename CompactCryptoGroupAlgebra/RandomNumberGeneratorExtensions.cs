@@ -15,11 +15,11 @@ namespace CompactCryptoGroupAlgebra
         /// <paramref name="lower"/> and <paramref name="upper"/>.
         /// </summary>
         /// <returns>The <see cref="T:System.Numerics.BigInteger"/>.</returns>
-        /// <param name="rng">Random number generator.</param>
+        /// <param name="randomNumberGenerator">Random number generator.</param>
         /// <param name="lower">Inclusive lower bound.</param>
         /// <param name="upper">Inclusive upper bound.</param>
         public static BigInteger RandomBetween(
-            this RandomNumberGenerator rng, BigInteger lower, BigInteger upper
+            this RandomNumberGenerator randomNumberGenerator, BigInteger lower, BigInteger upper
         )
         {
             NumberLength length = NumberLength.GetLength(upper - lower);
@@ -27,7 +27,7 @@ namespace CompactCryptoGroupAlgebra
             do
             {
                 byte[] buffer = new byte[length.InBytes];
-                rng.GetBytes(buffer);
+                randomNumberGenerator.GetBytes(buffer);
                 delta = new BigInteger(buffer);
             }
             while (delta >= upper - lower);
