@@ -6,7 +6,7 @@ namespace CompactCryptoGroupAlgebra
     /// <summary>
     /// The lengths of a number in binary representation.
     /// </summary>
-    public struct NumberLength
+    public readonly struct NumberLength
     {
         /// <summary>
         /// Returns the length of the number in bits.
@@ -56,7 +56,7 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <summary>
-        /// Initializes a new instace of <see cref="NumberLength"/> for 
+        /// Initializes a new instance of <see cref="NumberLength"/> for 
         /// a given byte length.
         /// </summary>
         /// <returns>The byte length.</returns>

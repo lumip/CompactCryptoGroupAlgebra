@@ -1,5 +1,5 @@
 ﻿using System;
-namespace CompactCryptoGroupAlgebra
+namespace CompactCryptoGroupAlgebra // Change namespace to reflect directory structure?
 {
     /// <summary>
     /// Indicates the violation of a <see cref="CompactCryptoGroupAlgebra.Debug.Assert(bool, string)"/>
@@ -10,7 +10,7 @@ namespace CompactCryptoGroupAlgebra
         /// <summary>
         /// Initializes a new instance of <see cref="AssertionException"/>.
         /// </summary>
-        public AssertionException(string? msg = null) : base(msg != null ? msg : "Assertion failure!") { }
+        public AssertionException(string? message = null) : base(message ?? "Assertion failure!") { }
     }
 
     /// <summary>
@@ -34,12 +34,12 @@ namespace CompactCryptoGroupAlgebra
         /// if the assertion fails.
         /// </summary>
         /// <param name="expressionResult">Expression result to assert.</param>
-        /// <param name="msg">Optional message for the thrown <see cref="AssertionException"/>.</param>
-        public static void Assert(bool expressionResult, string? msg = null)
+        /// <param name="message">Optional message for the thrown <see cref="AssertionException"/>.</param>
+        public static void Assert(bool expressionResult, string? message = null)
         {
 #if DEBUG
             if (!expressionResult)
-                throw new AssertionException(msg);
+                throw new AssertionException(message);
 #endif
         }
     }

@@ -1,6 +1,3 @@
-using System;
-using System.Numerics;
-
 using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
@@ -149,7 +146,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         public void TestEqualsFalseForUnrelatedObject()
         {
             var curve = TestCurveParameters.MontgomeryParameters.Equation;
-            var otherCurve = new object { };
+            var otherCurve = new object();
 
             bool result = curve.Equals(otherCurve);
             Assert.IsFalse(result);

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
@@ -38,8 +37,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     public class XOnlyMontgomeryCurveAlgebra : CryptoGroupAlgebra<BigInteger>
     {
         private readonly CurveParameters _parameters;
+        private readonly BigInteger _aConstant;
         private BigIntegerField Field { get { return _parameters.Equation.Field; } }
-        private BigInteger _aConstant;
 
         /// <summary>
         /// Initializes a new instance of <see cref="XOnlyMontgomeryCurveAlgebra"/> 
@@ -240,8 +239,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <inheritdoc/>
         public override bool Equals(CryptoGroupAlgebra<BigInteger>? other)
         {
-            var algebra = other as XOnlyMontgomeryCurveAlgebra;
-            return algebra != null && _parameters.Equals(algebra._parameters);
+            return other is XOnlyMontgomeryCurveAlgebra algebra && _parameters.Equals(algebra._parameters);
         }
 
         /// <inheritdoc/>

@@ -57,7 +57,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// Tests whether a given point lies on the curve.
         /// </summary>
         /// <param name="point"><see cref="CurvePoint"/> to test.</param>
-        /// <returns><c>true</c> if <paramref name="point"/> satisifies the curve equation; otherwise <c>false</c></returns>
+        /// <returns><c>true</c> if <paramref name="point"/> satisfies the curve equation; otherwise <c>false</c></returns>
         public abstract bool IsPointOnCurve(CurvePoint point);
 
         /// <summary>
@@ -86,8 +86,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            CurveEquation? other = obj as CurveEquation;
-            return other != null && A.Equals(other.A) && B.Equals(other.B) && Field.Modulo.Equals(other.Field.Modulo);
+            return obj is CurveEquation other && A.Equals(other.A) && B.Equals(other.B) && Field.Modulo.Equals(other.Field.Modulo);
         }
 
         /// <inheritdoc/>

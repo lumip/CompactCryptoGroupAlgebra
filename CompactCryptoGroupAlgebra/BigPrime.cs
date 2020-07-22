@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Numerics;
 using System.Security.Cryptography;
 
@@ -8,7 +7,7 @@ namespace CompactCryptoGroupAlgebra
     /// <summary>
     /// A big prime number.
     /// </summary>
-    public struct BigPrime
+    public readonly struct BigPrime
     {
         private readonly BigInteger _value;
 
@@ -59,7 +58,7 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <summary>
-        /// Implicitely converts to a <see cref="BigInteger"/>.
+        /// Implicitly converts to a <see cref="BigInteger"/>.
         /// </summary>
         public static implicit operator BigInteger(BigPrime p) => p._value;
 
@@ -148,7 +147,7 @@ namespace CompactCryptoGroupAlgebra
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            return obj is BigPrime && _value.Equals(((BigPrime)obj)._value);
+            return obj is BigPrime prime && _value.Equals(prime._value);
         }
 
         /// <inheritdoc/>

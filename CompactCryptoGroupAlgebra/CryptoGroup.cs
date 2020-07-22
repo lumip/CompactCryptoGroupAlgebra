@@ -19,7 +19,7 @@ namespace CompactCryptoGroupAlgebra
     /// order.
     ///
     /// The interface is intended to facilitate group operations as required
-    /// e.g. in a Diffie-Helman key exchange and related protocols.
+    /// e.g. in a Diffie-Hellman key exchange and related protocols.
     /// </summary>
     /// <typeparam name="T">The data type used for raw group elements the algebraic operations operate on.</typeparam>
     /// <remarks>

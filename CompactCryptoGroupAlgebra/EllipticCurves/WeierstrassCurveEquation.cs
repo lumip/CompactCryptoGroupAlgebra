@@ -1,6 +1,4 @@
-using System;
 using System.Numerics;
-
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
@@ -71,8 +69,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            WeierstrassCurveEquation? other = obj as WeierstrassCurveEquation;
-            return other != null && base.Equals(other);
+            return obj is WeierstrassCurveEquation other && base.Equals(other);
         }
 
         /// <inheritdoc/>

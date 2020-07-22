@@ -7,7 +7,7 @@ using CompactCryptoGroupAlgebra.Multiplicative;
 
 namespace Example
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -21,11 +21,11 @@ namespace Example
             BigInteger generator = 4;
 
             // Creating the group instance
-            var group = MultiplicativeGroupAlgebra.CreateCryptoGroup(prime, order, generator);
+            CryptoGroup<BigInteger> group = MultiplicativeGroupAlgebra.CreateCryptoGroup(prime, order, generator);
             DoDiffieHellman(group, randomNumberGenerator);
         }
 
-        public static void DoDiffieHellman<T>(
+        private static void DoDiffieHellman<T>(
             CryptoGroup<T> group, RandomNumberGenerator randomNumberGenerator
         ) where T : notnull
         {

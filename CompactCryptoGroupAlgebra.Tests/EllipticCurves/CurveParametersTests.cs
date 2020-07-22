@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 
 using NUnit.Framework;
 using Moq;
@@ -106,7 +105,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
                 equationMock.Object, generator, order, cofactor
             );
 
-            Assert.AreNotEqual(parameters, new object { });
+            Assert.AreNotEqual(parameters, new object());
         }
 
         [Test]

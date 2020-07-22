@@ -4,14 +4,14 @@ using System.Numerics;
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
     /// <summary>
-    /// A point on an eliptic curve.
+    /// A point on an elliptic curve.
     /// 
-    /// A point on an eliptic curve is a two-dimensional point with integer coordinates
+    /// A point on an elliptic curve is a two-dimensional point with integer coordinates
     /// from the (finite) field underlying the curve or lies at infinity.
     /// 
     /// Raw group element of <see cref="CurveGroupAlgebra"/>. This struct is mainly a
     /// information container and implements no algebraic operations. To perform
-    /// eliptic curve operations directly with CurvePoint, use the methods of
+    /// elliptic curve operations directly with CurvePoint, use the methods of
     /// <see cref="CurveGroupAlgebra"/>. If you only need generic cryptographic
     /// group algebra, use <see cref="CryptoGroup{CurvePoint}"/> instead.
     /// </summary>

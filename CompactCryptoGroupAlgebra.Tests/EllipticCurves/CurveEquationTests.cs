@@ -1,4 +1,3 @@
-using System;
 using System.Numerics;
 
 using NUnit.Framework;
@@ -132,7 +131,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
                 BigInteger.Zero, BigInteger.One
             ) { CallBase = true };
 
-            Assert.IsFalse(equationMock.Object.Equals(new object {}));
+            Assert.IsFalse(equationMock.Object.Equals(new object()));
         }
 
         [Test]

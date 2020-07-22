@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
@@ -64,7 +63,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// As defined in https://csrc.nist.gov/csrc/media/publications/fips/186/2/archive/2000-01-27/documents/fips186-2.pdf , p. 34.
         /// </remarks>
         /// <returns><see cref="CurveParameters"/> for the NIST P-256 curve.</returns>
-        public static CurveParameters NISTP256 = new CurveParameters(
+        public static readonly CurveParameters NISTP256 = new CurveParameters(
             curveEquation: new WeierstrassCurveEquation(
                     prime:  BigPrime.CreateWithoutChecks(BigInteger.Parse(
                             "115792089210356248762697446949407573530086143415290314195533631308867097853951"
@@ -105,7 +104,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// As defined in https://tools.ietf.org/html/rfc7748#section-4.1 .
         /// </remarks>
         /// <returns><see cref="CurveParameters"/> for the Curve25519 curve.</returns>
-        public static CurveParameters Curve25519 = new CurveParameters(
+        public static readonly CurveParameters Curve25519 = new CurveParameters(
             curveEquation: new MontgomeryCurveEquation(
                     prime: BigPrime.CreateWithoutChecks(BigInteger.Pow(2, 255) - 19),
                     a:  new BigInteger(486662),
@@ -124,8 +123,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            var parameters = obj as CurveParameters;
-            return parameters != null &&
+            return obj is CurveParameters parameters &&
                    Equation.Equals(parameters.Equation) &&
                    Order.Equals(parameters.Order) &&
                    Generator.Equals(parameters.Generator) &&

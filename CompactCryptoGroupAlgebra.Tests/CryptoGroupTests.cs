@@ -5,8 +5,6 @@ using System.Security.Cryptography;
 using NUnit.Framework;
 using Moq;
 
-using CompactCryptoGroupAlgebra;
-
 namespace CompactCryptoGroupAlgebra.Tests
 {
 

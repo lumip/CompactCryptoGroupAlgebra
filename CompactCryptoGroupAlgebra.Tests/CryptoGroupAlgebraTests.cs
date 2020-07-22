@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Numerics;
-using System.Reflection;
 
 using NUnit.Framework;
 using Moq;
@@ -8,10 +7,9 @@ using Moq.Protected;
 
 namespace CompactCryptoGroupAlgebra.Tests
 {
-    interface CryptoGroupAlgebraProtectedMembers
+    interface ICryptoGroupAlgebraProtectedMembers
     {
         int MultiplyScalarUnchecked(int e, BigInteger k, int factorBitLength);
-        bool IsElementDerived(int e);
     }
 
     [TestFixture]
@@ -186,7 +184,7 @@ namespace CompactCryptoGroupAlgebra.Tests
             int expected = 3 * generator;
 
             var algebraMock = new Mock<CryptoGroupAlgebra<int>>(MockBehavior.Strict, generator, order, cofactor, neutralElement, elementBitLength);
-            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
+            algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
                 .Setup(alg => alg.MultiplyScalarUnchecked(
                     It.IsAny<int>(), It.Is<BigInteger>(i => i == index), It.Is<int>(i => i == orderBitLength))
                 )
@@ -195,7 +193,7 @@ namespace CompactCryptoGroupAlgebra.Tests
             var result = algebraMock.Object.GenerateElement(index);
 
             Assert.AreEqual(expected, result);
-            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
+            algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
                 .Verify(alg => alg.MultiplyScalarUnchecked(
                     It.IsAny<int>(), It.Is<BigInteger>(i => i == index), It.Is<int>(i => i == orderBitLength)),
                     Times.Once()
@@ -233,7 +231,7 @@ namespace CompactCryptoGroupAlgebra.Tests
             var elementBitLength = 8;
 
             var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, cofactor, neutralElement, elementBitLength) { CallBase = true };
-            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
+            algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
                 .Setup(alg => alg.MultiplyScalarUnchecked(
                     It.IsAny<int>(), It.Is<BigInteger>(i => i == order - 1), It.Is<int>(i => i == 5))
                 )
@@ -242,7 +240,7 @@ namespace CompactCryptoGroupAlgebra.Tests
             int result = algebraMock.Object.Negate(element);
 
             Assert.AreEqual(expected, result);
-            algebraMock.Protected().As<CryptoGroupAlgebraProtectedMembers>()
+            algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
                 .Verify(alg => alg.MultiplyScalarUnchecked(
                     It.IsAny<int>(), It.Is<BigInteger>(i => i == order - 1), It.Is<int>(i => i == 5)),
                     Times.Once()

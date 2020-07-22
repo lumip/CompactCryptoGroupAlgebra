@@ -141,7 +141,7 @@ namespace CompactCryptoGroupAlgebra.Tests
         {
             var prime = BigPrime.CreateWithoutChecks(11);
 
-            Assert.AreNotEqual(prime, new object { });
+            Assert.AreNotEqual(prime, new object());
         }
 
         [Test]

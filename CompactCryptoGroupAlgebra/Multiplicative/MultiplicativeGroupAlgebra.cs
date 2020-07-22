@@ -14,7 +14,7 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
     public class MultiplicativeGroupAlgebra : CryptoGroupAlgebra<BigInteger>
     {
         /// <summary>
-        /// Accessor to the prime modulo definining the underlying number field.
+        /// Accessor to the prime modulo defining the underlying number field.
         /// </summary>
         /// <value>The prime modulo of the group.</value>
         public BigPrime Prime { get; }
@@ -61,8 +61,7 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         /// <inheritdoc/>
         public override bool Equals(CryptoGroupAlgebra<BigInteger>? other)
         {
-            var algebra = other as MultiplicativeGroupAlgebra;
-            return algebra != null &&
+            return other is MultiplicativeGroupAlgebra algebra &&
                    Prime.Equals(algebra.Prime) &&
                    Order.Equals(algebra.Order) &&
                    Generator.Equals(algebra.Generator);

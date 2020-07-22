@@ -13,8 +13,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         private readonly CurveParameters curveParameters;
         private readonly CurveParameters largeParameters;
 
-        private Mock<CurveEquation> curveEquationMock;
-        private Mock<CurveEquation> largeCurveEquationMock;
+        private readonly Mock<CurveEquation> curveEquationMock;
+        private readonly Mock<CurveEquation> largeCurveEquationMock;
 
         public CurveGroupAlgebraTests()
         {
@@ -68,6 +68,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
 
             curveEquationMock.Reset();
             curveEquationMock.Setup(eq => eq.Add(It.IsAny<CurvePoint>(), It.IsAny<CurvePoint>()))
+                // Parameter p has same name as local variable?
                 .Returns((CurvePoint p, CurvePoint q) => new CurvePoint(p.X + q.X, p.Y + q.Y));
 
             var result = curve.Add(p, other);
@@ -154,6 +155,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
 
             curveEquationMock.Reset();
             curveEquationMock.Setup(eq => eq.Add(It.IsAny<CurvePoint>(), It.IsAny<CurvePoint>()))
+                // Parameter p has same name as local variable?
+                // Parameter q has same name as local variable?
                 .Returns((CurvePoint p, CurvePoint q) => new CurvePoint(p.X + q.X, p.Y + q.Y));
 
             var expectedQ = new CurvePoint(25, 25);
@@ -292,7 +295,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         public void TestEqualsFalseForUnrelatedObject()
         {
             var groupAlgebra = new CurveGroupAlgebra(curveParameters);
-            var otherAlgebra = new object { };
+            var otherAlgebra = new object();
 
             bool result = groupAlgebra.Equals(otherAlgebra);
             Assert.IsFalse(result);

@@ -1,6 +1,3 @@
-using System;
-using System.Numerics;
-
 namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
 {
     public static class TestCurveParameters

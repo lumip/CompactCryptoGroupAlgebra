@@ -5,7 +5,7 @@ namespace CompactCryptoGroupAlgebra.Tests.TestUtils
 {
     public class SeededRandomNumberGenerator : RandomNumberGenerator
     {
-        private Random _random;
+        private readonly Random _random;
 
         public SeededRandomNumberGenerator(int seed)
         {

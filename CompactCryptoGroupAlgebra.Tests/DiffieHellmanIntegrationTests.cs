@@ -1,4 +1,3 @@
-using System;
 using System.Numerics;
 using System.Security.Cryptography;
 using System.Globalization;
@@ -11,25 +10,6 @@ namespace CompactCryptoGroupAlgebra.Tests
     [TestFixture]
     public class DiffieHellmanIntegrationTests
     {
-        public void DoDiffieHellman<T>(CryptoGroup<T> group) where T : notnull
-        {
-            RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
-
-            // Generating DH secret and public key for Alice
-            (BigInteger dhSecretAlice, CryptoGroupElement<T> dhPublicAlice) = 
-                group.GenerateRandom(randomNumberGenerator);
-
-            // Generating DH secret and public key for Bob
-            (BigInteger dhSecretBob, CryptoGroupElement<T> dhPublicBob) =
-                group.GenerateRandom(randomNumberGenerator);
-
-            // Computing shared secret for Alice and Bob
-            CryptoGroupElement<T> sharedSecretBob = dhPublicAlice * dhSecretBob;
-            CryptoGroupElement<T> sharedSecretAlice = dhPublicBob * dhSecretAlice;
-
-            Assert.AreEqual(sharedSecretAlice, sharedSecretBob);
-        }
-
         [Test]
         public void TestDiffieHellmanWithMultiplicativeGroup()
         {
@@ -80,6 +60,25 @@ namespace CompactCryptoGroupAlgebra.Tests
             );
             
             DoDiffieHellman(group);
+        }
+
+        private void DoDiffieHellman<T>(CryptoGroup<T> group) where T : notnull
+        {
+            RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
+
+            // Generating DH secret and public key for Alice
+            (BigInteger dhSecretAlice, CryptoGroupElement<T> dhPublicAlice) = 
+                group.GenerateRandom(randomNumberGenerator);
+
+            // Generating DH secret and public key for Bob
+            (BigInteger dhSecretBob, CryptoGroupElement<T> dhPublicBob) =
+                group.GenerateRandom(randomNumberGenerator);
+
+            // Computing shared secret for Alice and Bob
+            CryptoGroupElement<T> sharedSecretBob = dhPublicAlice * dhSecretBob;
+            CryptoGroupElement<T> sharedSecretAlice = dhPublicBob * dhSecretAlice;
+
+            Assert.AreEqual(sharedSecretAlice, sharedSecretBob);
         }
     }
 }

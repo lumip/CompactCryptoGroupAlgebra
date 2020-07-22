@@ -51,7 +51,7 @@ namespace CompactCryptoGroupAlgebra
         /// based on a byte representation <paramref name="valueBuffer"/> and a
         /// <see cref="ICryptoGroupAlgebra{T}"/> instance providing algebraic operations.
         /// </summary>
-        /// <param name="valueBuffer">Byte represenation of raw value.</param>
+        /// <param name="valueBuffer">Byte representation of raw value.</param>
         /// <param name="groupAlgebra">Corresponding group algebra instance.</param>
         protected internal CryptoGroupElement(byte[] valueBuffer, ICryptoGroupAlgebra<T> groupAlgebra)
         {
@@ -210,7 +210,7 @@ namespace CompactCryptoGroupAlgebra
         /// <inheritdoc/>
         public override string ToString()
         {
-            return string.Format("<CryptoGroupElement: {0}>", Value.ToString());
+            return $"<CryptoGroupElement: {Value.ToString()}>";
         }
     }
 }

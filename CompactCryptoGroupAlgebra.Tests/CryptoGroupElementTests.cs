@@ -4,8 +4,6 @@ using System.Numerics;
 using NUnit.Framework;
 using Moq;
 
-using CompactCryptoGroupAlgebra;
-
 namespace CompactCryptoGroupAlgebra.Tests
 {
     [TestFixture]
@@ -116,7 +114,6 @@ namespace CompactCryptoGroupAlgebra.Tests
             int value = 3;
             var scalar = new BigInteger(7);
             int expected = value * (int)scalar;
-            var order = new BigInteger(10);
 
             var algebraMock = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraMock.Setup(alg => alg.IsElement(It.IsAny<int>())).Returns(true);
@@ -234,7 +231,7 @@ namespace CompactCryptoGroupAlgebra.Tests
             var algebraStub = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraStub.Setup(alg => alg.IsElement(It.IsAny<int>())).Returns(true);
 
-            var otherElement = new object { };
+            var otherElement = new object();
             var element = new CryptoGroupElement<int>(5, algebraStub.Object);
 
             bool result = element.Equals(otherElement);
@@ -308,12 +305,11 @@ namespace CompactCryptoGroupAlgebra.Tests
         }
         
         [Test]
-        public void TestOperatorMulitplyLeft()
+        public void TestOperatorMultiplyLeft()
         {
             int value = 3;
             var scalar = new BigInteger(7);
             int expected = value * (int)scalar;
-            var order = new BigInteger(10);
 
             var algebraMock = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraMock.Setup(alg => alg.IsElement(It.IsAny<int>())).Returns(true);
@@ -334,7 +330,6 @@ namespace CompactCryptoGroupAlgebra.Tests
             int value = 3;
             var scalar = new BigInteger(7);
             int expected = value * (int)scalar;
-            var order = new BigInteger(10);
 
             var algebraMock = new Mock<ICryptoGroupAlgebra<int>>(MockBehavior.Strict);
             algebraMock.Setup(alg => alg.IsElement(It.IsAny<int>())).Returns(true);
@@ -375,7 +370,7 @@ namespace CompactCryptoGroupAlgebra.Tests
             algebraMock.Setup(alg => alg.ToBytes(It.IsAny<int>())).Returns(expected);
 
             var element = new CryptoGroupElement<int>(value, algebraMock.Object);
-            var result = element.ToBytes();
+            element.ToBytes();
 
             algebraMock.Verify(alg => alg.ToBytes(It.Is<int>(x => x == value)), Times.Once());
         }

@@ -1,9 +1,6 @@
-using System;
 using System.Numerics;
-using System.Collections.Generic;
 
 using NUnit.Framework;
-using CompactCryptoGroupAlgebra.Tests.TestUtils;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
 {

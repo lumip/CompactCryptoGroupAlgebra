@@ -1,10 +1,9 @@
-using System;
 using System.Numerics;
 using System.Globalization;
 
 namespace CompactCryptoGroupAlgebra.Tests.TestUtils
 {
-    public class BigIntegerUtils
+    public static class BigIntegerUtils
     {
         /// <summary>
         /// Parses a hex-formatted integer string as a <see cref="BigInteger" />.

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Numerics;
-using System.Security.Cryptography;
 
 namespace CompactCryptoGroupAlgebra
 {
@@ -12,7 +11,7 @@ namespace CompactCryptoGroupAlgebra
     /// be implemented by deriving classes.
     /// 
     /// Group elements passed into algebraic operations are assumed to be valid values,
-    /// this is not explicitely checked for and should be done by calling classes.
+    /// this is not explicitly checked for and should be done by calling classes.
     /// </summary>
     /// <typeparam name="T">The data type used for raw group elements the algebraic operations operate on.</typeparam>
     public abstract class CryptoGroupAlgebra<T> : ICryptoGroupAlgebra<T> where T : notnull
@@ -127,7 +126,7 @@ namespace CompactCryptoGroupAlgebra
         /// <paramref name="second"/> if <paramref name="selectSecond"/> is
         /// <c>true</c>; otherwise <paramref name="first"/>
         /// </returns>
-        protected virtual T Select(bool selectSecond, T first, T second)
+        private T Select(bool selectSecond, T first, T second)
         {
             if (selectSecond) return second;
             return first;

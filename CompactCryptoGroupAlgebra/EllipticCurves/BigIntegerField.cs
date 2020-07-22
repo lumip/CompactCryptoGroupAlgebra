@@ -24,7 +24,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public int ElementByteLength { get; }
 
         /// <summary>
-        /// Instantiates a new BigIntegerfield given a prime modulo.
+        /// Instantiates a new BigIntegerField given a prime modulo.
         /// </summary>
         /// <param name="primeModulo">The characteristic prime/modulo of the field.</param>
         public BigIntegerField(BigPrime primeModulo)

@@ -1,4 +1,3 @@
-using System;
 using System.Numerics;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
@@ -70,8 +69,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            MontgomeryCurveEquation? other = obj as MontgomeryCurveEquation;
-            return other != null && base.Equals(other);
+            return obj is MontgomeryCurveEquation other && base.Equals(other);
         }
 
         /// <inheritdoc/>

@@ -3,10 +3,8 @@ using System.Numerics;
 
 using NUnit.Framework;
 
-using CompactCryptoGroupAlgebra.Tests.TestUtils;
-
 // Best Practices: https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices
-namespace CompactCryptoGroupAlgebra.Multiplicative.Tests
+namespace CompactCryptoGroupAlgebra.Multiplicative.Tests // Namespace does not reflect directory structure
 {
     [TestFixture]
     public class MultiplicativeGroupAlgebraTests
@@ -160,7 +158,8 @@ namespace CompactCryptoGroupAlgebra.Multiplicative.Tests
             var order = BigPrime.CreateWithoutChecks(11);
             var cofactor = new BigInteger(2);
 
-            var groupAlgebra = new MultiplicativeGroupAlgebra(modulo, order, generator);
+            // Is it intended to create local variable groupAlgebra instead of assigning the field with the same name? Choose other name?
+            var groupAlgebra = new MultiplicativeGroupAlgebra(modulo, order, generator); 
 
             Assert.AreEqual(neutralElement, groupAlgebra!.NeutralElement, "verifying neutral element");
             Assert.AreEqual(generator, groupAlgebra!.Generator, "verifying generator");
@@ -190,7 +189,7 @@ namespace CompactCryptoGroupAlgebra.Multiplicative.Tests
         [Test]
         public void TestEqualsFalseForUnrelatedObject()
         {
-            var otherAlgebra = new object { };
+            var otherAlgebra = new object();
             bool result = groupAlgebra!.Equals(otherAlgebra);
             Assert.IsFalse(result);
         }
@@ -198,26 +197,24 @@ namespace CompactCryptoGroupAlgebra.Multiplicative.Tests
         [Test]
         public void TestEqualsFalseForOtherAlgebra()
         {
-            var testRng = new SeededRandomNumberGenerator();
-
             var otherAlgebra = new MultiplicativeGroupAlgebra(
-                prime: BigPrime.CreateWithoutChecks(59),
-                order: BigPrime.CreateWithoutChecks(11),
-                generator: 2
+                BigPrime.CreateWithoutChecks(59),
+                BigPrime.CreateWithoutChecks(11),
+                2
             );
             Assert.IsFalse(groupAlgebra!.Equals(otherAlgebra));
 
             otherAlgebra = new MultiplicativeGroupAlgebra(
-                prime: BigPrime.CreateWithoutChecks(23),
-                order: BigPrime.CreateWithoutChecks(7),
-                generator: 2
+                BigPrime.CreateWithoutChecks(23),
+                BigPrime.CreateWithoutChecks(7),
+                2
             );
             Assert.IsFalse(groupAlgebra!.Equals(otherAlgebra));
 
             otherAlgebra = new MultiplicativeGroupAlgebra(
-                prime: BigPrime.CreateWithoutChecks(23),
-                order: BigPrime.CreateWithoutChecks(11),
-                generator: 4
+                BigPrime.CreateWithoutChecks(23),
+                BigPrime.CreateWithoutChecks(11),
+                4
             );
             Assert.IsFalse(groupAlgebra!.Equals(otherAlgebra));
         }

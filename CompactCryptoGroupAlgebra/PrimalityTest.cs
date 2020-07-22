@@ -37,7 +37,7 @@ namespace CompactCryptoGroupAlgebra
         /// List of all primes from 3 to 113 for quick compositeness check
         /// in <see cref="IsProbablyPrime(BigInteger, RandomNumberGenerator, double)"/>
         /// </summary>
-        public static int[] SmallPrimes = {
+        private static readonly int[] SmallPrimes = {
                    3,   5,   7,  11,  13,  17,  19,  23,  29,
              31,  37,  41,  43,  47,  53,  59,  61,  67,  71,
              73,  79,  83,  89,  97, 101, 103, 107, 109, 113
@@ -53,7 +53,7 @@ namespace CompactCryptoGroupAlgebra
         /// a composite number, the algorithm may return <c>true</c> with probability
         /// less than <paramref name="errorProbability"/>.
         /// </summary>
-        /// <returns><c>true</c>, if probably prime was ised, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c>, if probably prime was ???, <c>false</c> otherwise.</returns>
         /// <param name="n">The number to check for primality.</param>
         /// <param name="randomNumberGenerator">Random number generator instance.</param>
         /// <param name="errorProbability">Acceptable probability of <c>true</c>
