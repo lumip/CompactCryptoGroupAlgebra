@@ -17,6 +17,8 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="randomNumberGenerator">Random number generator.</param>
         /// <param name="lower">Inclusive lower bound.</param>
         /// <param name="upper">Inclusive upper bound.</param>
+        
+        // Method name should be consistent with existing GetBytes(), e.g. GetBigIntegerBetween()
         public static BigInteger RandomBetween(
             this RandomNumberGenerator randomNumberGenerator, BigInteger lower, BigInteger upper
         )
