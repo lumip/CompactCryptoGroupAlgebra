@@ -6,6 +6,12 @@
     <RootNamespace>CompactCryptoGroupAlgebra</RootNamespace>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>CS8602;CS8603;CS8600;CS8625;CS8610</WarningsAsErrors>
+    <Title>CompactCryptoGroupAlgebra</Title>
+    <Authors>Lukas "lumip" Prediger</Authors>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionSuffix>alpha1</VersionSuffix>
+    <Description>C# Library for Algebraic Group Operations</Description>
+    <Copyright>Copyright © 2020 Lukas Prediger</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

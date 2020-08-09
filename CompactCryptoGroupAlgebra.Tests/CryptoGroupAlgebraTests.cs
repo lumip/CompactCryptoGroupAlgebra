@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Moq;
 using Moq.Protected;
 
-namespace CompactCryptoGroupAlgebra.Tests
+namespace CompactCryptoGroupAlgebra
 {
     interface ICryptoGroupAlgebraProtectedMembers
     {

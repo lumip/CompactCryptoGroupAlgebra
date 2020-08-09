@@ -3,7 +3,7 @@ using System.Numerics;
 
 using NUnit.Framework;
 
-namespace CompactCryptoGroupAlgebra.Multiplicative.Tests // Namespace does not reflect directory structure
+namespace CompactCryptoGroupAlgebra.Multiplicative
 {
     [TestFixture]
     public class MultiplicativeGroupAlgebraTests

@@ -3,7 +3,7 @@ using System.Numerics;
 
 using NUnit.Framework;
 
-namespace CompactCryptoGroupAlgebra.Multiplicative.Tests
+namespace CompactCryptoGroupAlgebra.Multiplicative
 {
     [TestFixture]
     public class MultiplicativeGroupAlgebraIntegratedTest

@@ -31,7 +31,7 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <returns>New <see cref="BigPrime"/> instance of <paramref name="primeValue"/>.</returns>
         /// <param name="primeValue">Prime value.</param>
-        internal static BigPrime CreateWithoutChecks(BigInteger primeValue)
+        public static BigPrime CreateWithoutChecks(BigInteger primeValue)
         {
             return new BigPrime(primeValue);
         }

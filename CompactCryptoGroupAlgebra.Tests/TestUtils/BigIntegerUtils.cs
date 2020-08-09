@@ -1,7 +1,7 @@
 using System.Numerics;
 using System.Globalization;
 
-namespace CompactCryptoGroupAlgebra.Tests.TestUtils
+namespace CompactCryptoGroupAlgebra.TestUtils
 {
     public static class BigIntegerUtils
     {

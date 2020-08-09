@@ -1,4 +1,4 @@
-namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
+namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
     public static class TestCurveParameters
     {

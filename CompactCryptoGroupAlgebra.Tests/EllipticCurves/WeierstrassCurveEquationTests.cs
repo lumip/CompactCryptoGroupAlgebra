@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
+namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
     [TestFixture]
     public class WeierstrassCurveEquationTests

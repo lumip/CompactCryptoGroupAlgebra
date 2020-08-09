@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace CompactCryptoGroupAlgebra.Tests
+namespace CompactCryptoGroupAlgebra
 {
     [TestFixture]
     public class DebugAssertTests

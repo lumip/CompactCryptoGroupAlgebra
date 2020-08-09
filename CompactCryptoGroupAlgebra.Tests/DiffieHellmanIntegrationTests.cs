@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 using NUnit.Framework;
 
-namespace CompactCryptoGroupAlgebra.Tests
+namespace CompactCryptoGroupAlgebra
 {
     [TestFixture]
     public class DiffieHellmanIntegrationTests

@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using NUnit.Framework;
 using Moq;
 
-namespace CompactCryptoGroupAlgebra.Tests
+namespace CompactCryptoGroupAlgebra
 {
 
     [TestFixture]
