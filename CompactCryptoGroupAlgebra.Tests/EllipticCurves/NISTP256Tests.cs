@@ -2,9 +2,9 @@
 using System.Numerics;
 
 using NUnit.Framework;
-using CompactCryptoGroupAlgebra.Tests.TestUtils;
+using CompactCryptoGroupAlgebra.TestUtils;
 
-namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
+namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
 
     [TestFixture]

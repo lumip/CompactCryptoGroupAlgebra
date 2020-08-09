@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net46</TargetFramework>
     <AssemblyName>CompactCryptoGroupAlgebra.Tests</AssemblyName>
-    <RootNamespace>CompactCryptoGroupAlgebra.Tests</RootNamespace>
+    <RootNamespace>CompactCryptoGroupAlgebra</RootNamespace>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>CS8602;CS8603;CS8600;CS8625;CS8610</WarningsAsErrors>
     <Title>CompactCryptoGroupAlgebra Unit Tests</Title>

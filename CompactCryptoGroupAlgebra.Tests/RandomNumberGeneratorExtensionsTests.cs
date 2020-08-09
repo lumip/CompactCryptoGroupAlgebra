@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using Moq;
 using NUnit.Framework;
 
-namespace CompactCryptoGroupAlgebra.Tests
+namespace CompactCryptoGroupAlgebra
 {
     [TestFixture]
     public class RandomNumberGeneratorExtensionsTests

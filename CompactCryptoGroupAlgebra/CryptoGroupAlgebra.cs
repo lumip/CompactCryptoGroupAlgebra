@@ -49,7 +49,6 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="elementBitLength">The maximum bit length of any group element.</param>
         protected CryptoGroupAlgebra(T generator, BigPrime order, BigInteger cofactor, T neutralElement, int elementBitLength)
         {
-            // todo: would be nice to do IsElement(generator) here - but that is virtual
             Generator = generator;
             Order = order;
             Cofactor = cofactor;

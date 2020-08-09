@@ -3,10 +3,9 @@ using System.Numerics;
 
 using NUnit.Framework;
 
-using CompactCryptoGroupAlgebra.Tests.TestUtils;
+using CompactCryptoGroupAlgebra.TestUtils;
 
-// Best Practices: https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices
-namespace CompactCryptoGroupAlgebra.Multiplicative.Tests
+namespace CompactCryptoGroupAlgebra.Multiplicative
 {
     [TestFixture]
     public class MultiplicativeGroupAlgebraTests

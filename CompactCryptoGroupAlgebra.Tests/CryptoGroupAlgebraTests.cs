@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Numerics;
-using System.Reflection;
 
 using NUnit.Framework;
 using Moq;
 using Moq.Protected;
 
-namespace CompactCryptoGroupAlgebra.Tests
+namespace CompactCryptoGroupAlgebra
 {
     interface CryptoGroupAlgebraProtectedMembers
     {

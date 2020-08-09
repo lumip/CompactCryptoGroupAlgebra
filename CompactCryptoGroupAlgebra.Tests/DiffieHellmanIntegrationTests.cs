@@ -5,15 +5,16 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 
 using NUnit.Framework;
+using CompactCryptoGroupAlgebra.TestUtils;
 
-namespace CompactCryptoGroupAlgebra.Tests
+namespace CompactCryptoGroupAlgebra
 {
     [TestFixture]
     public class DiffieHellmanIntegrationTests
     {
         public void DoDiffieHellman<T>(CryptoGroup<T> group) where T : notnull
         {
-            RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
+            RandomNumberGenerator randomNumberGenerator = new SeededRandomNumberGenerator();
 
             // Generating DH secret and public key for Alice
             (BigInteger dhSecretAlice, CryptoGroupElement<T> dhPublicAlice) = 

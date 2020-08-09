@@ -30,6 +30,7 @@ namespace CompactCryptoGroupAlgebra
     /// </remarks>
     public class CryptoGroup<T> where T: notnull
     {
+
         /// <summary>
         /// The <see cref="ICryptoGroupAlgebra{T}"/> that provides
         /// implementations of underlying group operations on raw group element type
@@ -82,7 +83,7 @@ namespace CompactCryptoGroupAlgebra
         /// Used to convert outputs of <see cref="ICryptoGroupAlgebra{T}"/> operations to <see cref="CryptoGroupElement{T}"/>
         /// instances by methods within this class.
         /// </remarks>
-        protected virtual CryptoGroupElement<T> CreateGroupElement(T value)
+        private CryptoGroupElement<T> CreateGroupElement(T value)
         {
             return new CryptoGroupElement<T>(value, Algebra);
         }
@@ -92,7 +93,7 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="buffer">Byte representation of the group elements.</param>
         /// <returns>An <see cref="CryptoGroupElement{T}"/>instance representing the given value.</returns>
-        protected virtual CryptoGroupElement<T> CreateGroupElement(byte[] buffer)
+        private CryptoGroupElement<T> CreateGroupElement(byte[] buffer)
         {
             return new CryptoGroupElement<T>(buffer, Algebra);
         }
