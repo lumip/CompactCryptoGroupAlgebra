@@ -134,7 +134,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         }
 
         /// <inheritdoc/>
-        public override BigInteger Add(BigInteger left,BigInteger right)
+        public override BigInteger Add(BigInteger left, BigInteger right)
         {
             throw new NotSupportedException("An x-only Montgomery curve " +
             	"has no definition for the standard addition. Use the " +
