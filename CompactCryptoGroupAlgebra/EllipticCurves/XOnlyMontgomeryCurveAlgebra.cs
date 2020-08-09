@@ -221,16 +221,6 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 r1 = XOnlyAdd(r0, r1, point);
                 r0 = XOnlyDouble(r0);
                 (r0, r1) = ConditionalSwap(bitI.IsOne, r0, r1);
-                //if (bitI.IsZero)
-                //{
-                //    r1 = AddInternal(r0, r1, e);
-                //    r0 = DoubleInternal(r0);
-                //}
-                //else
-                //{
-                //    r0 = AddInternal(r0, r1, e);
-                //    r1 = DoubleInternal(r1);
-                //}
             }
             Debug.Assert(i == -1);
             return RenormalizePoint(r0).X;

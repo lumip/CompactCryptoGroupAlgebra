@@ -21,11 +21,6 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         /// </summary>
         public BigInteger B { get; }
 
-        // /// <summary>
-        // /// The <see cref="CurveParameters"/> defining this <see cref="CurveEquation"/> instance.
-        // /// </summary>
-        // public CurveParameters CurveParameters { get; }
-        
         /// <summary>
         /// The prime field over which the curve operates.
         /// </summary>

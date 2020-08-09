@@ -27,24 +27,20 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             BigInteger y1 = left.Y;
             BigInteger y2 = right.Y;
 
-            BigInteger lambdaSame = Field.Mod((3 * Field.Square(x1) + A) * Field.InvertMult(2 * y1));
-            BigInteger lambdaDiff = Field.Mod((y2 - y1) * Field.InvertMult(x2 - x1));
             BigInteger lambda;
-            // note: branching is side-channel vulnerable
-            if (left.Equals(right)) // Equals probably not constant time
+            if (left.Equals(right))
             {
-                lambda = lambdaSame;
+                lambda = Field.Mod((3 * Field.Square(x1) + A) * Field.InvertMult(2 * y1));;
             }
             else
             {
-                lambda = lambdaDiff;
+                lambda = Field.Mod((y2 - y1) * Field.InvertMult(x2 - x1));
             }
             BigInteger x3 = Field.Mod(Field.Square(lambda) - x1 - x2);
             BigInteger y3 = Field.Mod(lambda * (x1 - x3) - y1);
 
             CurvePoint result = CurvePoint.PointAtInfinity;
             bool pointsAreNegations = AreNegations(left, right);
-            // note: branching is side-channel vulnerable
             if (left.IsAtInfinity && right.IsAtInfinity)
                 result = CurvePoint.PointAtInfinity;
             if (left.IsAtInfinity && !right.IsAtInfinity)

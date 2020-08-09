@@ -62,16 +62,15 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
         {
             var curve = new CurveGroupAlgebra(curveParameters);
 
-            var p = new CurvePoint(5, 5);
+            var point = new CurvePoint(5, 5);
             var other = new CurvePoint(15, 14);
             var expected = new CurvePoint(20, 19);
 
             curveEquationMock.Reset();
             curveEquationMock.Setup(eq => eq.Add(It.IsAny<CurvePoint>(), It.IsAny<CurvePoint>()))
-                // Parameter p has same name as local variable?
                 .Returns((CurvePoint p, CurvePoint q) => new CurvePoint(p.X + q.X, p.Y + q.Y));
 
-            var result = curve.Add(p, other);
+            var result = curve.Add(point, other);
             Assert.AreEqual(expected, result);
             curveEquationMock.Verify(eq => eq.Add(It.IsAny<CurvePoint>(), It.IsAny<CurvePoint>()), Times.Once);
         }
@@ -151,18 +150,16 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
             var k = new BigInteger(5);
             
             var curve = new CurveGroupAlgebra(curveParameters);
-            var p = new CurvePoint(5, 5);
+            var point = new CurvePoint(5, 5);
 
             curveEquationMock.Reset();
             curveEquationMock.Setup(eq => eq.Add(It.IsAny<CurvePoint>(), It.IsAny<CurvePoint>()))
-                // Parameter p has same name as local variable?
-                // Parameter q has same name as local variable?
                 .Returns((CurvePoint p, CurvePoint q) => new CurvePoint(p.X + q.X, p.Y + q.Y));
 
             var expectedQ = new CurvePoint(25, 25);
-            var q = curve.MultiplyScalar(p, k);
+            var otherPoint = curve.MultiplyScalar(point, k);
 
-            Assert.AreEqual(expectedQ, q);
+            Assert.AreEqual(expectedQ, otherPoint);
             curveEquationMock.Verify(eq => eq.Add(It.IsAny<CurvePoint>(), It.IsAny<CurvePoint>()), Times.Exactly(2*4)); // 2 * Order bit length
         }
 

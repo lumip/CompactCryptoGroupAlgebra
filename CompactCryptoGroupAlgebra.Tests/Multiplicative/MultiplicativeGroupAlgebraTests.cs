@@ -3,7 +3,6 @@ using System.Numerics;
 
 using NUnit.Framework;
 
-// Best Practices: https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices
 namespace CompactCryptoGroupAlgebra.Multiplicative.Tests // Namespace does not reflect directory structure
 {
     [TestFixture]
@@ -157,9 +156,6 @@ namespace CompactCryptoGroupAlgebra.Multiplicative.Tests // Namespace does not r
             var modulo = BigPrime.CreateWithoutChecks(23);
             var order = BigPrime.CreateWithoutChecks(11);
             var cofactor = new BigInteger(2);
-
-            // Is it intended to create local variable groupAlgebra instead of assigning the field with the same name? Choose other name?
-            var groupAlgebra = new MultiplicativeGroupAlgebra(modulo, order, generator); 
 
             Assert.AreEqual(neutralElement, groupAlgebra!.NeutralElement, "verifying neutral element");
             Assert.AreEqual(generator, groupAlgebra!.Generator, "verifying generator");

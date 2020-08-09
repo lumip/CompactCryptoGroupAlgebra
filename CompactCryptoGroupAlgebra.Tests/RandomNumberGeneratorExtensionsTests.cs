@@ -25,7 +25,7 @@ namespace CompactCryptoGroupAlgebra.Tests
                        Buffer.BlockCopy(rngDeltaBuffer, 0, buffer, 0, rngDeltaBuffer.Length);
                    });
 
-            var result = rngMock.Object.RandomBetween(lowerBound, upperBound);
+            var result = rngMock.Object.GetBigIntegerBetween(lowerBound, upperBound);
             Assert.AreEqual(expected, result);
             rngMock.Verify(rng => rng.GetBytes(It.IsAny<byte[]>()), Times.Once);
         }
@@ -51,7 +51,7 @@ namespace CompactCryptoGroupAlgebra.Tests
                        firstCall = false;
                    });
 
-            var result = rngMock.Object.RandomBetween(lowerBound, upperBound);
+            var result = rngMock.Object.GetBigIntegerBetween(lowerBound, upperBound);
             Assert.AreEqual(expected, result);
             rngMock.Verify(rng => rng.GetBytes(It.IsAny<byte[]>()), Times.Exactly(2));
         }

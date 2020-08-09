@@ -68,7 +68,7 @@ namespace CompactCryptoGroupAlgebra
         /// that is an exact copy of a given <paramref name="other"/> 
         /// instance of <see cref="CryptoGroupElement{T}"/>.
         /// </summary>
-        /// <param name="other">The <see cref="CryptoGroupElement{T}"/> instance to clone.static</param>
+        /// <param name="other">The <see cref="CryptoGroupElement{T}"/> instance to clone.</param>
         public CryptoGroupElement(CryptoGroupElement<T> other)
         {
             Algebra = other.Algebra;

@@ -5,8 +5,6 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves.Tests
     [TestFixture]
     public class CurvePointTests
     {
-        // reference results from https://trustica.cz/en/2018/04/26/elliptic-curves-prime-order-curves/
-        // curve has order 32, i.e., OrderSize = 6 bits
 
         [Test]
         public void TestClone()

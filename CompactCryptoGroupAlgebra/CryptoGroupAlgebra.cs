@@ -171,7 +171,7 @@ namespace CompactCryptoGroupAlgebra
         /// <inheritdoc/>
         public bool IsElement(T element)
         {
-            // implementation specific checks
+            // implementation-specific checks
             if (!IsElementDerived(element)) return false;
 
             // verifying that the point is not from a small subgroup of the whole curve (and thus outside

@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 namespace CompactCryptoGroupAlgebra
 {
     /// <summary>
-    /// Extends <see cref="RandomNumberGenerator"/> by a convenient way to
+    /// Extends <see cref="RandomNumberGenerator"/> with a convenient way to
     /// sample a random <see cref="BigInteger"/>.
     /// </summary>
     public static class RandomNumberGeneratorExtensions
@@ -17,9 +17,7 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="randomNumberGenerator">Random number generator.</param>
         /// <param name="lower">Inclusive lower bound.</param>
         /// <param name="upper">Inclusive upper bound.</param>
-        
-        // Method name should be consistent with existing GetBytes(), e.g. GetBigIntegerBetween()
-        public static BigInteger RandomBetween(
+        public static BigInteger GetBigIntegerBetween(
             this RandomNumberGenerator randomNumberGenerator, BigInteger lower, BigInteger upper
         )
         {

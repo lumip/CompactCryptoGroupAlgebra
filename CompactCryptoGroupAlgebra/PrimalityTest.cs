@@ -95,7 +95,7 @@ namespace CompactCryptoGroupAlgebra
             // actual Miller-Rabin test
             for (int i = 0; i < testCount; ++i)
             {
-                BigInteger a = randomNumberGenerator.RandomBetween(2, n - 1);
+                BigInteger a = randomNumberGenerator.GetBigIntegerBetween(2, n - 1);
                 if (IsCompositeWitness(a, q, k)) return false;
             }
             return true;

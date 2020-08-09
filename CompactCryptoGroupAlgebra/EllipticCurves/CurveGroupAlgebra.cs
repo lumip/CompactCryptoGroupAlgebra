@@ -56,7 +56,6 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             return _curveEquation.Add(left, right);
         }
 
-
         /// <summary>
         /// Negates a curve point.
         /// 

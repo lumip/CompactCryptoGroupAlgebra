@@ -25,13 +25,13 @@ namespace CompactCryptoGroupAlgebra
         /// checks.
         /// 
         /// CAUTION: This foregoes some computation at the risk of being UNSAFE
-        /// by introducing non-prime values into routines that rely on primes
+        /// by potentially introducing non-prime values into routines that rely on primes
         /// for security. Prefer using
         /// <see cref="BigPrime.Create(BigInteger, RandomNumberGenerator, double)" />.
         /// </summary>
         /// <returns>New <see cref="BigPrime"/> instance of <paramref name="primeValue"/>.</returns>
         /// <param name="primeValue">Prime value.</param>
-        public static BigPrime CreateWithoutChecks(BigInteger primeValue)
+        internal static BigPrime CreateWithoutChecks(BigInteger primeValue)
         {
             return new BigPrime(primeValue);
         }
