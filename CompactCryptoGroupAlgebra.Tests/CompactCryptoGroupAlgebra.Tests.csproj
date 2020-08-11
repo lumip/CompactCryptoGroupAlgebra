@@ -9,7 +9,6 @@
     <Title>CompactCryptoGroupAlgebra Unit Tests</Title>
     <Authors>Lukas "lumip" Prediger</Authors>
     <VersionPrefix>1.0.0</VersionPrefix>
-    <VersionSuffix>alpha1</VersionSuffix>
     <Description>Tests for the CompactCryptoGroupAlgebra Library</Description>
     <Copyright>Copyright © 2020 Lukas Prediger</Copyright>
   </PropertyGroup>

@@ -19,6 +19,11 @@ __!Security Advisory!__ Note that due to its focus on simplicity `CompactCryptoG
   - Elliptic curves in Montgomery form, specifically Curve25519
   - The x-coordinate-only variant of Montgomery curves
 
+## Installing
+
+`CompactCryptoGroupAlgebra` can be installed from [nuget](https://www.nuget.org/packages/CompactCryptoGroupAlgebra/1.0.0).
+Follow the link for instructions on how to install using your preferred method (package manager, .net cli, etc).
+
 ## Usage
 
 The public API presents the two generic base classes `CryptoGroup` and `CryptoGroupElement` which are agnostic of the underlying instantiation and implementation of the group.
@@ -92,8 +97,9 @@ of the multiplicative prime field group.
 Functionality of `CompactCryptoGroupAlgebra` is split over a range of classes, each with a single specific purpose, the most important of which are highlighted below.
 
 - `CryptoGroupElement<T>` represents an element of a cryptographic group and implements operators for ease of use, abstracting from a specific underlying implementation type via its template type argument.
-- `CryptoGroup<T>` is a wrapper around `CryptoGroupAlgebra<T>` that ensures that all returned values are returned as `CryptoGroupElement<T>` instances.
-- `CryptoGroupAlgebra<T>` is an abstract base class for implementations of a specific mathematical group structure, providing common implementations derived from fundamental group operations (such as generating and inverting group elements).
+- `CryptoGroup<T>` is a wrapper around `ICryptoGroupAlgebra<T>` that ensures that all returned values are returned as `CryptoGroupElement<T>` instances.
+- `ICryptoGroupAlgebra<T>` is the common interface for implementations of a specific mathematical group structure using the underlying type `T`
+- `CryptoGroupAlgebra<T>` is an abstract base class for implementations of `ICryptoGroupAlgebra<T>`, providing common implementations derived from fundamental group operations (such as generating and inverting group elements).
 - `Multiplicative.MultiplicativeGroupAlgebra` is an implementation of `CryptoGroupAlgebra` for multiplicative groups in fields of prime characteristic.
 - `EllipticCurves.CurveGroupAlgebra` is an implementation of `CryptoGroupAlgebra` for elliptic curves that in turn relies on a specific `CurveEquation` instance for fundamental operations.
 - Subclasses of `EllipticCurves.CurveEquation` provide the implementations of specific forms of elliptic curves (currently, `EllipticCurves.WeierstrassCurveEquation` and `EllipticCurves.MontgomeryCurveEquation` are provided).
@@ -127,4 +133,8 @@ but you also have the option of instantiating an instance for your own curve.
 
 ## License
 
-`CompactCryptoCurveAlgebra` is licensed under the [GPLv3 license](/LICENSE.txt) for general use.
+`CompactCryptoGroupAlgebra` is licensed under the [GPLv3 license](/LICENSE.txt) for general use.
+
+## Versioning
+
+`CompactCryptoGroupAlgebra` version numbers adhere to [Semantic Versioning](https://semver.org).
