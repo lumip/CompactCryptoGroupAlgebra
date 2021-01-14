@@ -1,0 +1,4 @@
+- 2.0.0-alpha
+    - Added GenerateRandomElement to ICryptoGroupAlgebra interface
+
+- 1.0.0 Initial Release
