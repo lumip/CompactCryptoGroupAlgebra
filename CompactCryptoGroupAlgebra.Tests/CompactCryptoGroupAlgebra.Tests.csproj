@@ -8,9 +8,8 @@
     <WarningsAsErrors>CS8602;CS8603;CS8600;CS8625;CS8610</WarningsAsErrors>
     <Title>CompactCryptoGroupAlgebra Unit Tests</Title>
     <Authors>Lukas "lumip" Prediger</Authors>
-    <VersionPrefix>1.0.0</VersionPrefix>
     <Description>Tests for the CompactCryptoGroupAlgebra Library</Description>
-    <Copyright>Copyright © 2020 Lukas Prediger</Copyright>
+    <Copyright>Copyright © 2020, 2021 Lukas Prediger</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
