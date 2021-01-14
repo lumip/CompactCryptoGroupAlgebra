@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Security.Cryptography;
 
 using NUnit.Framework;
 using Moq;
@@ -267,6 +268,55 @@ namespace CompactCryptoGroupAlgebra
                 alg => alg.Equals(It.Is<CryptoGroupAlgebra<int>>(x => x == otherAlgebraMock.Object)),
                 Times.Once()
             );
+        }
+
+        [Test]
+        public void TestGenerateRandomElement()
+        {
+            var order = BigPrime.CreateWithoutChecks(1021);
+            int orderBitLength = 10;
+            int orderByteLength = 2;
+            var generatorStub = 1;
+            var cofactor = BigInteger.One;
+            var neutralElement = 0;
+            var elementBitLength = orderBitLength;
+
+            var expected = 7;
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, cofactor, neutralElement, elementBitLength) { CallBase = true };
+            algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
+                .Setup(alg => alg.MultiplyScalarUnchecked(It.IsAny<int>(), It.IsAny<BigInteger>(), It.IsAny<int>())
+            ).Returns(expected);
+            
+            var index = new BigInteger(301);
+            byte[] rngResponse = (index - 1).ToByteArray();
+
+            var rngMock = new Mock<RandomNumberGenerator>();
+            rngMock
+                .Setup(rng => rng.GetBytes(It.IsAny<byte[]>()))
+                .Callback(
+                    new Action<byte[]>(
+                        (buffer) => { Buffer.BlockCopy(rngResponse, 0, buffer, 0, orderByteLength); }
+                    )
+                );
+
+            var result = algebraMock.Object.GenerateRandomElement(rngMock.Object);
+            var resultIndex = result.Item1;
+            var resultElement = result.Item2;
+            
+            Assert.AreEqual(index, resultIndex);
+            Assert.AreEqual(expected, resultElement);
+            
+            algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
+                .Verify(
+                    alg => alg.MultiplyScalarUnchecked(
+                        It.Is<int>(x => x == generatorStub),
+                        It.Is<BigInteger>(x => x == index),
+                        It.Is<int>(x => x == orderBitLength)),
+                    Times.Once()
+                );
+
+            rngMock.Verify(rng => rng.GetBytes(It.Is<byte[]>(x => x.Length == orderByteLength)), Times.Once());
         }
 
     }
