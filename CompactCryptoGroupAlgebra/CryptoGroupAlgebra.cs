@@ -16,6 +16,7 @@
 
 using System;
 using System.Numerics;
+using System.Security.Cryptography;
 
 namespace CompactCryptoGroupAlgebra
 {
@@ -241,5 +242,14 @@ namespace CompactCryptoGroupAlgebra
 
         /// <inheritdoc/>
         public abstract override int GetHashCode();
+
+
+        /// <inheritdoc/>
+        public (BigInteger, T) GenerateRandomElement(RandomNumberGenerator randomNumberGenerator)
+        {
+            BigInteger index = randomNumberGenerator.GetBigIntegerBetween(1, Order - 1);
+            T element = GenerateElement(index);
+            return (index, element);
+        }
     }
 }

@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Numerics;
+using System.Security.Cryptography;
 
 namespace CompactCryptoGroupAlgebra
 {
@@ -151,5 +152,20 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="element">The group element to convert.</param>
         /// <returns>A byte array holding a representation of the group element.</returns>
         byte[] ToBytes(T element);
+
+        /// <summary>
+        /// Generates a random group element.
+        /// 
+        /// The group element is obtained by first drawing an index less than the group's
+        /// order uniformly at random and then multiplying the group's generator with
+        /// that index.
+        ///
+        /// To obtain a group element for a given index, see <see cref="GenerateElement(BigInteger)"/>.
+        /// </summary>
+        /// <param name="randomNumberGenerator">A (cryptographically strong) random number generator instance from
+        /// which the index will be drawn.
+        /// </param>
+        /// <returns>A tuple of the random index and the corresponding group element.</returns>
+        (BigInteger, T) GenerateRandomElement(RandomNumberGenerator randomNumberGenerator);
     }
 }

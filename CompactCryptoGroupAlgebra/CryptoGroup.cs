@@ -204,9 +204,10 @@ namespace CompactCryptoGroupAlgebra
         /// <returns>A tuple of the random index and the corresponding group element.</returns>
         public (BigInteger, CryptoGroupElement<T>) GenerateRandom(RandomNumberGenerator randomNumberGenerator)
         {
-            BigInteger index = randomNumberGenerator.GetBigIntegerBetween(1, Order - 1);
-            CryptoGroupElement<T> element = Generate(index);
-            return (index, element);
+            BigInteger index;
+            T element;
+            (index, element) = Algebra.GenerateRandomElement(randomNumberGenerator);
+            return (index, CreateGroupElement(element));
         }
     }
 }
