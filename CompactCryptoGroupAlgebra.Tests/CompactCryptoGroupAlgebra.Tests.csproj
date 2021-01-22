@@ -2,9 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>net46;netcoreapp3.1</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
     <AssemblyName>CompactCryptoGroupAlgebra.Tests</AssemblyName>
     <RootNamespace>CompactCryptoGroupAlgebra</RootNamespace>
     <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
     <WarningsAsErrors>CS8602;CS8603;CS8600;CS8625;CS8610</WarningsAsErrors>
     <Title>CompactCryptoGroupAlgebra Unit Tests</Title>
     <Authors>Lukas "lumip" Prediger</Authors>
@@ -15,12 +17,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>full</DebugType>
     <OutputPath>bin/$(Configuration)/</OutputPath>
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>bin/$(Configuration)/</OutputPath>
-    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

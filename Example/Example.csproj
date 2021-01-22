@@ -6,6 +6,7 @@
     <AssemblyName>Example</AssemblyName>
     <RootNamespace>Example</RootNamespace>
     <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
     <WarningsAsErrors>CS8602;CS8603;CS8600;CS8625;CS8610</WarningsAsErrors>
     <Title>Example for CompactCryptoGroupAlgebra</Title>
     <Authors>Lukas "lumip" Prediger</Authors>
