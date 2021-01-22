@@ -62,7 +62,7 @@ namespace CompactCryptoGroupAlgebra
             DoDiffieHellman(group);
         }
 
-        private void DoDiffieHellman<T>(CryptoGroup<T> group) where T : notnull
+        public static void DoDiffieHellman<T>(CryptoGroup<T> group) where T : notnull
         {
             RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
 

@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompactCryptoGroupAlgebra", "CompactCryptoGroupAlgebra\CompactCryptoGroupAlgebra.csproj", "{5F5CFCF8-677E-4028-B74A-E6AB2975360C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompactCryptoGroupAlgebra", "CompactCryptoGroupAlgebra\CompactCryptoGroupAlgebra.csproj", "{71DF0F2B-F30F-4218-B959-5BDF980251BC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.csproj", "{43DEFB14-5176-4863-9A51-D141802BA000}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompactCryptoGroupAlgebra.Tests", "CompactCryptoGroupAlgebra.Tests\CompactCryptoGroupAlgebra.Tests.csproj", "{FAD092CB-98B1-4206-A8BC-77AFDDA6CEBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompactCryptoGroupAlgebra.OpenSsl", "CompactCryptoGroupAlgebra.OpenSsl\CompactCryptoGroupAlgebra.OpenSsl.csproj", "{52E88759-E5B2-4F13-A582-006969BE0F4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompactCryptoGroupAlgebra.OpenSsl.Tests", "CompactCryptoGroupAlgebra.OpenSsl.Tests\CompactCryptoGroupAlgebra.OpenSsl.Tests.csproj", "{32AF3E40-ADF7-43FB-98FA-A8995A83DA37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +19,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5F5CFCF8-677E-4028-B74A-E6AB2975360C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F5CFCF8-677E-4028-B74A-E6AB2975360C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F5CFCF8-677E-4028-B74A-E6AB2975360C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F5CFCF8-677E-4028-B74A-E6AB2975360C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71DF0F2B-F30F-4218-B959-5BDF980251BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71DF0F2B-F30F-4218-B959-5BDF980251BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71DF0F2B-F30F-4218-B959-5BDF980251BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71DF0F2B-F30F-4218-B959-5BDF980251BC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{43DEFB14-5176-4863-9A51-D141802BA000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{43DEFB14-5176-4863-9A51-D141802BA000}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43DEFB14-5176-4863-9A51-D141802BA000}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -27,6 +31,14 @@ Global
 		{FAD092CB-98B1-4206-A8BC-77AFDDA6CEBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAD092CB-98B1-4206-A8BC-77AFDDA6CEBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAD092CB-98B1-4206-A8BC-77AFDDA6CEBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52E88759-E5B2-4F13-A582-006969BE0F4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52E88759-E5B2-4F13-A582-006969BE0F4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52E88759-E5B2-4F13-A582-006969BE0F4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52E88759-E5B2-4F13-A582-006969BE0F4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32AF3E40-ADF7-43FB-98FA-A8995A83DA37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32AF3E40-ADF7-43FB-98FA-A8995A83DA37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32AF3E40-ADF7-43FB-98FA-A8995A83DA37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32AF3E40-ADF7-43FB-98FA-A8995A83DA37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

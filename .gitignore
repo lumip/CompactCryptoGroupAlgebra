@@ -6,6 +6,6 @@
 .vs
 project.lock.json
 CoverageReport/
-coverage.xml
+*coverage*.xml
 __Instrumented/
 TestResult.xml
