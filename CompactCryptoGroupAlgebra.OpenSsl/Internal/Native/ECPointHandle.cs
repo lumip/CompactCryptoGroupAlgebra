@@ -33,7 +33,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
         private extern static int EC_POINT_invert(ECGroupHandle group, ECPointHandle a, BigNumberContextHandle ctx);
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
-        private extern static int EC_POINT_point2oct(ECGroupHandle group, ECPointHandle p, PointRepresentation form, byte[]? buffer, int bufferLen, BigNumberContextHandle contextHandle);
+        private extern static int EC_POINT_point2oct(ECGroupHandle group, ECPointHandle p, PointEncoding form, byte[]? buffer, int bufferLen, BigNumberContextHandle contextHandle);
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static int EC_POINT_oct2point(ECGroupHandle group, ECPointHandle p, byte[] buffer, int bufferLen, BigNumberContextHandle ctx);
@@ -97,7 +97,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
             return result == 0;
         }
 
-        public static int ToByteBuffer(ECGroupHandle group, ECPointHandle p, PointRepresentation form, byte[]? buffer, BigNumberContextHandle ctx)
+        public static int ToByteBuffer(ECGroupHandle group, ECPointHandle p, PointEncoding form, byte[]? buffer, BigNumberContextHandle ctx)
         {
             Debug.Assert(!group.IsInvalid, $"Accessed an invalid ECGroupHandle! <{nameof(group)}>");
             Debug.Assert(!p.IsInvalid, $"Accessed an invalid ECPointHandle! <{nameof(p)}>");

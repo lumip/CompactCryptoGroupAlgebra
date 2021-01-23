@@ -10,6 +10,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
     public class EllipticCurveAlgebra : ICryptoGroupAlgebra<ECPoint>, IDisposable
     {
 
+        private static readonly PointEncoding GroupPointEncoding = PointEncoding.Compressed;
 
         internal ECGroupHandle Handle
         {
@@ -98,7 +99,13 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             }
         }
 
-        public int ElementBitLength => throw new NotImplementedException();
+        public int ElementBitLength 
+        {
+            get
+            {
+                return PointEncodingLength.GetEncodingBitLength(GroupPointEncoding, ECGroupHandle.GetDegree(Handle));
+            }
+        }
 
         public int OrderBitLength
         {
@@ -166,7 +173,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
 
         public byte[] ToBytes(ECPoint element)
         {
-            return element.ToBytes(PointRepresentation.Compressed);
+            return element.ToBytes(GroupPointEncoding);
         }
 
         public (BigInteger, ECPoint) GenerateRandomElement(RandomNumberGenerator randomNumberGenerator)
@@ -177,7 +184,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
 
                 // note(lumip): OpenSSL up to version 1.1.1 does not generate private keys for EC
                 //  as secure BIGNUM. Workaround by setting an empty secure private key BIGNUM before
-                //  generation.
+                //  generation. (cf. https://github.com/openssl/openssl/issues/13892)
                 using (var privKeyTemplateHandle = BigNumberHandle.CreateSecure())
                 {
                     ECKeyHandle.SetPrivateKey(keyHandle, privKeyTemplateHandle);

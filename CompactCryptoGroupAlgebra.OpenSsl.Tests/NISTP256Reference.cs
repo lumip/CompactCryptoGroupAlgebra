@@ -17,7 +17,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
 
         public static BigInteger Cofactor = BigInteger.One;
 
-        public static int ElementBitLength = NumberLength.GetLength(Prime).InBits + 1;
+        public static int ElementBitLength = NumberLength.GetLength(Prime).InBits;
 
         public static int OrderBitLength = NumberLength.GetLength(Order).InBits;
     }

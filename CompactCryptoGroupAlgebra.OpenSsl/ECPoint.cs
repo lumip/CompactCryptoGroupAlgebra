@@ -68,7 +68,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             return new BigInteger(ToBytes()).GetHashCode();
         }
 
-        public byte[] ToBytes(PointRepresentation representation = PointRepresentation.Compressed)
+        public byte[] ToBytes(PointEncoding representation = PointEncoding.Compressed)
         {
             using (var ctx = BigNumberContextHandle.Create())
             { 

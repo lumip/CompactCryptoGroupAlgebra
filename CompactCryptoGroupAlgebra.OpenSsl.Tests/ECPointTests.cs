@@ -70,11 +70,9 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
         public void TestGetCoordinates()
         {
             var point = new ECPoint(groupHandle, rawPointHandle);
-            // var expectedXInt = BigInteger.Parse("06B17D1F2E12C4247F8BCE6E563A440F277037D812DEB33A0F4A13945D898C296", System.Globalization.NumberStyles.HexNumber);
-            // var expectedYInt = BigInteger.Parse("04FE342E2FE1A7F9B8EE7EB4A7C0F9E162BCE33576B315ECECBB6406837BF51F5", System.Globalization.NumberStyles.HexNumber);
-
+            
             var expectedXNum = new BigNumber(NISTP256Reference.generatorX);
-            var expectedYNum = new BigNumber(NISTP256Reference.generatorX);
+            var expectedYNum = new BigNumber(NISTP256Reference.generatorY);
             
             (var x, var y) = point.GetCoordinates();
 

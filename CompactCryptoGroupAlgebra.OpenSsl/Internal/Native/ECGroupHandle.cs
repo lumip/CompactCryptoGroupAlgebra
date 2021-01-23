@@ -25,6 +25,9 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static int EC_GROUP_have_precompute_mult(ECGroupHandle group);
+
+        [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
+        private extern static int EC_GROUP_get_degree(ECGroupHandle group);
 #endregion
 
 #region Checked Native Methods
@@ -69,6 +72,14 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
         {
             Debug.Assert(!group.IsInvalid, $"Accessed an invalid ECGroupHandle! <{nameof(group)}>");
             return (EC_GROUP_have_precompute_mult(group) == 1);
+        }
+
+        public static int GetDegree(ECGroupHandle group)
+        {
+            Debug.Assert(!group.IsInvalid, $"Accessed an invalid ECGroupHandle! <{nameof(group)}>");
+            var result = EC_GROUP_get_degree(group);
+            if (result == 0) throw new OpenSslNativeException();
+            return result;
         }
 #endregion
 

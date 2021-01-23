@@ -72,11 +72,11 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
         }
 
         [Test]
-        public void TestElementLength()
+        public void TestElementBitLength()
         {
             var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
 
-            var expected = NISTP256Reference.ElementBitLength;
+            var expected = NISTP256Reference.ElementBitLength + 8;
 
             var length = algebra.ElementBitLength;
 
