@@ -1,4 +1,4 @@
-namespace CompactCryptoGroupAlgebra.OpenSsl.Internal
+namespace CompactCryptoGroupAlgebra.OpenSsl
 {
 
     /// <summary>
@@ -7,7 +7,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal
     /// <remarks>
     /// The enum values correspond directly to OpenSSL.
     /// </remarks>
-    internal enum PointEncoding : int
+    public enum PointEncoding : int
     {
         /** the point is encoded as z||x, where the octet z specifies
          *  which solution of the quadratic equation y is  */
@@ -19,7 +19,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal
         Hybrid = 6
     }
 
-    internal static class PointEncodingLength
+    public static class PointEncodingLength
     {
         /// <summary>
         /// Computes the bits required for a given encoding of an elliptic curve point.
