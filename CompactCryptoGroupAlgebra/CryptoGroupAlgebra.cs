@@ -21,7 +21,8 @@ using System.Security.Cryptography;
 namespace CompactCryptoGroupAlgebra
 {
     /// <summary>
-    /// Base implementation of <see cref="ICryptoGroupAlgebra{T}"/>.
+    /// Base implementation of <see cref="ICryptoGroupAlgebra{BigInteger, T}"/>
+    /// with <see cref="BigInteger"/> scalars.
     /// 
     /// Provides common implementations independent of the actual group details
     /// based on basic operations. Basic operations are left abstract and must
@@ -30,8 +31,10 @@ namespace CompactCryptoGroupAlgebra
     /// Group elements passed into algebraic operations are assumed to be valid values,
     /// this is not explicitly checked for and should be done by calling classes.
     /// </summary>
-    /// <typeparam name="T">The data type used for raw group elements the algebraic operations operate on.</typeparam>
-    public abstract class CryptoGroupAlgebra<T> : ICryptoGroupAlgebra<T> where T : notnull
+    /// <typeparam name="T">
+    /// The data type used for raw group elements the algebraic operations operate on.
+    /// </typeparam>
+    public abstract class CryptoGroupAlgebra<T> : ICryptoGroupAlgebra<BigInteger, T> where T : notnull
     {
         /// <inheritdoc/>
         public BigPrime Order { get; }

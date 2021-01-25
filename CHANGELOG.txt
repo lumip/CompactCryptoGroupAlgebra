@@ -1,4 +1,5 @@
 - 2.0.0-alpha
     - Added GenerateRandomElement to ICryptoGroupAlgebra interface
+    - Introduced generic type parameter for scalar types in major interfaces
 
 - 1.0.0 Initial Release

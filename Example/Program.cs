@@ -37,25 +37,25 @@ namespace Example
             BigInteger generator = 4;
 
             // Creating the group instance
-            CryptoGroup<BigInteger> group = MultiplicativeGroupAlgebra.CreateCryptoGroup(prime, order, generator);
+            var group = MultiplicativeGroupAlgebra.CreateCryptoGroup(prime, order, generator);
             DoDiffieHellman(group, randomNumberGenerator);
         }
 
-        private static void DoDiffieHellman<T>(
-            CryptoGroup<T> group, RandomNumberGenerator randomNumberGenerator
-        ) where T : notnull
+        private static void DoDiffieHellman<TScalar, TElement>(
+            CryptoGroup<TScalar, TElement> group, RandomNumberGenerator randomNumberGenerator
+        ) where TScalar : notnull where TElement : notnull
         {
             // Generating DH secret and public key for Alice
-            (BigInteger dhSecretAlice, CryptoGroupElement<T> dhPublicAlice) = 
+            (TScalar dhSecretAlice, CryptoGroupElement<TScalar, TElement> dhPublicAlice) = 
                 group.GenerateRandom(randomNumberGenerator);
 
             // Generating DH secret and public key for Bob
-            (BigInteger dhSecretBob, CryptoGroupElement<T> dhPublicBob) =
+            (TScalar dhSecretBob, CryptoGroupElement<TScalar, TElement> dhPublicBob) =
                 group.GenerateRandom(randomNumberGenerator);
 
             // Computing shared secret for Alice and Bob
-            CryptoGroupElement<T> sharedSecretBob = dhPublicAlice * dhSecretBob;
-            CryptoGroupElement<T> sharedSecretAlice = dhPublicBob * dhSecretAlice;
+            CryptoGroupElement<TScalar, TElement> sharedSecretBob = dhPublicAlice * dhSecretBob;
+            CryptoGroupElement<TScalar, TElement> sharedSecretAlice = dhPublicBob * dhSecretAlice;
 
             // Confirm that it's the same
             Debug.Assert(sharedSecretAlice.Equals(sharedSecretBob));

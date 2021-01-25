@@ -62,21 +62,23 @@ namespace CompactCryptoGroupAlgebra
             DoDiffieHellman(group);
         }
 
-        public static void DoDiffieHellman<T>(CryptoGroup<T> group) where T : notnull
+        public static void DoDiffieHellman<TScalar, TElement>(
+            CryptoGroup<TScalar, TElement> group
+        ) where TScalar : notnull where TElement : notnull
         {
             RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
 
             // Generating DH secret and public key for Alice
-            (BigInteger dhSecretAlice, CryptoGroupElement<T> dhPublicAlice) = 
+            (var dhSecretAlice, var dhPublicAlice) = 
                 group.GenerateRandom(randomNumberGenerator);
 
             // Generating DH secret and public key for Bob
-            (BigInteger dhSecretBob, CryptoGroupElement<T> dhPublicBob) =
+            (var dhSecretBob, var dhPublicBob) =
                 group.GenerateRandom(randomNumberGenerator);
 
             // Computing shared secret for Alice and Bob
-            CryptoGroupElement<T> sharedSecretBob = dhPublicAlice * dhSecretBob;
-            CryptoGroupElement<T> sharedSecretAlice = dhPublicBob * dhSecretAlice;
+            var sharedSecretBob = dhPublicAlice * dhSecretBob;
+            var sharedSecretAlice = dhPublicBob * dhSecretAlice;
 
             Assert.AreEqual(sharedSecretAlice, sharedSecretBob);
         }

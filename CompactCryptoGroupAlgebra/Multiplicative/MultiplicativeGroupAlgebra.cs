@@ -23,8 +23,8 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
     /// <summary>
     /// Algebraic group operations based on multiplications in the finite field of a prime number <c>P</c>.
     /// 
-    /// Through the <see cref="CryptoGroup{T}"/> interface, the addition represents
-    /// multiplication of two integers modulo <c>P</c>, while scalar multiplication
+    /// Through the <see cref="CryptoGroup{BigInteger, BigInteger}"/> interface, the addition
+    /// represents multiplication of two integers modulo <c>P</c>, while scalar multiplication
     /// is exponentiation of an integer modulo <c>P</c>.
     /// </summary>
     public class MultiplicativeGroupAlgebra : CryptoGroupAlgebra<BigInteger>
@@ -94,15 +94,15 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         }
 
         /// <summary>
-        /// Creates a <see cref="CryptoGroup{BigInteger}" /> instance using a <see cref="MultiplicativeGroupAlgebra" />
+        /// Creates a <see cref="CryptoGroup{BigInteger, BigInteger}" /> instance using a <see cref="MultiplicativeGroupAlgebra" />
         /// instance with the given parameters.
         /// </summary>
         /// <param name="prime">The prime modulo of the group.</param>
         /// <param name="order">The order of the group</param>
         /// <param name="generator">The generator of the group.</param>
-        public static CryptoGroup<BigInteger> CreateCryptoGroup(BigPrime prime, BigPrime order, BigInteger generator)
+        public static CryptoGroup<BigInteger, BigInteger> CreateCryptoGroup(BigPrime prime, BigPrime order, BigInteger generator)
         {
-            return new CryptoGroup<BigInteger>(new MultiplicativeGroupAlgebra(
+            return new CryptoGroup<BigInteger, BigInteger>(new MultiplicativeGroupAlgebra(
                 prime, order, generator
             ));
         }

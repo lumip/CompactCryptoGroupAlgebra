@@ -15,7 +15,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
-using System.Numerics;
 using System.Security.Cryptography;
 
 namespace CompactCryptoGroupAlgebra
@@ -31,35 +30,42 @@ namespace CompactCryptoGroupAlgebra
     /// A group features a generator from which each of its elements can
     /// be obtained by scalar multiplication with a unique scalar identifier.
     /// For safety reasons (i.e., resistance against small subgroup attacks)
-    /// generators of <see cref="CryptoGroup{T}"/> instances are always of prime
-    /// order.
+    /// generators of <see cref="CryptoGroup{TScalar, TElement}"/> instances
+    /// are always of prime order.
     ///
     /// The interface is intended to facilitate group operations as required
     /// e.g. in a Diffie-Hellman key exchange and related protocols.
     /// </summary>
-    /// <typeparam name="T">The data type used for raw group elements the algebraic operations operate on.</typeparam>
+    /// <typeparam name="TScalar">
+    /// The data type used to represent a scalar number for indexing group elements.
+    /// </typeparam>
+    /// <typeparam name="TElement">
+    /// The data type used for raw group elements the algebraic operations operate on.
+    /// </typeparam>
     /// <remarks>
-    /// <see cref="CryptoGroup{T}"/> provides a high-level API of algebraic operations
-    /// implemented in a <see cref="ICryptoGroupAlgebra{T}"/> instance, wrapping all
-    /// basic element type values in <see cref="CryptoGroupElement{T}" /> instances that
+    /// <see cref="CryptoGroup{TScalar, TElement}"/> provides a high-level API
+    /// of algebraic operations implemented in a <see cref="ICryptoGroupAlgebra{TScalar, TElement}"/>
+    /// instance, wrapping all basic element type values in
+    /// <see cref="CryptoGroupElement{TScalar, TElement}" /> instances that
     /// offer operator overloading.
     /// </remarks>
-    public class CryptoGroup<T> where T: notnull
+    public class CryptoGroup<TScalar, TElement> where TScalar : notnull where TElement : notnull
     {
 
         /// <summary>
-        /// The <see cref="ICryptoGroupAlgebra{T}"/> that provides
+        /// The <see cref="ICryptoGroupAlgebra{TScalar, TElement}"/> that provides
         /// implementations of underlying group operations on raw group element type
-        /// <typeparamref name="T"/>.
+        /// <typeparamref name="TElement"/>.
         /// </summary>
-        public ICryptoGroupAlgebra<T> Algebra { get; }
+        public ICryptoGroupAlgebra<TScalar, TElement> Algebra { get; }
 
         /// <summary>
-        /// Initializes a <see cref="CryptoGroup{T}"/> instance using a given <see cref="ICryptoGroupAlgebra{T}"/> instance
+        /// Initializes a <see cref="CryptoGroup{TScalar, TElement}"/> instance using a
+        /// given <see cref="ICryptoGroupAlgebra{TScalar, TElement}"/> instance
         /// for algebraic operations.
         /// </summary>
-        /// <param name="algebra">Group algebra implementation on raw data type <typeparamref name="T"/></param>
-        public CryptoGroup(ICryptoGroupAlgebra<T> algebra)
+        /// <param name="algebra">Group algebra implementation on raw data type <typeparamref name="TElement"/></param>
+        public CryptoGroup(ICryptoGroupAlgebra<TScalar, TElement> algebra)
         {
             Algebra = algebra;
         }
@@ -69,7 +75,7 @@ namespace CompactCryptoGroupAlgebra
         /// 
         /// The generator is a group element that allows to generate the entire group by scalar multiplication.
         /// </summary>
-        public CryptoGroupElement<T> Generator { get { return CreateGroupElement(Algebra.Generator); } }
+        public CryptoGroupElement<TScalar, TElement> Generator { get { return CreateGroupElement(Algebra.Generator); } }
 
         /// <summary>
         /// The length (in binary digits) of the group's order.
@@ -91,27 +97,36 @@ namespace CompactCryptoGroupAlgebra
         public NumberLength ElementLength { get { return NumberLength.FromBitLength(Algebra.ElementBitLength); } }
 
         /// <summary>
-        /// Creates a new <see cref="CryptoGroupElement{T}"/> instance for a given raw group element of type <typeparamref name="T"/>.
+        /// Creates a new <see cref="CryptoGroupElement{TScalar, TElement}"/> instance for a
+        /// given raw group element of type <typeparamref name="TElement"/>.
         /// </summary>
         /// <param name="value">Value of the group element as raw type.</param>
-        /// <returns>An <see cref="CryptoGroupElement{T}"/>instance representing the given value.</returns>
+        /// <returns>
+        /// A <see cref="CryptoGroupElement{TScalar, TElement}"/> instance
+        /// representing the given value.
+        /// </returns>
         /// <remarks>
-        /// Used to convert outputs of <see cref="ICryptoGroupAlgebra{T}"/> operations to <see cref="CryptoGroupElement{T}"/>
+        /// Used to convert outputs of <see cref="ICryptoGroupAlgebra{TScalar, TElement}"/>
+        /// operations to <see cref="CryptoGroupElement{TScalar, TElement}"/>
         /// instances by methods within this class.
         /// </remarks>
-        private CryptoGroupElement<T> CreateGroupElement(T value)
+        private CryptoGroupElement<TScalar, TElement> CreateGroupElement(TElement value)
         {
-            return new CryptoGroupElement<T>(value, Algebra);
+            return new CryptoGroupElement<TScalar, TElement>(value, Algebra);
         }
 
         /// <summary>
-        /// Creates a new <see cref="CryptoGroupElement{T}"/> instance from a byte representation of the group element.
+        /// Creates a new <see cref="CryptoGroupElement{TScalar, TElement}"/> instance from a
+        /// byte representation of the group element.
         /// </summary>
         /// <param name="buffer">Byte representation of the group elements.</param>
-        /// <returns>An <see cref="CryptoGroupElement{T}"/>instance representing the given value.</returns>
-        private CryptoGroupElement<T> CreateGroupElement(byte[] buffer)
+        /// <returns>
+        /// An <see cref="CryptoGroupElement{TScalar, TElement}"/> instance
+        /// representing the given value.
+        /// </returns>
+        private CryptoGroupElement<TScalar, TElement> CreateGroupElement(byte[] buffer)
         {
-            return new CryptoGroupElement<T>(buffer, Algebra);
+            return new CryptoGroupElement<TScalar, TElement>(buffer, Algebra);
         }
 
         /// <summary>
@@ -123,7 +138,9 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="left">Group element to add.</param>
         /// <param name="right">Group element to add.</param>
         /// <returns>The result of the group addition.</returns>
-        public CryptoGroupElement<T> Add(CryptoGroupElement<T> left, CryptoGroupElement<T> right)
+        public CryptoGroupElement<TScalar, TElement> Add(
+            CryptoGroupElement<TScalar, TElement> left, CryptoGroupElement<TScalar, TElement> right
+        )
         {
             if (!left.Algebra.Equals(Algebra))
                 throw new ArgumentException("The argument is not an element of the group.", nameof(left));
@@ -137,7 +154,7 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="buffer">Byte array holding a representation of a group element.</param>
         /// <returns>The group element as an instance of CryptoGroupElement.</returns>
-        public CryptoGroupElement<T> FromBytes(byte[] buffer)
+        public CryptoGroupElement<TScalar, TElement> FromBytes(byte[] buffer)
         {
             return CreateGroupElement(buffer);
         }
@@ -154,7 +171,7 @@ namespace CompactCryptoGroupAlgebra
         ///  that uniquely identifies the element to generate.
         /// </param>
         /// <returns>The group element uniquely identified by the index.</returns>
-        public CryptoGroupElement<T> Generate(BigInteger index)
+        public CryptoGroupElement<TScalar, TElement> Generate(TScalar index)
         {
             return CreateGroupElement(Algebra.GenerateElement(index));
         }
@@ -168,7 +185,9 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="element">A group element.</param>
         /// <param name="k">A scalar.</param>
         /// <returns>The result of the multiplication.</returns>
-        public CryptoGroupElement<T> MultiplyScalar(CryptoGroupElement<T> element, BigInteger k)
+        public CryptoGroupElement<TScalar, TElement> MultiplyScalar(
+            CryptoGroupElement<TScalar, TElement> element, TScalar k
+        )
         {
             if (!element.Algebra.Equals(Algebra))
                 throw new ArgumentException("The argument is not an element of the group.", nameof(element));
@@ -182,7 +201,7 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="element">The group element to negate.</param>
         /// <returns>The negation of the given element in the group.</returns>
-        public CryptoGroupElement<T> Negate(CryptoGroupElement<T> element)
+        public CryptoGroupElement<TScalar, TElement> Negate(CryptoGroupElement<TScalar, TElement> element)
         {
             if (!element.Algebra.Equals(Algebra))
                 throw new ArgumentException("The argument is not an element of the group.", nameof(element));
@@ -196,17 +215,15 @@ namespace CompactCryptoGroupAlgebra
         /// order uniformly at random and then multiplying the group's generator with
         /// that index.
         ///
-        /// To obtain a group element for a given index, see <see cref="Generate(BigInteger)"/>.
+        /// To obtain a group element for a given index, see <see cref="Generate(TScalar)"/>.
         /// </summary>
         /// <param name="randomNumberGenerator">A (cryptographically strong) random number generator instance from
         /// which the index will be drawn.
         /// </param>
         /// <returns>A tuple of the random index and the corresponding group element.</returns>
-        public (BigInteger, CryptoGroupElement<T>) GenerateRandom(RandomNumberGenerator randomNumberGenerator)
+        public (TScalar, CryptoGroupElement<TScalar, TElement>) GenerateRandom(RandomNumberGenerator randomNumberGenerator)
         {
-            BigInteger index;
-            T element;
-            (index, element) = Algebra.GenerateRandomElement(randomNumberGenerator);
+            (var index, var element) = Algebra.GenerateRandomElement(randomNumberGenerator);
             return (index, CreateGroupElement(element));
         }
     }

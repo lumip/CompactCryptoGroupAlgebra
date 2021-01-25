@@ -29,7 +29,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// information container and implements no algebraic operations. To perform
     /// elliptic curve operations directly with CurvePoint, use the methods of
     /// <see cref="CurveGroupAlgebra"/>. If you only need generic cryptographic
-    /// group algebra, use <see cref="CryptoGroup{CurvePoint}"/> instead.
+    /// group algebra, use <see cref="CryptoGroup{BigInteger, CurvePoint}"/> instead.
     /// </summary>
     public readonly struct CurvePoint : IEquatable<CurvePoint>
     {

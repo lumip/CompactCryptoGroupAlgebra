@@ -28,13 +28,15 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// characteristic <c>P</c>. Elements of the groups are all points (<c>x mod P</c>, <c>y mod P</c>) that satisfy
     /// the curve equation (and the additional "point at infinity" as neutral element).
     ///
-    /// The exact parameters of the curve (<c>A</c>, <c>B</c>, <c>P</c>) are encoded in a <see cref="CurveParameters"/> object.
+    /// The exact parameters of the curve (<c>A</c>, <c>B</c>, <c>P</c>) are
+    /// encoded in a <see cref="CurveParameters"/> object.
     ///
     /// The x-coordinate-only specification is computationally more efficient (and elements require less
     /// storage) but does not have a well-defined addition for arbitrary points.
-    /// <see cref="ICryptoGroupAlgebra{E}.Add(E, E)"/> and <see cref="ICryptoGroupAlgebra{E}.Negate(E)"/>
+    /// <see cref="ICryptoGroupAlgebra{BigInteger, BigInteger}.Add(BigInteger, BigInteger)"/> and
+    /// <see cref="ICryptoGroupAlgebra{BigInteger, BigInteger}.Negate(BigInteger)"/>
     /// are therefore not implemented (however, 
-    /// <see cref="ICryptoGroupAlgebra{E}.MultiplyScalar(E, BigInteger)"/> is).
+    /// <see cref="ICryptoGroupAlgebra{BigInteger, BigInteger}.MultiplyScalar(BigInteger, BigInteger)"/> is).
     /// If you require full addition on arbitrary points, use <see cref="CurveGroupAlgebra"/> with
     /// a <see cref="MontgomeryCurveEquation"/> instance.
     /// 
@@ -256,13 +258,13 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         }
 
         /// <summary>
-        /// Creates a <see cref="CryptoGroup{BigInteger}" /> instance using a <see cref="XOnlyMontgomeryCurveAlgebra" />
+        /// Creates a <see cref="CryptoGroup{BigInteger, BigInteger}" /> instance using a <see cref="XOnlyMontgomeryCurveAlgebra" />
         /// instance with the given <see cref="CurveParameters"/>.
         /// </summary>
         /// <param name="parameters">The parameters of the elliptic curve.</param>
-        public static CryptoGroup<BigInteger> CreateCryptoGroup(CurveParameters parameters)
+        public static CryptoGroup<BigInteger, BigInteger> CreateCryptoGroup(CurveParameters parameters)
         {
-            return new CryptoGroup<BigInteger>(
+            return new CryptoGroup<BigInteger, BigInteger>(
                 new XOnlyMontgomeryCurveAlgebra(parameters)
             );
         }

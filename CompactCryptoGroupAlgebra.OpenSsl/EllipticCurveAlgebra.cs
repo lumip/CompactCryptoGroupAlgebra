@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 namespace CompactCryptoGroupAlgebra.OpenSsl
 {
 
-    public class EllipticCurveAlgebra : ICryptoGroupAlgebra<ECPoint>, IDisposable
+    public class EllipticCurveAlgebra : ICryptoGroupAlgebra<BigInteger, ECPoint>, IDisposable
     {
 
         private static readonly PointEncoding GroupPointEncoding = PointEncoding.Compressed;
