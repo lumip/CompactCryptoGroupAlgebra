@@ -43,6 +43,16 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static BigNumberHandle BN_lebin2bn(byte[] buffer, int len, BigNumberHandle ret);
+
+        [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
+        private extern static int BN_mod_mul(BigNumberHandle r, BigNumberHandle a, BigNumberHandle b, BigNumberHandle m, BigNumberContextHandle ctx);
+
+        [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
+        private extern static int BN_priv_rand_range(BigNumberHandle rnd, BigNumberHandle range);
+
+        [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
+        private extern static int BN_mod_exp_mont_consttime(BigNumberHandle result, BigNumberHandle a, BigNumberHandle exponent,
+                              BigNumberHandle modulo, BigNumberContextHandle ctx, BigNumberMontgomeryContextHandle montCtx);
 #endregion
 
 #region Checked Native Methods
@@ -102,6 +112,33 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
             var result = BN_lebin2bn(buffer, buffer.Length, target);
             if (result.IsInvalid) throw new OpenSslNativeException();
             return result;
+        }
+
+        public static void ModMul(BigNumberHandle r, BigNumberHandle a, BigNumberHandle b, BigNumberHandle m, BigNumberContextHandle ctx)
+        {
+            Debug.Assert(!r.IsInvalid, $"Accessed an invalid BigNumberHandle! <{nameof(r)}>");
+            Debug.Assert(!a.IsInvalid, $"Accessed an invalid BigNumberHandle! <{nameof(a)}>");
+            Debug.Assert(!b.IsInvalid, $"Accessed an invalid BigNumberHandle! <{nameof(b)}>");
+            Debug.Assert(!m.IsInvalid, $"Accessed an invalid BigNumberHandle! <{nameof(m)}>");
+            Debug.Assert(!ctx.IsInvalid, $"Accessed an invalid BigNumberContextHandle! <{nameof(ctx)}>");
+            if (BN_mod_mul(r, a, b, m, ctx) == 0) throw new OpenSslNativeException();
+        }
+
+        public static void SecureModExp(BigNumberHandle r, BigNumberHandle a, BigNumberHandle e, BigNumberHandle m, BigNumberContextHandle ctx)
+        {
+            Debug.Assert(!r.IsInvalid, $"Accessed an invalid BigNumberHandle! <{nameof(r)}>");
+            Debug.Assert(!a.IsInvalid, $"Accessed an invalid BigNumberHandle! <{nameof(a)}>");
+            Debug.Assert(!e.IsInvalid, $"Accessed an invalid BigNumberHandle! <{nameof(e)}>");
+            Debug.Assert(!m.IsInvalid, $"Accessed an invalid BigNumberHandle! <{nameof(m)}>");
+            Debug.Assert(!ctx.IsInvalid, $"Accessed an invalid BigNumberContextHandle! <{nameof(ctx)}>");
+            if (BN_mod_exp_mont_consttime(r, a, e, m, ctx, BigNumberMontgomeryContextHandle.Null) == 0) throw new OpenSslNativeException();
+        }
+
+        public static void SecureRandom(BigNumberHandle rnd, BigNumberHandle range)
+        {
+            Debug.Assert(!rnd.IsInvalid, $"Accessed an invalid BigNumberHandle! <{nameof(rnd)}>");
+            Debug.Assert(!range.IsInvalid, $"Accessed an invalid BigNumberHandle! <{nameof(range)}>");
+            if (BN_priv_rand_range(rnd, range) == 0) throw new OpenSslNativeException();
         }
 #endregion
 

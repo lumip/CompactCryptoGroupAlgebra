@@ -3,65 +3,53 @@ using NUnit.Framework;
 using System;
 using System.Numerics;
 
-namespace CompactCryptoGroupAlgebra.OpenSsl.Internal
+using CompactCryptoGroupAlgebra.OpenSsl.Internal.Native;
+
+namespace CompactCryptoGroupAlgebra.OpenSsl
 {
     public class BigNumberTests
     {
 
         [Test]
-        [TestCase(false)]
-        [TestCase(true)]
-        public void TestConstructor(bool useSecure)
+        public void TestConstructor()
         {
-            var number = new BigNumber(useSecure);
-            Assert.That(number.IsSecure == useSecure);
-            Assert.That(number.IsConstantTime == useSecure);
+            var number = new BigNumber();
+            Assert.That(!number.Handle.IsInvalid);
+            Assert.That(!number.Handle.IsClosed);
         }
 
         [Test]
-        [TestCase(false)]
-        [TestCase(true)]
-        public void TestBigIntegerConstructor(bool useSecure)
+        public void TestBigIntegerConstructor()
         {
             var rawValue = 936758;
             var bigInteger = new BigInteger(rawValue);
             var expected = new BigNumber(rawValue);
 
-            var number = new BigNumber(bigInteger, useSecure);
-            Assert.That(number.IsSecure == useSecure);
-            Assert.That(number.IsConstantTime == useSecure);
+            var number = new BigNumber(bigInteger);
 
             Assert.That(number.Equals(expected));
         }
 
         [Test]
-        [TestCase(false)]
-        [TestCase(true)]
-        public void TestIntegerConstructor(bool useSecure)
+        public void TestIntegerConstructor()
         {
             var rawValue = 869235;
-            var number = new BigNumber(rawValue, useSecure);
-            Assert.That(number.IsSecure == useSecure);
-            Assert.That(number.IsConstantTime == useSecure);
+            var number = new BigNumber(rawValue);
 
-            using (var expectedHandle = Native.BigNumberHandle.Create())
+            using (var expectedHandle = BigNumberHandle.Create())
             {
-                Native.BigNumberHandle.SetWord(expectedHandle, (ulong)rawValue);
-                Assert.That(Native.BigNumberHandle.Compare(number.Handle, expectedHandle) == 0);
+                BigNumberHandle.SetWord(expectedHandle, (ulong)rawValue);
+                Assert.That(BigNumberHandle.Compare(number.Handle, expectedHandle) == 0);
             }
         }
 
         [Test]
-        [TestCase(false)]
-        [TestCase(true)]
-        public void TestBytesConstructor(bool useSecure)
+        public void TestBytesConstructor()
         {
             var rawValue = new byte[] { 0x07, 0x8f, 0xa4 };
             var expected = new BigNumber(0xa48f07);
 
-            var number = new BigNumber(rawValue, useSecure);
-            Assert.That(number.IsSecure == useSecure);
-            Assert.That(number.IsConstantTime == useSecure);
+            var number = new BigNumber(rawValue);
 
             Assert.That(number.Equals(expected));
         }
@@ -81,21 +69,26 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal
         [Test]
         public void TestFromRawHandleFailsOnInvalid()
         {
-            var invalidHandle = new Native.BigNumberHandle();
+            var invalidHandle = new BigNumberHandle();
             Assert.That(invalidHandle.IsInvalid);
             Assert.Throws<ArgumentException>(() => BigNumber.FromRawHandle(invalidHandle));
         }
 
         [Test]
-        [TestCase(false)]
-        [TestCase(true)]
-        public void TestFromRawHandle(bool useSecure)
+        public void TestFromRawHandleFailsWithSecure()
         {
-            using (var handle = Native.BigNumberHandle.Create())
+            var secureHandle = BigNumberHandle.CreateSecure();
+            Assert.Throws<ArgumentException>(() => BigNumber.FromRawHandle(secureHandle));
+        }
+
+        [Test]
+        public void TestFromRawHandle()
+        {
+            using (var handle = BigNumberHandle.Create())
             {
-                Native.BigNumberHandle.SetWord(handle, 3);
-                var number = BigNumber.FromRawHandle(handle, useSecure);
-                Assert.That(Native.BigNumberHandle.Compare(number.Handle, handle) == 0);
+                BigNumberHandle.SetWord(handle, 3);
+                var number = BigNumber.FromRawHandle(handle);
+                Assert.That(BigNumberHandle.Compare(number.Handle, handle) == 0);
             }
         }
 
@@ -171,6 +164,41 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal
             var number = new BigNumber(rawValue);
             
             Assert.That(number.ToString().Equals(expected));
+        }
+
+        [Test]
+        public void TestModMul()
+        {
+            ulong firstNumberRaw = 69345;
+            ulong secondNumberRaw = 97628;
+            ulong moduloRaw = 100001;
+            ulong resultRaw = (firstNumberRaw * secondNumberRaw) % moduloRaw;
+            var expected = new BigNumber(resultRaw);
+
+            var firstNumber = new BigNumber(firstNumberRaw);
+            var secondNumber = new BigNumber(secondNumberRaw);
+            var modulo = new BigNumber(moduloRaw);
+
+            var result = firstNumber.ModMul(secondNumber, modulo);
+            Assert.That(result.Equals(expected));
+        }
+
+        [Test]
+        public void TestModExp()
+        {
+            var baseRaw = 96235;
+            var exponentRaw = 7354;
+            var moduloRaw = 200001;
+            var resultRaw = BigInteger.ModPow(baseRaw, exponentRaw, moduloRaw);
+            var expected = new BigNumber(resultRaw);
+
+            var basis = new BigNumber(baseRaw);
+            var exponent = SecureBigNumber.FromBigNumber(new BigNumber(exponentRaw));
+            var modulo = new BigNumber(moduloRaw);
+
+            var result = basis.ModExp(exponent, modulo);
+
+            Assert.That(result.Equals(expected));
         }
     }
 }

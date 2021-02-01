@@ -2,7 +2,6 @@ using NUnit.Framework;
 using System;
 
 using CompactCryptoGroupAlgebra.OpenSsl.Internal.Native;
-using CompactCryptoGroupAlgebra.OpenSsl.Internal;
 
 namespace CompactCryptoGroupAlgebra.OpenSsl
 {

@@ -200,9 +200,10 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
                 Debug.Assert(!pubKeyHandle.IsInvalid);
                 var point = new ECPoint(Handle, pubKeyHandle);
 
-                using (var factor = BigNumber.FromRawHandle(privKeyHandle, secure: true))
+                using (var factor = SecureBigNumber.FromRawHandle(privKeyHandle))
                 {
-                    return (factor.ToBigInteger(), point);
+                    throw new NotSupportedException("returning BigInteger indices is not supported!");
+                    // return (factor.ToBigInteger(), point);
                 }
             }
         }
