@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System.Numerics;
 using System.Security.Cryptography;
 
 namespace CompactCryptoGroupAlgebra
@@ -69,7 +70,7 @@ namespace CompactCryptoGroupAlgebra
         /// the embedded subgroup represented by the current
         /// <see cref="ICryptoGroupAlgebra{TScalar, TElement}"/>.
         /// </summary>
-        TScalar Cofactor { get; }
+        BigInteger Cofactor { get; }
 
         /// <summary>
         /// The maximum bit length of elements of the group.
