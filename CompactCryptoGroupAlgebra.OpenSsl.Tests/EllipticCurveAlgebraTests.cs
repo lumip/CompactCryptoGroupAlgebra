@@ -3,7 +3,6 @@ using System;
 using System.Numerics;
 using System.Security.Cryptography;
 
-using CompactCryptoGroupAlgebra.OpenSsl.Internal;
 using CompactCryptoGroupAlgebra.OpenSsl.Internal.Native;
 
 namespace CompactCryptoGroupAlgebra.OpenSsl
@@ -117,14 +116,14 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             var groupHandle = ECGroupHandle.CreateByCurveNID((int)EllipticCurveID.Prime256v1);
             var ctx = BigNumberContextHandle.Create();
 
-            var factor = new BigInteger(13);
+            var factor = SecureBigNumber.FromBigNumber(new BigNumber(13));
 
             var basePointFactor = new BigInteger(27);
             var point = new ECPoint(groupHandle);
             ECPointHandle.Multiply(groupHandle, point.Handle, new BigNumber(basePointFactor).Handle, ECPointHandle.Null, BigNumberHandle.Null, ctx);
 
             var expected = new ECPoint(groupHandle);
-            ECPointHandle.Multiply(groupHandle, expected.Handle, BigNumberHandle.Null, point.Handle, new BigNumber(factor).Handle, ctx);
+            ECPointHandle.Multiply(groupHandle, expected.Handle, BigNumberHandle.Null, point.Handle, factor.Handle, ctx);
             
             var result = algebra.MultiplyScalar(point, factor);
 
@@ -141,10 +140,12 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             var groupHandle = ECGroupHandle.CreateByCurveNID((int)EllipticCurveID.Prime256v1);
 
             var ctx = BigNumberContextHandle.Create();
-            var index = BigInteger.Parse("97752369786356789875745735", System.Globalization.NumberStyles.Integer);
+            var index = SecureBigNumber.FromBigNumber(new BigNumber(
+                BigInteger.Parse("97752369786356789875745735", System.Globalization.NumberStyles.Integer)
+            ));
 
             var expected = new ECPoint(groupHandle);
-            ECPointHandle.Multiply(groupHandle, expected.Handle, new BigNumber(index).Handle, ECPointHandle.Null, BigNumberHandle.Null, ctx);
+            ECPointHandle.Multiply(groupHandle, expected.Handle, index.Handle, ECPointHandle.Null, BigNumberHandle.Null, ctx);
             
             var result = algebra.GenerateElement(index);
 

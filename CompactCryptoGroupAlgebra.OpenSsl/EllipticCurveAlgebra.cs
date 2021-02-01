@@ -1,13 +1,12 @@
 using System;
 using System.Numerics;
-using CompactCryptoGroupAlgebra.OpenSsl.Internal;
 using CompactCryptoGroupAlgebra.OpenSsl.Internal.Native;
 using System.Security.Cryptography;
 
 namespace CompactCryptoGroupAlgebra.OpenSsl
 {
 
-    public class EllipticCurveAlgebra : ICryptoGroupAlgebra<BigInteger, ECPoint>, IDisposable
+    public class EllipticCurveAlgebra : ICryptoGroupAlgebra<SecureBigNumber, ECPoint>, IDisposable
     {
 
         private static readonly PointEncoding GroupPointEncoding = PointEncoding.Compressed;
@@ -127,16 +126,13 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             return ECPoint.CreateFromBytes(Handle, buffer);
         }
 
-        public ECPoint GenerateElement(BigInteger index)
+        public ECPoint GenerateElement(SecureBigNumber index)
         {
-            using (var i = new BigNumber(index))
+            using (var ctx = BigNumberContextHandle.Create())
             {
-                using (var ctx = BigNumberContextHandle.Create())
-                {
-                    var res = new ECPoint(Handle);
-                    ECPointHandle.Multiply(Handle, res.Handle, i.Handle, ECPointHandle.Null, BigNumberHandle.Null, ctx);
-                    return res;
-                }
+                var res = new ECPoint(Handle);
+                ECPointHandle.Multiply(Handle, res.Handle, index.Handle, ECPointHandle.Null, BigNumberHandle.Null, ctx);
+                return res;
             }
         }
 
@@ -148,16 +144,13 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             }
         }
 
-        public ECPoint MultiplyScalar(ECPoint e, BigInteger k)
+        public ECPoint MultiplyScalar(ECPoint e, SecureBigNumber k)
         {
-            using (var factor = new BigNumber(k))
+            using (var ctx = BigNumberContextHandle.Create())
             {
-                using (var ctx = BigNumberContextHandle.Create())
-                {
-                    var res = new ECPoint(Handle);
-                    ECPointHandle.Multiply(Handle, res.Handle, BigNumberHandle.Null, e.Handle, factor.Handle, ctx);
-                    return res;
-                }
+                var res = new ECPoint(Handle);
+                ECPointHandle.Multiply(Handle, res.Handle, BigNumberHandle.Null, e.Handle, k.Handle, ctx);
+                return res;
             }
         }
 
@@ -176,7 +169,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             return element.ToBytes(GroupPointEncoding);
         }
 
-        public (BigInteger, ECPoint) GenerateRandomElement(RandomNumberGenerator randomNumberGenerator)
+        public (SecureBigNumber, ECPoint) GenerateRandomElement(RandomNumberGenerator randomNumberGenerator)
         {
             using (var keyHandle = ECKeyHandle.Create())
             {
@@ -200,11 +193,8 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
                 Debug.Assert(!pubKeyHandle.IsInvalid);
                 var point = new ECPoint(Handle, pubKeyHandle);
 
-                using (var factor = SecureBigNumber.FromRawHandle(privKeyHandle))
-                {
-                    throw new NotSupportedException("returning BigInteger indices is not supported!");
-                    // return (factor.ToBigInteger(), point);
-                }
+                var index = SecureBigNumber.FromRawHandle(privKeyHandle);
+                return (index, point);
             }
         }
 
