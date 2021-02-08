@@ -11,6 +11,7 @@ namespace CompactCryptoGroupAlgebra
     interface ICryptoGroupAlgebraProtectedMembers
     {
         int MultiplyScalarUnchecked(int e, BigInteger k, int factorBitLength);
+        bool IsElementDerived(int e);
     }
 
     [TestFixture]
@@ -317,6 +318,80 @@ namespace CompactCryptoGroupAlgebra
                 );
 
             rngMock.Verify(rng => rng.GetBytes(It.Is<byte[]>(x => x.Length == orderByteLength)), Times.Once());
+        }
+
+        [Test]
+        public void TestIsElement()
+        {
+            var order = BigPrime.CreateWithoutChecks(11);
+            int element = 7;
+
+            var generatorStub = 1;
+            var cofactor = new BigInteger(2);
+            var neutralElement = 0;
+            var elementBitLength = 8;
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, cofactor, neutralElement, elementBitLength) { CallBase = true };
+            algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
+                .Setup(alg => alg.IsElementDerived(It.IsAny<int>()))
+                .Returns(true);
+            algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
+                .Setup(alg => alg.MultiplyScalarUnchecked(It.IsAny<int>(), It.Is<BigInteger>(x => x.Equals(cofactor)), It.IsAny<int>()))
+                .Returns(element);
+            algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
+                .Setup(alg => alg.MultiplyScalarUnchecked(It.IsAny<int>(), It.Is<BigInteger>(x => x.Equals(order)), It.IsAny<int>()))
+                .Returns(neutralElement);
+
+
+            Assert.IsTrue(algebraMock.Object.IsElement(element));
+        }
+
+        [Test]
+        public void TestIsElementFalseForUnsafeSubgroup()
+        {
+            var order = BigPrime.CreateWithoutChecks(11);
+            int element = 7;
+
+            var generatorStub = 1;
+            var cofactor = new BigInteger(2);
+            var neutralElement = 0;
+            var elementBitLength = 8;
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, cofactor, neutralElement, elementBitLength) { CallBase = true };
+            algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
+                .Setup(alg => alg.IsElementDerived(It.IsAny<int>()))
+                .Returns(true);
+
+            // an element is in an unsafe subgroup if it results in neutral element when multiplied by cofactor
+            algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
+                .Setup(alg => alg.MultiplyScalarUnchecked(It.IsAny<int>(), It.Is<BigInteger>(x => x.Equals(cofactor)), It.IsAny<int>()))
+                .Returns(neutralElement);
+
+
+            Assert.IsFalse(algebraMock.Object.IsElement(element));
+        }
+
+        [Test]
+        public void TestIsElementFalseIfDerivedIsFalse()
+        {
+            var order = BigPrime.CreateWithoutChecks(11);
+            int element = 7;
+
+            var generatorStub = 1;
+            var cofactor = new BigInteger(2);
+            var neutralElement = 0;
+            var elementBitLength = 8;
+
+            var algebraMock = new Mock<CryptoGroupAlgebra<int>>(generatorStub, order, cofactor, neutralElement, elementBitLength) { CallBase = true };
+            algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
+                .Setup(alg => alg.IsElementDerived(It.IsAny<int>()))
+                .Returns(false);
+            algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
+                .Setup(alg => alg.MultiplyScalarUnchecked(It.IsAny<int>(), It.IsAny<BigInteger>(), It.IsAny<int>()))
+                .Returns(1);
+
+
+            Assert.IsFalse(algebraMock.Object.IsElement(element));
         }
 
     }

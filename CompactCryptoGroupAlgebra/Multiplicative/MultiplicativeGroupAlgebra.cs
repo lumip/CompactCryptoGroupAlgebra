@@ -57,6 +57,14 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         }
 
         /// <inheritdoc/>
+        public override BigInteger Negate(BigInteger e)
+        {
+            (_, _, BigInteger r) = ExtendedEuclideanAlgorithm.GreatestCommonDivisor(Prime, e);
+            r = (r + Prime) % Prime;
+            return r;
+        }
+
+        /// <inheritdoc/>
         protected override bool IsElementDerived(BigInteger element)
         {
             return (element > BigInteger.Zero && element < Prime);

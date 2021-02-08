@@ -18,6 +18,7 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
                 order: BigPrime.CreateWithoutChecks(11),
                 generator: 2
             );
+            // group elements: 1,  2,  3,  4,  6,  8,  9, 12, 13, 16, 18
         }
 
         [Test]
@@ -35,9 +36,9 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         [TestCase(2, 9)]
         [TestCase(3, 4)]
         [TestCase(4, 12)]
-        [TestCase(5, 13)]
         [TestCase(6, 16)]
         [TestCase(13, 9)]
+        [TestCase(5, 13)] // this is not part of the actual (sub)group but the embedding group, we confirm that it works anyways
         public void TestMultiplyScalar(int scalarInt, int expectedInt)
         {
             var k = new BigInteger(scalarInt);
@@ -70,8 +71,9 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
 
         [Test]
         [TestCase(2)]
-        [TestCase(5)]
-        [TestCase(10)]
+        [TestCase(9)]
+        [TestCase(13)]
+        [TestCase(5)] // this is not part of the actual (sub)group but the embedding group, we confirm that it works anyways
         public void TestIsElementAcceptsValidElements(int elementInt)
         {
             var element = new BigInteger(elementInt);
@@ -113,12 +115,25 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         [Test]
         [TestCase(1)]
         [TestCase(2)]
-        [TestCase(5)]
-        [TestCase(10)]
+        [TestCase(9)]
+        [TestCase(18)]
         public void TestNegate(int elementInt)
         {
             var x = new BigInteger(elementInt);
-            Assert.AreEqual(groupAlgebra!.MultiplyScalar(x, groupAlgebra!.Order - 1), groupAlgebra!.Negate(x));
+            var negated = groupAlgebra!.Negate(x);
+
+            Assert.AreEqual(groupAlgebra!.Add(negated, x), BigInteger.One, "adding negated value does not result in neutral element");
+            Assert.AreEqual(groupAlgebra!.MultiplyScalar(x, groupAlgebra!.Order - 1), negated, "negated value not as expected");
+        }
+
+        public void TestNegateForNonSubgroup()
+        {
+            var x = new BigInteger(5);
+            var negated = groupAlgebra!.Negate(x);
+
+            Assert.AreEqual(groupAlgebra!.Add(negated, x), BigInteger.One,
+                "adding negated value for embedding group element does not result in neutral element"
+            );
         }
 
         [Test]
@@ -195,22 +210,22 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         {
             var otherAlgebra = new MultiplicativeGroupAlgebra(
                 BigPrime.CreateWithoutChecks(59),
-                BigPrime.CreateWithoutChecks(11),
-                2
-            );
-            Assert.IsFalse(groupAlgebra!.Equals(otherAlgebra));
-
-            otherAlgebra = new MultiplicativeGroupAlgebra(
-                BigPrime.CreateWithoutChecks(23),
-                BigPrime.CreateWithoutChecks(7),
-                2
+                BigPrime.CreateWithoutChecks(29),
+                5
             );
             Assert.IsFalse(groupAlgebra!.Equals(otherAlgebra));
 
             otherAlgebra = new MultiplicativeGroupAlgebra(
                 BigPrime.CreateWithoutChecks(23),
                 BigPrime.CreateWithoutChecks(11),
-                4
+                8
+            );
+            Assert.IsFalse(groupAlgebra!.Equals(otherAlgebra));
+
+            otherAlgebra = new MultiplicativeGroupAlgebra(
+                BigPrime.CreateWithoutChecks(23),
+                BigPrime.CreateWithoutChecks(23),
+                5
             );
             Assert.IsFalse(groupAlgebra!.Equals(otherAlgebra));
         }
