@@ -28,6 +28,9 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static int EC_GROUP_get_degree(ECGroupHandle group);
+
+        [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
+        private extern static int EC_GROUP_cmp(ECGroupHandle a, ECGroupHandle b, BigNumberContextHandle ctx);
 #endregion
 
 #region Checked Native Methods
@@ -80,6 +83,17 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
             var result = EC_GROUP_get_degree(group);
             if (result == 0) throw new OpenSslNativeException();
             return result;
+        }
+
+        public static bool Compare(ECGroupHandle a, ECGroupHandle b, BigNumberContextHandle ctx)
+        {
+            Debug.Assert(!a.IsInvalid, $"Accessed an invalid ECGroupHandle! <{nameof(a)}>");
+            Debug.Assert(!b.IsInvalid, $"Accessed an invalid ECGroupHandle! <{nameof(b)}>");
+            Debug.Assert(!ctx.IsInvalid, $"Accessed an invalid BigNumberContextHandle! <{nameof(ctx)}>");
+            var result = EC_GROUP_cmp(a, b, ctx);
+            if (result == -1) throw new OpenSslNativeException();
+            else if (result == 0) return true;
+            return false;
         }
 #endregion
 

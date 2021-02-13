@@ -134,6 +134,26 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             }
         }
 
+        public BigNumber ModExp(BigNumber exponent, BigNumber modulo)
+        {
+            using (var ctx = BigNumberContextHandle.CreateSecure())
+            {
+                var result = new BigNumber();
+                BigNumberHandle.ModExp(result.Handle, Handle, exponent.Handle, modulo.Handle, ctx);
+                return result;
+            }
+        }
+
+        public BigNumber ModReciprocal(BigNumber modulo)
+        {
+            using (var ctx = BigNumberContextHandle.CreateSecure())
+            {
+                var result = new BigNumber();
+                BigNumberHandle.ModInverse(result.Handle, Handle, modulo.Handle, ctx);
+                return result;
+            }
+        }
+
         /// <inheritdocs />
         public void Dispose()
         {

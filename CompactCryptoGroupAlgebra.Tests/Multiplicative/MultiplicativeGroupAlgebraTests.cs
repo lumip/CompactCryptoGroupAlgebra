@@ -73,7 +73,6 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         [TestCase(2)]
         [TestCase(9)]
         [TestCase(13)]
-        [TestCase(5)] // this is not part of the actual (sub)group but the embedding group, we confirm that it works anyways
         public void TestIsElementAcceptsValidElements(int elementInt)
         {
             var element = new BigInteger(elementInt);

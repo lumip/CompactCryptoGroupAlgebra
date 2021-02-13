@@ -30,6 +30,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
 
         private BigPrime? _order;
 
+        /// <inheritdocs />
         public BigPrime Order
         {
             get
@@ -49,24 +50,19 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             }
         }
 
-        private ECPoint? _generator;
-
+        /// <inheritdocs />
         public ECPoint Generator
         {
             get
             {
-                if (_generator == null)
-                {
-                    var rawGenerator = ECGroupHandle.GetGenerator(Handle);
-
-                    _generator = new ECPoint(Handle, rawGenerator);
-                }
-                return _generator;
+                var rawGenerator = ECGroupHandle.GetGenerator(Handle);
+                return new ECPoint(Handle, rawGenerator);
             }
         }
 
         private ECPoint? _neutralElement;
 
+        /// <inheritdocs />
         public ECPoint NeutralElement
         {
             get
@@ -82,6 +78,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
 
         private BigInteger? _cofactor;
 
+        /// <inheritdocs />
         public BigInteger Cofactor
         {
             get
@@ -98,6 +95,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             }
         }
 
+        /// <inheritdocs />
         public int ElementBitLength 
         {
             get
@@ -106,6 +104,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             }
         }
 
+        /// <inheritdocs />
         public int OrderBitLength
         {
             get
@@ -114,6 +113,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             }
         }
 
+        /// <inheritdocs />
         public ECPoint Add(ECPoint left, ECPoint right)
         {
             var res = new ECPoint(Handle);
@@ -121,14 +121,16 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             return res;
         }
 
+        /// <inheritdocs />
         public ECPoint FromBytes(byte[] buffer)
         {
             return ECPoint.CreateFromBytes(Handle, buffer);
         }
 
+        /// <inheritdocs />
         public ECPoint GenerateElement(SecureBigNumber index)
         {
-            using (var ctx = BigNumberContextHandle.Create())
+            using (var ctx = BigNumberContextHandle.CreateSecure())
             {
                 var res = new ECPoint(Handle);
                 ECPointHandle.Multiply(Handle, res.Handle, index.Handle, ECPointHandle.Null, BigNumberHandle.Null, ctx);
@@ -136,17 +138,16 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             }
         }
 
+        /// <inheritdocs />
         public bool IsElement(ECPoint element)
         {
-            using (var ctx = BigNumberContextHandle.Create())
-            {
-                return ECPointHandle.IsOnCurve(Handle, element.Handle, ctx);
-            }
+            return ECPointHandle.IsOnCurve(Handle, element.Handle, _ctxHandle);
         }
 
+        /// <inheritdocs />
         public ECPoint MultiplyScalar(ECPoint e, SecureBigNumber k)
         {
-            using (var ctx = BigNumberContextHandle.Create())
+            using (var ctx = BigNumberContextHandle.CreateSecure())
             {
                 var res = new ECPoint(Handle);
                 ECPointHandle.Multiply(Handle, res.Handle, BigNumberHandle.Null, e.Handle, k.Handle, ctx);
@@ -154,21 +155,21 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             }
         }
 
+        /// <inheritdocs />
         public ECPoint Negate(ECPoint element)
         {
-            using (var ctx = BigNumberContextHandle.Create())
-            {
-                var p = new ECPoint(Handle, element.Handle);
-                ECPointHandle.InvertInPlace(Handle, p.Handle, ctx);
-                return p;
-            }
+            var p = new ECPoint(Handle, element.Handle);
+            ECPointHandle.InvertInPlace(Handle, p.Handle, _ctxHandle);
+            return p;
         }
 
+        /// <inheritdocs />
         public byte[] ToBytes(ECPoint element)
         {
             return element.ToBytes(GroupPointEncoding);
         }
 
+        /// <inheritdocs />
         public (SecureBigNumber, ECPoint) GenerateRandomElement(RandomNumberGenerator randomNumberGenerator)
         {
             using (var keyHandle = ECKeyHandle.Create())
@@ -198,6 +199,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             }
         }
 
+        /// <inheritdocs />
         public void Dispose()
         {
             Dispose(true);
@@ -212,6 +214,25 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
                 _ctxHandle.Dispose();
             }
         }
+
+        /// <inheritdocs />
+        public override bool Equals(object? obj)
+        {
+            EllipticCurveAlgebra? other = obj as EllipticCurveAlgebra;
+            if (other == null) return false;
+
+            return ECGroupHandle.Compare(this.Handle, other.Handle, _ctxHandle);
+        }
+        
+        /// <inheritdocs />
+        public override int GetHashCode()
+        {
+            int hashCode = 55837;
+            hashCode = hashCode * 233 + Order.GetHashCode();
+            hashCode = hashCode * 233 + Generator.GetHashCode();
+            return hashCode;
+        }
+
     }
 
 }

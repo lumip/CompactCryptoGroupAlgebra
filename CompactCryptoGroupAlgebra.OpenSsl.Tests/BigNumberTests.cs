@@ -184,7 +184,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
         }
 
         [Test]
-        public void TestModExp()
+        public void TestSecureModExp()
         {
             var baseRaw = 96235;
             var exponentRaw = 7354;
@@ -197,6 +197,36 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             var modulo = new BigNumber(moduloRaw);
 
             var result = basis.ModExp(exponent, modulo);
+
+            Assert.That(result.Equals(expected));
+        }
+
+        [Test]
+        public void TestModExp()
+        {
+            var baseRaw = 96235;
+            var exponentRaw = 7354;
+            var moduloRaw = 200001;
+            var resultRaw = BigInteger.ModPow(baseRaw, exponentRaw, moduloRaw);
+            var expected = new BigNumber(resultRaw);
+
+            var basis = new BigNumber(baseRaw);
+            var exponent = new BigNumber(exponentRaw);
+            var modulo = new BigNumber(moduloRaw);
+
+            var result = basis.ModExp(exponent, modulo);
+
+            Assert.That(result.Equals(expected));
+        }
+
+        [Test]
+        public void TestModReciprocal()
+        {
+            var numberRaw = 7652;
+            var modulo = BigPrime.CreateWithoutChecks(89237);
+            var number = new BigNumber(numberRaw);
+            var expected = number.ModExp(new BigNumber(modulo - 2), new BigNumber(modulo));
+            var result = number.ModReciprocal(new BigNumber(modulo));
 
             Assert.That(result.Equals(expected));
         }

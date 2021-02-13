@@ -236,6 +236,50 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             Assert.DoesNotThrow(algebra.Dispose);
         }
 
+
+        [Test]
+        public void TestEqualsTrue()
+        {
+            var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
+            var otherAlgebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
+
+            Assert.That(algebra.Equals(otherAlgebra));
+        }
+
+        [Test]
+        public void TestEqualsFalseForNull()
+        {
+            var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
+            Assert.That(!algebra.Equals(null));
+        }
+
+        [Test]
+        public void TestEqualsFalseForUnrelatedObject()
+        {
+            var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
+            var otherAlgebra = new object();
+            Assert.That(!algebra.Equals(otherAlgebra));
+        }
+
+        [Test]
+        public void TestEqualsFalseForOtherAlgebra()
+        {
+            var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
+            var otherAlgebra = new EllipticCurveAlgebra(EllipticCurveID.Prime239v3);
+            
+            Assert.That(!algebra.Equals(otherAlgebra));
+        }
+
+        [Test]
+        public void TestGetHashCodeSameForEqual()
+        {
+            var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
+            var otherAlgebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
+
+            Assert.That(algebra.GetHashCode() == otherAlgebra.GetHashCode());
+        }
+
+
     }
 
 }
