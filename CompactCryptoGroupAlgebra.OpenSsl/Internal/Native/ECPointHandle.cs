@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
 {
 
+    /// <summary>
+    /// A handle for OpenSSL <c>EC_POINT</c> structures.
+    /// </summary>
     sealed class ECPointHandle : NativeHandle
     {
 
@@ -154,8 +157,18 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
         private extern static void EC_POINT_clear_free(IntPtr point);
 #endregion
 
+        /// <summary>
+        /// Allocates a new OpenSSL <c>EC_POINT</c> structure and
+        /// returns a handle to it.
         ///
-        /// <remarks>Guaranteed to result in a valid handle if no exception.</remarks>
+        /// The returned handle is guaranteed to point to be valid,
+        /// i.e., point to a valid <c>EC_POINT</c> structure.
+        /// </summary>
+        /// <param name="group">Valid handle to a OpenSSL <c>EC_GROUP</c> structure.</param>
+        /// <returns>
+        /// A valid <see cref="ECPointHandle" /> pointing to a freshly allocated
+        /// <c>EC_POINT</c> structure associated with the <c>EC_GROUP</c> given by <paramref name="group"/>.
+        /// </returns>
         public static ECPointHandle Create(ECGroupHandle group)
         {
             var point = new ECPointHandle(EC_POINT_new(group), ownsHandle: true);
@@ -163,6 +176,9 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
             return point;
         }
 
+        /// <summary>
+        /// An unintialized handle. A null pointer.
+        /// </summary>
         public static ECPointHandle Null = new ECPointHandle();
 
         internal ECPointHandle() : base(ownsHandle: false)
@@ -170,6 +186,14 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
 
         }
 
+        /// <summary>
+        /// Creates a new <see cref="ECPointHandle" /> instance for
+        /// the given raw <paramref name="handle"/>.
+        /// </summary>
+        /// <param name="handle">A valid pointer to a OpenSSL <c>EC_POINT</c> structure.</param>
+        /// <param name="ownsHandle">
+        /// If <c>true</c>, the referred <c>EC_POINT</c> will be deleted from memory on disposal.
+        /// </param>
         internal ECPointHandle(IntPtr handle, bool ownsHandle) : base(ownsHandle)
         {
             SetHandle(handle);
@@ -179,6 +203,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
             }
         }
 
+        /// <inheritdocs />
         protected override bool ReleaseHandle()
         {
             EC_POINT_clear_free(this.handle);

@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
 {
 
+    /// <summary>
+    /// A handle for OpenSSL <c>EC_KEY</c> structures.
+    /// </summary>
     sealed class ECKeyHandle : NativeHandle
     {
 
@@ -66,8 +69,17 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
         private extern static void EC_KEY_free(IntPtr key);
 #endregion
 
+        /// <summary>
+        /// Allocates a new OpenSSL <c>EC_KEY</c> structure and
+        /// returns a handle to it.
         ///
-        /// <remarks>Guaranteed to result in a valid handle if no exception.</remarks>
+        /// The returned handle is guaranteed to point to be valid,
+        /// i.e., point to a valid <c>EC_KEY</c> structure.
+        /// </summary>
+        /// <returns>
+        /// A valid <see cref="ECPointHandle" /> pointing to a freshly allocated
+        /// <c>EC_KEY</c> structure.
+        /// </returns>
         public static ECKeyHandle Create()
         {
             var key = new ECKeyHandle(EC_KEY_new(), ownsHandle: true);
@@ -75,6 +87,9 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
             return key;
         }
 
+        /// <summary>
+        /// An unintialized handle. A null pointer.
+        /// </summary>
         public static ECKeyHandle Null = new ECKeyHandle();
 
         internal ECKeyHandle() : base(ownsHandle: false)
@@ -82,6 +97,14 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
 
         }
 
+        /// <summary>
+        /// Creates a new <see cref="ECKeyHandle" /> instance for
+        /// the given raw <paramref name="handle"/>.
+        /// </summary>
+        /// <param name="handle">A valid pointer to a OpenSSL <c>EC_KEY</c> structure.</param>
+        /// <param name="ownsHandle">
+        /// If <c>true</c>, the referred <c>EC_KEY</c> will be deleted from memory on disposal.
+        /// </param>
         internal ECKeyHandle(IntPtr handle, bool ownsHandle) : base(ownsHandle)
         {
             SetHandle(handle);
@@ -91,6 +114,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
             }
         }
 
+        /// <inheritdocs />
         protected override bool ReleaseHandle()
         {
             Debug.Assert(!IsInvalid);

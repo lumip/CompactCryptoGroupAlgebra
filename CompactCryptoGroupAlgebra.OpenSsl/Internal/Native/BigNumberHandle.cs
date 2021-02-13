@@ -3,18 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
 {
-
-    [Flags]
-    internal enum BigNumberFlags : int
-    {
-        None            = 0,
-        Malloced        = 0x01,
-        StaticData      = 0x02,
-        ConstantTime    = 0x04,
-        Secure          = 0x08
-    }
-
-
+    /// <summary>
+    /// A handle for OpenSSL <c>BIGNUM</c> structures.
+    /// </summary>
     sealed class BigNumberHandle : NativeHandle
     {
 
@@ -179,8 +170,17 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
         private extern static void BN_clear_free(IntPtr val);
 #endregion
 
+        /// <summary>
+        /// Allocates a new OpenSSL <c>BIGNUM</c> structure
+        /// and returns a handle to it.
         ///
-        /// <remarks>Guaranteed to result in a valid handle if no exception.</remarks>
+        /// The returned handle is guaranteed to point to be valid,
+        /// i.e., point to a valid <c>BIGNUM</c> structure.
+        /// </summary>
+        /// <returns>
+        /// A valid <see cref="BigNumberHandle" /> pointing to a
+        /// freshly allocated <c>BIGNUM</c> structure.
+        /// </returns>
         public static BigNumberHandle Create()
         {
             var handle = new BigNumberHandle(BN_new(), ownsHandle: true);
@@ -188,8 +188,18 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
             return handle;
         }
 
+        /// <summary>
+        /// Allocates a new OpenSSL <c>BIGNUM</c> structure
+        /// in OpenSSL secure heap and returns a handle to it.
         ///
-        /// <remarks>Guaranteed to result in a valid handle if no exception.</remarks>
+        /// The returned handle is guaranteed to point to be valid,
+        /// i.e., point to a valid <c>BIGNUM</c> structure with
+        /// <c>BN_FLG_SECURE</c> and <c>BN_FLG_CONSTTIME</c> flags set.
+        /// </summary>
+        /// <returns>
+        /// A valid <see cref="BigNumberHandle" /> pointing to a
+        /// freshly allocated <c>BIGNUM</c> structure.
+        /// </returns>
         public static BigNumberHandle CreateSecure()
         {
             var handle = new BigNumberHandle(BN_secure_new(), ownsHandle: true);
@@ -198,6 +208,9 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
             return handle;
         }
 
+        /// <summary>
+        /// An unintialized handle. A null pointer.
+        /// </summary>
         public static BigNumberHandle Null = new BigNumberHandle();
 
         internal BigNumberHandle() : base(ownsHandle: false)
@@ -205,6 +218,14 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
 
         }
 
+        /// <summary>
+        /// Creates a new <see cref="BigNumberHandle" /> instance for
+        /// the given raw <paramref name="handle"/>.
+        /// </summary>
+        /// <param name="handle">A valid pointer to a OpenSSL <c>BIGNUM</c> structure.</param>
+        /// <param name="ownsHandle">
+        /// If <c>true</c>, the referred <c>BIGNUM</c> will be deleted from memory on disposal.
+        /// </param>
         private BigNumberHandle(IntPtr handle, bool ownsHandle) : base(ownsHandle)
         {
             SetHandle(handle);
@@ -214,6 +235,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
             }
         }
 
+        /// <inheritdocs />
         protected override bool ReleaseHandle()
         {
             Debug.Assert(!IsInvalid);

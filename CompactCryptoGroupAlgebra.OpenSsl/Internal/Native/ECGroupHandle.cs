@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
 {
 
+    /// <summary>
+    /// A handle for OpenSSL <c>EC_GROUP</c> structures.
+    /// </summary>
     sealed class ECGroupHandle : NativeHandle
     {
 
@@ -108,8 +111,18 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
         private extern static void EC_GROUP_clear_free(IntPtr curve);
 #endregion
 
+        /// <summary>
+        /// Allocates a new OpenSSL <c>EC_GROUP</c> structure for
+        /// the curve indicated by <paramref name="nid"/> and
+        /// returns a handle to it.
         ///
-        /// <remarks>Guaranteed to result in a valid handle if no exception.</remarks>
+        /// The returned handle is guaranteed to point to be valid,
+        /// i.e., point to a valid <c>EC_GROUP</c> structure.
+        /// </summary>
+        /// <returns>
+        /// A valid <see cref="ECGroupHandle" /> pointing to a freshly allocated
+        /// <c>EC_GROUP</c> structure.
+        /// </returns>
         public static ECGroupHandle CreateByCurveNID(int nid)
         {
             var group = new ECGroupHandle(EC_GROUP_new_by_curve_name(nid), ownsHandle: true);
@@ -117,13 +130,9 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
             return group;
         }
 
-        public static ECGroupHandle CreateEmpty()
-        {
-            var group = new ECGroupHandle(EC_GROUP_new(), ownsHandle: true);
-            if (group.IsInvalid) throw new OpenSslNativeException();
-            return group;
-        }
-
+        /// <summary>
+        /// An unintialized handle. A null pointer.
+        /// </summary>
         public static ECGroupHandle Null = new ECGroupHandle();
 
         internal ECGroupHandle() : base(ownsHandle: false)
@@ -131,6 +140,14 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
 
         }
 
+        /// <summary>
+        /// Creates a new <see cref="ECGroupHandle" /> instance for
+        /// the given raw <paramref name="handle"/>.
+        /// </summary>
+        /// <param name="handle">A valid pointer to a OpenSSL <c>EC_GROUP</c> structure.</param>
+        /// <param name="ownsHandle">
+        /// If <c>true</c>, the referred <c>EC_GROUP</c> will be deleted from memory on disposal.
+        /// </param>
         internal ECGroupHandle(IntPtr handle, bool ownsHandle) : base(ownsHandle)
         {
             SetHandle(handle);
@@ -140,6 +157,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
             }
         }
 
+        /// <inheritdocs />
         protected override bool ReleaseHandle()
         {
             Debug.Assert(!IsInvalid);

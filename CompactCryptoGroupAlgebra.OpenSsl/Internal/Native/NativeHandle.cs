@@ -3,6 +3,10 @@ using System.Runtime.InteropServices;
 
 namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
 {
+
+    /// <summary>
+    /// Base class for native handles of OpenSSL structures.
+    /// </summary>
     abstract class NativeHandle : SafeHandle
     {
 
@@ -17,6 +21,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
         }
 #endif // FEATURE_CORECLR
 
+        /// <inheritdocs />
         public override bool IsInvalid
         {
             get

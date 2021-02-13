@@ -7,27 +7,39 @@ using CompactCryptoGroupAlgebra.OpenSsl.Internal.Native;
 namespace CompactCryptoGroupAlgebra.OpenSsl
 {
 
-    public class MultiplicativeGroupAlgebra : ICryptoGroupAlgebra<SecureBigNumber, BigNumber>, IDisposable
+    /// <summary>
+    /// OpenSSL-based cryptographic group algebra based on multiplication in a prime field.
+    ///
+    /// <see cref="MultiplicativeGroupAlgebra" /> uses OpenSSL based <see cref="BigNumber" />s
+    /// as raw group elements and <see cref="SecureBigNumber" />s as scalar factors and private keys.
+    /// </summary>
+    public sealed class MultiplicativeGroupAlgebra : ICryptoGroupAlgebra<SecureBigNumber, BigNumber>, IDisposable
     {
 
         BigNumber _modulo;
         BigNumber _order;
 
+        /// <inheritdocs />
         public BigPrime Order { get; private set; }
 
+        /// <inheritdocs />
         public BigNumber Generator { get; private set; }
 
+        /// <inheritdocs />
         public BigNumber NeutralElement => BigNumber.One;
 
+        /// <inheritdocs />
         public BigInteger Cofactor { get; private set; }
 
+        /// <inheritdocs />
         public int ElementBitLength => _modulo.Length.InBits;
 
+        /// <inheritdocs />
         public int OrderBitLength => _order.Length.InBits;
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="CompactCryptoGroup.OpenSsl.MultiplicativeGroupAlgebra"/>
+        /// <see cref="MultiplicativeGroupAlgebra"/>
         /// class given the group's parameters.
         /// </summary>
         /// <param name="prime">The prime modulo of the group.</param>
@@ -48,7 +60,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="CompactCryptoGroup.OpenSsl.MultiplicativeGroupAlgebra"/>
+        /// <see cref="MultiplicativeGroupAlgebra"/>
         /// class given the group's parameters.
         /// </summary>
         /// <param name="prime">The prime modulo of the group.</param>
@@ -59,21 +71,25 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
         {
         }
 
+        /// <inheritdocs />
         public BigNumber Add(BigNumber left, BigNumber right)
         {
             return left.ModMul(right, _modulo);
         }
 
+        /// <inheritdocs />
         public BigNumber FromBytes(byte[] buffer)
         {
             return new BigNumber(buffer);
         }
 
+        /// <inheritdocs />
         public BigNumber GenerateElement(SecureBigNumber index)
         {
             return MultiplyScalar(Generator, index);
         }
 
+        /// <inheritdocs />
         public (SecureBigNumber, BigNumber) GenerateRandomElement(RandomNumberGenerator randomNumberGenerator)
         {
             var index = SecureBigNumber.Random(_order);
@@ -81,6 +97,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             return (index, element);
         }
 
+        /// <inheritdocs />
         public bool IsElement(BigNumber element)
         {
             // implementation-specific checks
@@ -104,16 +121,19 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             return true;
         }
 
+        /// <inheritdocs />
         public BigNumber MultiplyScalar(BigNumber e, SecureBigNumber k)
         {
             return e.ModExp(k, _modulo);
         }
 
+        /// <inheritdocs />
         public BigNumber Negate(BigNumber element)
         {
             return element.ModReciprocal(_modulo);
         }
 
+        /// <inheritdocs />
         public byte[] ToBytes(BigNumber element)
         {
             return element.ToBytes();
@@ -126,7 +146,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             GC.SuppressFinalize(true);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {

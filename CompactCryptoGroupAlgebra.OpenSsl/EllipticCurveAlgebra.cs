@@ -6,7 +6,16 @@ using System.Security.Cryptography;
 namespace CompactCryptoGroupAlgebra.OpenSsl
 {
 
-    public class EllipticCurveAlgebra : ICryptoGroupAlgebra<SecureBigNumber, ECPoint>, IDisposable
+    /// <summary>
+    /// OpenSSL-based cryptographic group algebra based on point addition in elliptic curves.
+    /// 
+    /// Elements of the group are all points (<c>x mod P</c>, <c>y mod P</c>) that satisfy
+    /// the curve equation and are of group order (to prevent small subgroup attacks).
+    ///
+    /// <see cref="EllipticCurveAlgebra" /> uses OpenSSL based <see cref="ECPoint" />s
+    /// as raw group elements and <see cref="SecureBigNumber" />s as scalar factors and private keys.
+    /// </summary>
+    public sealed class EllipticCurveAlgebra : ICryptoGroupAlgebra<SecureBigNumber, ECPoint>, IDisposable
     {
 
         private static readonly PointEncoding GroupPointEncoding = PointEncoding.Compressed;
@@ -19,6 +28,11 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
 
         private BigNumberContextHandle _ctxHandle;
 
+        /// <summary>
+        /// Creates a new <see cref="EllipticCurveAlgebra" /> instance
+        /// for the curve identified by <paramref name="curveId"/>.
+        /// </summary>
+        /// <param name="curveId">Identifier of the elliptic curve.</param>
         public EllipticCurveAlgebra(EllipticCurveID curveId)
         {
             Handle = ECGroupHandle.CreateByCurveNID((int)curveId);
@@ -206,7 +220,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             GC.SuppressFinalize(true);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {
