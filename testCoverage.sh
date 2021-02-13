@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 nuget restore CompactCryptoGroupAlgebra.sln
 nuget install AltCover -Version 7.0.773 -OutputDirectory testPackages
 nuget install NUnit.Console -Version 3.10.0 -OutputDirectory testPackages
