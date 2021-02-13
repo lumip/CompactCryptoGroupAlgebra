@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
+namespace CompactCryptoGroupAlgebra.OpenSsl
 {
     /// <summary>
     /// Exception type for errors in native OpenSSL calls.
@@ -39,7 +39,10 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
         /// given error code.
         /// </summary>
         /// <param name="code">An OpenSSL error code.</param>
-        public OpenSslNativeException(ulong code) : base(GetErrorMessage(code)) { }
+        public OpenSslNativeException(ulong code) : base(GetErrorMessage(code))
+        {
+            Code = code;
+        }
 
         /// <summary>
         /// Creates a new <see cref="OpenSslNativeException" /> for the
