@@ -8,4 +8,4 @@ project.lock.json
 CoverageReport/
 *coverage*.xml
 __Instrumented/
-TestResult.xml
+*Coverage*/

@@ -1,17 +1,10 @@
 #!/bin/bash
 set -e
-nuget restore CompactCryptoGroupAlgebra.sln
-nuget install AltCover -Version 7.0.773 -OutputDirectory testPackages
-nuget install NUnit.Console -Version 3.10.0 -OutputDirectory testPackages
+dotnet restore
 nuget install ReportGenerator -Version 4.6.1 -OutputDirectory testPackages
-msbuild /p:Configuration=Debug CompactCryptoGroupAlgebra.sln
-
-rm coverage.xml
-mono testPackages/altcover.7.0.773/tools/net45/AltCover.exe -i CompactCryptoGroupAlgebra.Tests/bin/Debug/net46/ --localSource -e CompactCryptoGroupAlgebra.Tests -x coverage.xml
-mono testPackages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe CompactCryptoGroupAlgebra.Tests/bin/Debug/net46/__Instrumented/CompactCryptoGroupAlgebra.Tests.dll
-
-rm openssl-coverage.xml
-mono testPackages/altcover.7.0.773/tools/net45/AltCover.exe -i CompactCryptoGroupAlgebra.OpenSsl.Tests/bin/Debug/net46/ --localSource -e CompactCryptoGroupAlgebra.OpenSsl.Tests -x "openssl-coverage.xml"
-mono testPackages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe CompactCryptoGroupAlgebra.OpenSsl.Tests/bin/Debug/net46/__Instrumented/CompactCryptoGroupAlgebra.OpenSsl.Tests.dll
-
-mono testPackages/ReportGenerator.4.6.1/tools/net47/ReportGenerator.exe -reports:"coverage.xml;openssl-coverage.xml" -targetdir:CoverageReport  
+rm -rf CompactCryptoGroupAlgebra.Tests/Coverage
+dotnet test CompactCryptoGroupAlgebra.Tests --logger "trx;LogFileName=TestResults.trx" --logger "nunit;LogFileName=TestResults.xml" --results-directory ./CompactCryptoGroupAlgebra.Tests/Coverage /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./Coverage/ /p:Exclude="[nunit.*]*"
+rm -rf CompactCryptoGroupAlgebra.OpenSsl.Tests/Coverage
+dotnet test CompactCryptoGroupAlgebra.OpenSsl.Tests --logger "trx;LogFileName=TestResults.trx" --logger "nunit;LogFileName=TestResults.xml" --results-directory ./CompactCryptoGroupAlgebra.OpenSsl.Tests/Coverage /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./Coverage/ /p:Exclude=\"[nunit.*]*,[CompactCryptoGroupAlgebra]*,[CompactCryptoGroupAlgebra.Tests]*\" /p:Include="CompactCryptoGroupAlgebra.OpenSsl*"
+rm -rf CoverageReport
+dotnet testPackages/ReportGenerator.4.6.1/tools/netcoreapp3.0/ReportGenerator.dll -reports:"CompactCryptoGroupAlgebra.Tests/Coverage/coverage.netcoreapp3.1.opencover.xml;CompactCryptoGroupAlgebra.OpenSsl.Tests/Coverage/coverage.netcoreapp3.1.opencover.xml" -targetdir:CoverageReport -reporttypes:HTML

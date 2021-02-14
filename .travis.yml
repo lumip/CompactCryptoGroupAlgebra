@@ -1,19 +1,16 @@
 language: csharp
-mono: latest
+mono: none
+dotnet: 3.1
 solution: CompactCryptoGroupAlgebra.sln
 
 before_install:
   - export COMMITTER_EMAIL="$(git log -1 $TRAVIS_COMMIT --pretty='%cE')"
   - export AUTHOR_NAME="$(git log -1 $TRAVIS_COMMIT --pretty='%aN')"
 install:
-  - nuget restore CompactCryptoGroupAlgebra.sln
-  - nuget install AltCover -Version 7.0.773 -OutputDirectory testPackages
-  - nuget install NUnit.Console -Version 3.10.0 -OutputDirectory testPackages
-  - nuget install coveralls.net -Version 0.7.0 -OutputDirectory testPackages
+  - dotnet restore
+  - dotnet tool install coveralls.net --version 2.0.0 --framework netcoreapp3.1 --tool-path testPackages
 script:
-  - msbuild /p:Configuration=Debug CompactCryptoGroupAlgebra.sln
-  - mono testPackages/altcover.7.0.773/tools/net45/AltCover.exe -i CompactCryptoGroupAlgebra.Tests/bin/Debug/net46/ --localSource -e CompactCryptoGroupAlgebra.Tests
-  - mono testPackages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe CompactCryptoGroupAlgebra.Tests/bin/Debug/net46/__Instrumented/CompactCryptoGroupAlgebra.Tests.dll
+  - dotnet test CompactCryptoGroupAlgebra.Tests --logger "trx;LogFileName=TestResults.trx" --logger "nunit;LogFileName=TestResults.xml" --results-directory ./CompactCryptoGroupAlgebra.Tests/Coverage /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./Coverage/ /p:Exclude="[nunit.*]*"
+  - dotnet test CompactCryptoGroupAlgebra.OpenSsl.Tests --logger "trx;LogFileName=TestResults.trx" --logger "nunit;LogFileName=TestResults.xml" --results-directory ./CompactCryptoGroupAlgebra.OpenSsl.Tests/Coverage /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./Coverage/ /p:Exclude=\"[nunit.*]*,[CompactCryptoGroupAlgebra]*,[CompactCryptoGroupAlgebra.Tests]*\" /p:Include="CompactCryptoGroupAlgebra.OpenSsl*"
 after_success:
-  - mono testPackages/coveralls.net.0.7.0/tools/csmacnz.Coveralls.exe --opencover -i coverage.xml --serviceName travis-ci --jobId $TRAVIS_JOB_ID --commitId $TRAVIS_COMMIT --commitBranch $TRAVIS_BRANCH --commitAuthor "$AUTHOR_NAME" --commitEmail "$COMMITTER_EMAIL" --commitMessage "$TRAVIS_COMMIT_MESSAGE" --pullRequest $TRAVIS_PULL_REQUEST
-#  - mono testPackages/ReportGenerator.4.6.1/tools/net47/ReportGenerator.exe -reports:coverage.xml -targetdir:CoverageReport  
+  - testPackages/csmacnz.Coveralls --multiple -i "opencover=CompactCryptoGroupAlgebra.Tests/Coverage/coverage.netcoreapp3.1.opencover.xml;opencover=CompactCryptoGroupAlgebra.OpenSsl.Tests/Coverage/coverage.netcoreapp3.1.opencover.xml" --serviceName travis-ci --jobId $TRAVIS_JOB_ID --commitId $TRAVIS_COMMIT --commitBranch $TRAVIS_BRANCH --commitAuthor "$AUTHOR_NAME" --commitEmail "$COMMITTER_EMAIL" --commitMessage "$TRAVIS_COMMIT_MESSAGE" --pullRequest $TRAVIS_PULL_REQUEST
