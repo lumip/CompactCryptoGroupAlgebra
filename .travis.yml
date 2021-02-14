@@ -1,4 +1,6 @@
 language: csharp
+os: linux
+dist: bionic
 mono: none
 dotnet: 3.1
 solution: CompactCryptoGroupAlgebra.sln
@@ -6,6 +8,8 @@ solution: CompactCryptoGroupAlgebra.sln
 before_install:
   - export COMMITTER_EMAIL="$(git log -1 $TRAVIS_COMMIT --pretty='%cE')"
   - export AUTHOR_NAME="$(git log -1 $TRAVIS_COMMIT --pretty='%aN')"
+  - sudo apt-get update
+  - sudo apt-get -y install libssl-dev
 install:
   - dotnet restore
   - dotnet tool install coveralls.net --version 2.0.0 --framework netcoreapp3.1 --tool-path testPackages
