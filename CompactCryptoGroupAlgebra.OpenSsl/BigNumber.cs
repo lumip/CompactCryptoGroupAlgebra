@@ -165,14 +165,6 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             return ToBigInteger().ToString();
         }
 
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Handle.Dispose();
-            }
-        }
-
         /// <summary>
         /// Multiplies this <see cref="BigNumber" /> with <paramref name="other"/>
         /// modulo <paramref name="modulo"/> and returns the result.
@@ -281,6 +273,14 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Handle.Dispose();
+            }
         }
     }
 }

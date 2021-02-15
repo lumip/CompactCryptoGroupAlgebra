@@ -9,6 +9,8 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
     class OpenSslNativeException : Exception
     {
 
+        private static object NativeExceptionLock = new object();
+
 #region Native Methods
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static ulong ERR_get_error();
@@ -16,6 +18,17 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static IntPtr ERR_error_string(ulong e, byte[]? buf);
 #endregion
+
+        /// <summary>
+        /// Thread-safe wrapper around <see cref="ERR_get_error()" />.
+        /// </summary>
+        private static ulong GetLastError()
+        {
+            lock (NativeExceptionLock)
+            {
+                return ERR_get_error();
+            }
+        }
 
         /// <summary>
         /// OpenSSL error code.
@@ -48,7 +61,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
         /// Creates a new <see cref="OpenSslNativeException" /> for the
         /// most recent OpenSSL error.
         /// </summary>
-        internal OpenSslNativeException() : this(ERR_get_error())
+        internal OpenSslNativeException() : this(GetLastError())
         {
         }
     }

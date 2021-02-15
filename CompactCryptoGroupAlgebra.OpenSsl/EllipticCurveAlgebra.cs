@@ -17,6 +17,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
     /// </summary>
     public sealed class EllipticCurveAlgebra : ICryptoGroupAlgebra<SecureBigNumber, ECPoint>, IDisposable
     {
+        private object instanceLock = new object();
 
         private static readonly PointEncoding GroupPointEncoding = PointEncoding.Compressed;
 
@@ -25,8 +26,6 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             get;
             private set;
         }
-
-        private BigNumberContextHandle _ctxHandle;
 
         /// <summary>
         /// Creates a new <see cref="EllipticCurveAlgebra" /> instance
@@ -37,9 +36,10 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
         {
             Handle = ECGroupHandle.CreateByCurveNID((int)curveId);
 
-            _ctxHandle = BigNumberContextHandle.Create();
-
-            ECGroupHandle.PrecomputeGeneratorMultiples(Handle, _ctxHandle);
+            using (var ctx = BigNumberContextHandle.Create())
+            {
+                ECGroupHandle.PrecomputeGeneratorMultiples(Handle, ctx);
+            }
         }
 
         private BigPrime? _order;
@@ -49,15 +49,23 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
         {
             get
             {
-                if (!_order.HasValue)
+                if (!_order.HasValue) // read is atomic; if _order.HasValue we don't need to lock because it will not be written again
                 {
-                    using (var order = new BigNumber())
+                    // if _order has no value, we create and store one for faster lookup in later calls
+                    lock (instanceLock)
                     {
-                        ECGroupHandle.GetOrder(Handle, order.Handle, _ctxHandle);
-                        var orderInt = order.ToBigInteger();
+                        if (!_order.HasValue) // check that _order has not been set while we were waiting for lock
+                        {
+                            using (var order = new BigNumber())
+                            using (var ctx = BigNumberContextHandle.Create())
+                            {
+                                ECGroupHandle.GetOrder(Handle, order.Handle, ctx);
+                                var orderInt = order.ToBigInteger();
 
-                        Debug.Assert(orderInt.IsProbablyPrime(RandomNumberGenerator.Create()));
-                        _order = BigPrime.CreateWithoutChecks(orderInt);
+                                Debug.Assert(orderInt.IsProbablyPrime(RandomNumberGenerator.Create()));
+                                _order = BigPrime.CreateWithoutChecks(orderInt);
+                            }
+                        }
                     }
                 }
                 return _order.Value;
@@ -83,8 +91,14 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             {
                 if (_neutralElement == null)
                 {
-                    _neutralElement = new ECPoint(Handle);
-                    ECPointHandle.SetToInfinity(Handle, _neutralElement.Handle);
+                    lock (instanceLock)
+                    {
+                        if (_neutralElement == null)
+                        {
+                            _neutralElement = new ECPoint(Handle);
+                            ECPointHandle.SetToInfinity(Handle, _neutralElement.Handle);
+                        }
+                    }
                 }
                 return _neutralElement;
             }
@@ -99,10 +113,17 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             {
                 if (!_cofactor.HasValue)
                 {
-                    using (var cofactor = new BigNumber())
+                    lock (instanceLock)
                     {
-                        ECGroupHandle.GetCofactor(Handle, cofactor.Handle, _ctxHandle);
-                        _cofactor = cofactor.ToBigInteger();
+                        if (!_cofactor.HasValue)
+                        {
+                            using (var cofactor = new BigNumber())
+                            using (var ctx = BigNumberContextHandle.Create())
+                            {
+                                ECGroupHandle.GetCofactor(Handle, cofactor.Handle, ctx);
+                                _cofactor = cofactor.ToBigInteger();
+                            }
+                        }
                     }
                 }
                 return _cofactor.Value;
@@ -130,9 +151,12 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
         /// <inheritdocs />
         public ECPoint Add(ECPoint left, ECPoint right)
         {
-            var res = new ECPoint(Handle);
-            ECPointHandle.Add(Handle, res.Handle, left.Handle, right.Handle, _ctxHandle);
-            return res;
+            using (var ctx = BigNumberContextHandle.Create())
+            {
+                var res = new ECPoint(Handle);
+                ECPointHandle.Add(Handle, res.Handle, left.Handle, right.Handle, ctx);
+                return res;
+            }
         }
 
         /// <inheritdocs />
@@ -155,7 +179,10 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
         /// <inheritdocs />
         public bool IsElement(ECPoint element)
         {
-            return ECPointHandle.IsOnCurve(Handle, element.Handle, _ctxHandle);
+            using (var ctx = BigNumberContextHandle.Create())
+            {
+                return ECPointHandle.IsOnCurve(Handle, element.Handle, ctx);
+            }
         }
 
         /// <inheritdocs />
@@ -172,9 +199,12 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
         /// <inheritdocs />
         public ECPoint Negate(ECPoint element)
         {
-            var p = new ECPoint(Handle, element.Handle);
-            ECPointHandle.InvertInPlace(Handle, p.Handle, _ctxHandle);
-            return p;
+            using (var ctx = BigNumberContextHandle.Create())
+            {
+                var p = new ECPoint(Handle, element.Handle);
+                ECPointHandle.InvertInPlace(Handle, p.Handle, ctx);
+                return p;
+            }
         }
 
         /// <inheritdocs />
@@ -225,7 +255,6 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             if (disposing)
             {
                 Handle.Dispose();
-                _ctxHandle.Dispose();
             }
         }
 
@@ -235,7 +264,10 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             EllipticCurveAlgebra? other = obj as EllipticCurveAlgebra;
             if (other == null) return false;
 
-            return ECGroupHandle.Compare(this.Handle, other.Handle, _ctxHandle);
+            using (var ctx = BigNumberContextHandle.Create())
+            {
+                return ECGroupHandle.Compare(this.Handle, other.Handle, ctx);
+            }
         }
         
         /// <inheritdocs />
