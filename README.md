@@ -8,7 +8,7 @@ These groups are mathematical structures which are characterized by a set of gro
 
 The aim of this project is to provide a basis for this kind of cryptographic algebra that is both, simple to use and easy to extend and customise. It also serves as a simple showcase on how concrete algebraic structures, such as elliptic curves, may be implemented in principle, without obfuscating the fundamentals for purposes of performance and security.
 
-__!Security Advisory!__ Note that due to its focus on simplicity `CompactCryptoGroupAlgebra` is _neither_ a _fully secure_ implementation _nor_ the _most performant_. It is intended for experimental and educational purposes. If you require strict security, please use established cryptography libraries.
+__!Security Advisory!__ Note that due to its focus on simplicity `CompactCryptoGroupAlgebra` is _neither_ a _fully secure_ implementation _nor_ the _most performant_. It is intended for experimental and educational purposes. If you require strict security, please use established cryptography libraries. A secure implementation of `CompactCryptoGroupAlgebra` interfaces using native calls to OpenSSL is made available by the `CompactCryptoGroupAlgebra.OpenSsl` library included in this repository.
 
 ## Features
 
@@ -33,6 +33,7 @@ In addition, `CompactCryptoGroupAlgebra` currently provide group instantiations 
 Performing a Diffie-Hellman Key Exchange on a multiplicative group may look like
 
 ```c#
+
 using System;
 using System.Numerics;
 using System.Security.Cryptography;
@@ -50,31 +51,31 @@ namespace Example
             RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
 
             // Choosing parameters for multiplicative group
-            // order 11 subgroup with generator 4 of characteristic 23 multiplicative group
+            // order 11 subgroup with generator 4 of characteristic 23 multiplicative group 
             BigPrime prime = BigPrime.Create(23, randomNumberGenerator);
             BigPrime order = BigPrime.Create(11, randomNumberGenerator);
             BigInteger generator = 4;
 
             // Creating the group instance
-            CryptoGroup<BigInteger> group = MultiplicativeGroupAlgebra.CreateCryptoGroup(prime, order, generator);
+            var group = MultiplicativeGroupAlgebra.CreateCryptoGroup(prime, order, generator);
             DoDiffieHellman(group, randomNumberGenerator);
         }
 
-        private static void DoDiffieHellman<T>(
-            CryptoGroup<T> group, RandomNumberGenerator randomNumberGenerator
-        ) where T : notnull
+        private static void DoDiffieHellman<TScalar, TElement>(
+            CryptoGroup<TScalar, TElement> group, RandomNumberGenerator randomNumberGenerator
+        ) where TScalar : notnull where TElement : notnull
         {
             // Generating DH secret and public key for Alice
-            (BigInteger dhSecretAlice, CryptoGroupElement<T> dhPublicAlice) =
+            (TScalar dhSecretAlice, CryptoGroupElement<TScalar, TElement> dhPublicAlice) = 
                 group.GenerateRandom(randomNumberGenerator);
 
             // Generating DH secret and public key for Bob
-            (BigInteger dhSecretBob, CryptoGroupElement<T> dhPublicBob) =
+            (TScalar dhSecretBob, CryptoGroupElement<TScalar, TElement> dhPublicBob) =
                 group.GenerateRandom(randomNumberGenerator);
 
             // Computing shared secret for Alice and Bob
-            CryptoGroupElement<T> sharedSecretBob = dhPublicAlice * dhSecretBob;
-            CryptoGroupElement<T> sharedSecretAlice = dhPublicBob * dhSecretAlice;
+            CryptoGroupElement<TScalar, TElement> sharedSecretBob = dhPublicAlice * dhSecretBob;
+            CryptoGroupElement<TScalar, TElement> sharedSecretAlice = dhPublicBob * dhSecretAlice;
 
             // Confirm that it's the same
             Debug.Assert(sharedSecretAlice.Equals(sharedSecretBob));
