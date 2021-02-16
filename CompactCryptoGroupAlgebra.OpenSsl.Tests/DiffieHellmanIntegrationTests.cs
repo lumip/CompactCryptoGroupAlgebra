@@ -4,6 +4,9 @@ using System.Numerics;
 using System.Text.RegularExpressions;
 using System.Globalization;
 
+using CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves;
+using CompactCryptoGroupAlgebra.OpenSsl.Multiplicative;
+
 namespace CompactCryptoGroupAlgebra.OpenSsl
 {
     public class DiffieHellmanIntegrationTests

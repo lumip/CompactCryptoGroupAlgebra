@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace CompactCryptoGroupAlgebra.OpenSsl
+namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
 {
 
     class PointEncodingLengthTests

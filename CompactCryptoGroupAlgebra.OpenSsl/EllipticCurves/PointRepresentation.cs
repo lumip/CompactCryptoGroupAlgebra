@@ -1,4 +1,4 @@
-namespace CompactCryptoGroupAlgebra.OpenSsl
+namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
 {
 
     /// <summary>

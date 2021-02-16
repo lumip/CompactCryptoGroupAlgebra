@@ -3,7 +3,7 @@ using System;
 
 using CompactCryptoGroupAlgebra.OpenSsl.Internal.Native;
 
-namespace CompactCryptoGroupAlgebra.OpenSsl
+namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
 {
     class ECPointTests
     {

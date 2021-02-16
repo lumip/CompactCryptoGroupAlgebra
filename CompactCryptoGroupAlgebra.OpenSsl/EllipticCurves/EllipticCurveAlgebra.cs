@@ -3,7 +3,7 @@ using System.Numerics;
 using CompactCryptoGroupAlgebra.OpenSsl.Internal.Native;
 using System.Security.Cryptography;
 
-namespace CompactCryptoGroupAlgebra.OpenSsl
+namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
 {
 
     /// <summary>

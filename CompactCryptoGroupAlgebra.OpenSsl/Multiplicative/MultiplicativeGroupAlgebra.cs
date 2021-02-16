@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 using CompactCryptoGroupAlgebra.OpenSsl.Internal.Native;
 
-namespace CompactCryptoGroupAlgebra.OpenSsl
+namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
 {
 
     /// <summary>

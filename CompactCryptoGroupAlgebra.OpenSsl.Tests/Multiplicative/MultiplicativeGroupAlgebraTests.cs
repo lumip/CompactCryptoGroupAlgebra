@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Security.Cryptography;
 
-namespace CompactCryptoGroupAlgebra.OpenSsl
+namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
 {
     public class MultiplicativeGroupAlgebraTests
     {

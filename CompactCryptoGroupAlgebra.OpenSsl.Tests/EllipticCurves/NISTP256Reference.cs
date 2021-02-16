@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace CompactCryptoGroupAlgebra.OpenSsl
+namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
 {
 
     class NISTP256Reference
