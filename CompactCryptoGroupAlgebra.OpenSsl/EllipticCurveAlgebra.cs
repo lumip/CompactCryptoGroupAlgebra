@@ -279,6 +279,16 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             return hashCode;
         }
 
+        /// <summary>
+        /// Creates a <see cref="CryptoGroup{SecureBigNumber, ECPoint}" /> instance using a <see cref="EllipticCurveAlgebra" />
+        /// for the given curve identifier.
+        /// </summary>
+        /// <param name="curveId">Identifier of the elliptic curve.</param>
+        public static CryptoGroup<SecureBigNumber, ECPoint> CreateCryptoGroup(EllipticCurveID curveId)
+        {
+            return new CryptoGroup<SecureBigNumber, ECPoint>(new EllipticCurveAlgebra(curveId));
+        }
+
     }
 
 }

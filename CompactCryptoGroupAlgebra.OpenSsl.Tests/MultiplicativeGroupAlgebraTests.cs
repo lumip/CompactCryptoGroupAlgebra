@@ -267,5 +267,17 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             Assert.DoesNotThrow(algebra.Dispose);
         }
 
+        [Test]
+        public void TestCreateCryptoGroup()
+        {
+            var group = MultiplicativeGroupAlgebra.CreateCryptoGroup(
+                prime, order, generator
+            );
+            var expectedGroupAlgebra = new MultiplicativeGroupAlgebra(
+                prime, order, generator
+            );
+            Assert.That(group.Algebra.Equals(expectedGroupAlgebra));
+        }
+
     }
 }

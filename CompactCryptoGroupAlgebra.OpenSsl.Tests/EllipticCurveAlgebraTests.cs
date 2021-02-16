@@ -279,6 +279,13 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             Assert.That(algebra.GetHashCode() == otherAlgebra.GetHashCode());
         }
 
+        [Test]
+        public void TestCreateCryptoGroup()
+        {
+            var expectedGroupAlgebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
+            var group = EllipticCurveAlgebra.CreateCryptoGroup(EllipticCurveID.Prime256v1);
+            Assert.That(group.Algebra.Equals(expectedGroupAlgebra));
+        }
 
     }
 

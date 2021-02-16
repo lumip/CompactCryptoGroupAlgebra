@@ -174,6 +174,22 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             return hashCode;
         }
 
+        /// <summary>
+        /// Creates a <see cref="CryptoGroup{SecureBigNumber, BigNumber}" /> instance using a <see cref="MultiplicativeGroupAlgebra" />
+        /// instance with the given parameters.
+        /// </summary>
+        /// <param name="prime">The prime modulo of the group.</param>
+        /// <param name="order">The order of the group</param>
+        /// <param name="generator">The generator of the group.</param>
+        public static CryptoGroup<SecureBigNumber, BigNumber> CreateCryptoGroup(
+            BigPrime prime, BigPrime order, BigInteger generator
+        )
+        {
+            return new CryptoGroup<SecureBigNumber, BigNumber>(new MultiplicativeGroupAlgebra(
+                prime, order, generator
+            ));
+        }
+
     }
 
 }
