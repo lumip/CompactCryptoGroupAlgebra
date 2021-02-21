@@ -16,6 +16,7 @@
 
 using System;
 using System.Numerics;
+using System.Diagnostics;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {

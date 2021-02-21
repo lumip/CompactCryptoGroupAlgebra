@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
 {

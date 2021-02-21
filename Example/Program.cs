@@ -17,6 +17,7 @@
 using System;
 using System.Numerics;
 using System.Security.Cryptography;
+using System.Diagnostics;
 
 using CompactCryptoGroupAlgebra;
 using CompactCryptoGroupAlgebra.Multiplicative;

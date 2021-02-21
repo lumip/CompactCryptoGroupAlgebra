@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
-
+using System.Diagnostics;
 using System.Numerics;
 
 using CompactCryptoGroupAlgebra.OpenSsl.Internal.Native;

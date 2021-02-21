@@ -1,6 +1,7 @@
 using System;
-using CompactCryptoGroupAlgebra.OpenSsl.Internal.Native;
 using System.Numerics;
+using System.Diagnostics;
+using CompactCryptoGroupAlgebra.OpenSsl.Internal.Native;
 
 namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
 {
