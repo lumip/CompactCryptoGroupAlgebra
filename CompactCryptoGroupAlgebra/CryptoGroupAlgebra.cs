@@ -202,12 +202,9 @@ namespace CompactCryptoGroupAlgebra
 
             // verifying that the point is not from a small subgroup of the whole curve (and thus outside
             // of the safe subgroup over which operations are considered)
-            if (Cofactor > 1)
-            {
-                T check = MultiplyScalarUnchecked(element, Cofactor, NumberLength.GetLength(Cofactor).InBits);
-                if (check.Equals(NeutralElement))
-                    return false;
-            }
+            T check = MultiplyScalarUnchecked(element, Cofactor, NumberLength.GetLength(Cofactor).InBits);
+            if (check.Equals(NeutralElement))
+                return false;
             return true;
         }
 

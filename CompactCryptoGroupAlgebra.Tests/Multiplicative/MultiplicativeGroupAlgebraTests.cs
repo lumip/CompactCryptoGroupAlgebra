@@ -103,6 +103,14 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         }
 
         [Test]
+        public void TestIsSafeElementForNeutralElementCofactorOne()
+        {
+            var groupAlgebra = new MultiplicativeGroupAlgebra(BigPrime.CreateWithoutChecks(11), BigPrime.CreateWithoutChecks(10), 2);
+            Assert.That(groupAlgebra.IsPotentialElement(groupAlgebra.NeutralElement));
+            Assert.That(!groupAlgebra.IsSafeElement(groupAlgebra.NeutralElement));
+        }
+
+        [Test]
         public void TestGroupElementBitLength()
         {
             Assert.AreEqual(5, groupAlgebra!.ElementBitLength);
@@ -211,26 +219,13 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         public void TestEqualsFalseForOtherAlgebra()
         {
             var otherAlgebra = new MultiplicativeGroupAlgebra(
-                BigPrime.CreateWithoutChecks(59),
-                BigPrime.CreateWithoutChecks(29),
-                5
-            );
-            Assert.IsFalse(groupAlgebra!.Equals(otherAlgebra));
-
-            otherAlgebra = new MultiplicativeGroupAlgebra(
-                BigPrime.CreateWithoutChecks(23),
-                BigPrime.CreateWithoutChecks(11),
-                8
-            );
-            Assert.IsFalse(groupAlgebra!.Equals(otherAlgebra));
-
-            otherAlgebra = new MultiplicativeGroupAlgebra(
-                BigPrime.CreateWithoutChecks(23),
-                BigPrime.CreateWithoutChecks(23),
-                5
+                BigPrime.CreateWithoutChecks(2*53+1),
+                BigPrime.CreateWithoutChecks(53),
+                4
             );
             Assert.IsFalse(groupAlgebra!.Equals(otherAlgebra));
         }
+
 
         [Test]
         public void TestGetHashCodeSameForEqual()

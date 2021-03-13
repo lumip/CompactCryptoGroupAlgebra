@@ -39,7 +39,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 curveEquation: largeCurveEquationMock.Object,
                 generator: new CurvePoint(),
                 order: BigPrime.CreateWithoutChecks(2),
-                cofactor: BigInteger.Zero
+                cofactor: BigInteger.One
             );
         }
 
@@ -88,6 +88,21 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public void TestIsElementForPointAtInfinity()
         {
             var curve = new CurveGroupAlgebra(curveParameters);
+            curveEquationMock.Setup(eq => eq.Add(It.IsAny<CurvePoint>(), It.IsAny<CurvePoint>())).Returns(CurvePoint.PointAtInfinity);
+            Assert.IsTrue(curve.IsPotentialElement(CurvePoint.PointAtInfinity), "IsPotentialElement not true for point at infinity!");
+            Assert.IsFalse(curve.IsSafeElement(CurvePoint.PointAtInfinity), "IsSafeElement not false for point at infinity!");
+        }
+
+        [Test]
+        public void TestIsElementForPointAtInfinityCofactorOne()
+        {
+            var parameters = new CurveParameters(
+                curveParameters.Equation,
+                curveParameters.Generator,
+                curveParameters.Order,
+                BigInteger.One
+            );
+            var curve = new CurveGroupAlgebra(parameters);
             curveEquationMock.Setup(eq => eq.Add(It.IsAny<CurvePoint>(), It.IsAny<CurvePoint>())).Returns(CurvePoint.PointAtInfinity);
             Assert.IsTrue(curve.IsPotentialElement(CurvePoint.PointAtInfinity), "IsPotentialElement not true for point at infinity!");
             Assert.IsFalse(curve.IsSafeElement(CurvePoint.PointAtInfinity), "IsSafeElement not false for point at infinity!");
