@@ -167,7 +167,17 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             var point = new ECPoint(groupHandle);
             ECPointHandle.Multiply(groupHandle, point.Handle, new BigNumber(index).Handle, ECPointHandle.Null, BigNumberHandle.Null, ctx);
             
-            Assert.That(algebra.IsElement(point), "valid point not accepted!");
+            Assert.That(algebra.IsPotentialElement(point), "valid point not accepted by IsPotentialElement!");
+            Assert.That(algebra.IsSafeElement(point), "valid point not accepted by IsSafeElement!");
+        }
+
+        [Test]
+        public void TestIsElementForPointAtInfinity()
+        {
+            var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
+
+            Assert.That(algebra.IsPotentialElement(algebra.NeutralElement), "point at infinity not accepted by IsPotentialElement!");
+            Assert.That(!algebra.IsSafeElement(algebra.NeutralElement), "point at infinity accepted by IsSafeElement!");
         }
 
         [Test]

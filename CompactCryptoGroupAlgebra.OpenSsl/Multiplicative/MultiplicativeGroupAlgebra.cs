@@ -109,20 +109,18 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
             return true;
         }
 
+        /// <inheritdocs />
         public bool IsSafeElement(BigNumber element)
         {
             if (!IsPotentialElement(element)) return false;
-            
+
             // verifying that the point is not from a small subgroup of the whole curve (and thus outside
             // of the safe subgroup over which operations are considered)
-            if (Cofactor > 1)
+            using (var cofactorBignum = new BigNumber(Cofactor))
             {
-                using (var cofactorBignum = new BigNumber(Cofactor))
-                {
-                    var check = element.ModExp(cofactorBignum, _modulo);
-                    if (check.Equals(NeutralElement))
-                        return false;
-                }
+                var check = element.ModExp(cofactorBignum, _modulo);
+                if (check.Equals(NeutralElement))
+                    return false;
             }
             return true;
         }

@@ -113,7 +113,8 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
         public void TestIsElementAcceptsValidElements(int elementInt)
         {
             var element = new BigNumber(elementInt);
-            Assert.That(groupAlgebra!.IsElement(element));
+            Assert.That(groupAlgebra!.IsPotentialElement(element));
+            Assert.That(groupAlgebra!.IsSafeElement(element));
         }
 
         [Test]
@@ -124,16 +125,26 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
         public void TestIsElementRejectsInvalidElementsOutOfBounds(int elementInt)
         {
             var element = new BigNumber(elementInt);
-            Assert.That(!groupAlgebra!.IsElement(element));
+            Assert.That(!groupAlgebra!.IsPotentialElement(element));
+            Assert.That(!groupAlgebra!.IsSafeElement(element));
         }
 
         [Test]
         [TestCase(1)]
         [TestCase(22)]
-        public void TestIsElementRejectsUnsafeElements(int elementInt)
+        public void TestIsElementForUnsafeElements(int elementInt)
         {
             var element = new BigNumber(elementInt);
-            Assert.That(!groupAlgebra!.IsElement(element));
+            Assert.That(groupAlgebra!.IsPotentialElement(element));
+            Assert.That(!groupAlgebra!.IsSafeElement(element));
+        }
+
+        [Test]
+        public void TestIsElementForNeutralElementAndNoCofactor()
+        {
+            var groupAlgebra = new MultiplicativeGroupAlgebra(BigPrime.CreateWithoutChecks(11), BigPrime.CreateWithoutChecks(10), 2);
+            Assert.That(groupAlgebra.IsPotentialElement(groupAlgebra.NeutralElement));
+            Assert.That(!groupAlgebra.IsSafeElement(groupAlgebra.NeutralElement));
         }
 
         [Test]
@@ -222,26 +233,13 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
         public void TestEqualsFalseForOtherAlgebra()
         {
             var otherAlgebra = new MultiplicativeGroupAlgebra(
-                BigPrime.CreateWithoutChecks(59),
-                BigPrime.CreateWithoutChecks(29),
-                5
+                BigPrime.CreateWithoutChecks(2*53+1),
+                BigPrime.CreateWithoutChecks(53),
+                4
             );
-            Assert.That(!groupAlgebra!.Equals(otherAlgebra));
-
-            otherAlgebra = new MultiplicativeGroupAlgebra(
-                BigPrime.CreateWithoutChecks(23),
-                BigPrime.CreateWithoutChecks(11),
-                8
-            );
-            Assert.That(!groupAlgebra!.Equals(otherAlgebra));
-
-            otherAlgebra = new MultiplicativeGroupAlgebra(
-                BigPrime.CreateWithoutChecks(23),
-                BigPrime.CreateWithoutChecks(23),
-                5
-            );
-            Assert.That(!groupAlgebra!.Equals(otherAlgebra));
+            Assert.IsFalse(groupAlgebra!.Equals(otherAlgebra));
         }
+
 
         [Test]
         public void TestGetHashCodeSameForEqual()

@@ -190,7 +190,17 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
         /// <inheritdocs />
         public bool IsSafeElement(ECPoint element)
         {
-            return IsPotentialElement(element);
+            if (!IsPotentialElement(element)) return false;
+
+            // verifying that the point is not from a small subgroup of the whole curve (and thus outside
+            // of the safe subgroup over which operations are considered)
+            using (var cofactorBignum = new BigNumber(Cofactor))
+            {
+                var check = MultiplyScalar(element, SecureBigNumber.FromBigNumber(new BigNumber(Cofactor)));
+                if (check.IsAtInfinity)
+                    return false;
+            }
+            return true;
         }
 
         /// <inheritdocs />
