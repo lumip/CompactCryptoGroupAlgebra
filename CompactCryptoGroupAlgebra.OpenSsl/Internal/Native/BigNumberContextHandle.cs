@@ -85,7 +85,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         protected override bool ReleaseHandle()
         {
             Debug.Assert(!IsInvalid);

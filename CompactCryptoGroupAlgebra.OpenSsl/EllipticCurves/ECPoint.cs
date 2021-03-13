@@ -85,7 +85,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public override bool Equals(object? obj)
         {
             ECPoint? other = obj as ECPoint;
@@ -97,7 +97,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
         
-        /// <inheritdocs />
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return new BigInteger(ToBytes()).GetHashCode();
@@ -145,7 +145,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
 
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(disposing: true);

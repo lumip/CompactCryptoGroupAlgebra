@@ -85,7 +85,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             return _curveEquation.Negate(p);
         }
 
-        /// <inheritdocs/>
+        /// <inheritdoc/>
         protected override bool IsElementDerived(CurvePoint point)
         {
             if (!Field.IsElement(point.X) || !Field.IsElement(point.Y))

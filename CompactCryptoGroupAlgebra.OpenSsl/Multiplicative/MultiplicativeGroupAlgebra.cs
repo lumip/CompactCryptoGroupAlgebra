@@ -19,22 +19,22 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
         BigNumber _modulo;
         BigNumber _order;
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public BigPrime Order { get; private set; }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public BigNumber Generator { get; private set; }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public BigNumber NeutralElement => BigNumber.One;
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public BigInteger Cofactor { get; private set; }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public int ElementBitLength => _modulo.Length.InBits;
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public int OrderBitLength => _order.Length.InBits;
 
         /// <summary>
@@ -71,25 +71,25 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
         {
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public BigNumber Add(BigNumber left, BigNumber right)
         {
             return left.ModMul(right, _modulo);
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public BigNumber FromBytes(byte[] buffer)
         {
             return new BigNumber(buffer);
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public BigNumber GenerateElement(SecureBigNumber index)
         {
             return MultiplyScalar(Generator, index);
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public (SecureBigNumber, BigNumber) GenerateRandomElement(RandomNumberGenerator randomNumberGenerator)
         {
             var index = SecureBigNumber.Random(_order);
@@ -97,7 +97,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
             return (index, element);
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public bool IsPotentialElement(BigNumber element)
         {
             // implementation-specific checks
@@ -109,7 +109,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
             return true;
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public bool IsSafeElement(BigNumber element)
         {
             if (!IsPotentialElement(element)) return false;
@@ -125,25 +125,25 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
             return true;
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public BigNumber MultiplyScalar(BigNumber e, SecureBigNumber k)
         {
             return e.ModExp(k, _modulo);
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public BigNumber Negate(BigNumber element)
         {
             return element.ModReciprocal(_modulo);
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public byte[] ToBytes(BigNumber element)
         {
             return element.ToBytes();
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);
@@ -160,7 +160,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public override bool Equals(object? obj)
         {
             MultiplicativeGroupAlgebra? other = obj as MultiplicativeGroupAlgebra;
@@ -169,7 +169,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
             return _modulo.Equals(other._modulo) && Generator.Equals(other.Generator);
         }
         
-        /// <inheritdocs />
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             int hashCode = 19973;

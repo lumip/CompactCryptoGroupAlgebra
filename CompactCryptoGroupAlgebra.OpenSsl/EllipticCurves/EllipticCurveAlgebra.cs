@@ -46,7 +46,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
 
         private BigPrime? _order;
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public BigPrime Order
         {
             get
@@ -74,7 +74,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public ECPoint Generator
         {
             get
@@ -86,7 +86,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
 
         private ECPoint? _neutralElement;
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public ECPoint NeutralElement
         {
             get
@@ -108,7 +108,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
 
         private BigInteger? _cofactor;
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public BigInteger Cofactor
         {
             get
@@ -132,7 +132,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public int ElementBitLength 
         {
             get
@@ -141,7 +141,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public int OrderBitLength
         {
             get
@@ -150,7 +150,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public ECPoint Add(ECPoint left, ECPoint right)
         {
             using (var ctx = BigNumberContextHandle.Create())
@@ -161,13 +161,13 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public ECPoint FromBytes(byte[] buffer)
         {
             return ECPoint.CreateFromBytes(Handle, buffer);
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public ECPoint GenerateElement(SecureBigNumber index)
         {
             using (var ctx = BigNumberContextHandle.CreateSecure())
@@ -178,7 +178,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public bool IsPotentialElement(ECPoint element)
         {
             using (var ctx = BigNumberContextHandle.Create())
@@ -187,7 +187,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public bool IsSafeElement(ECPoint element)
         {
             if (!IsPotentialElement(element)) return false;
@@ -203,7 +203,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             return true;
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public ECPoint MultiplyScalar(ECPoint e, SecureBigNumber k)
         {
             using (var ctx = BigNumberContextHandle.CreateSecure())
@@ -214,7 +214,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public ECPoint Negate(ECPoint element)
         {
             using (var ctx = BigNumberContextHandle.Create())
@@ -225,13 +225,13 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public byte[] ToBytes(ECPoint element)
         {
             return element.ToBytes(GroupPointEncoding);
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public (SecureBigNumber, ECPoint) GenerateRandomElement(RandomNumberGenerator randomNumberGenerator)
         {
             using (var keyHandle = ECKeyHandle.Create())
@@ -261,7 +261,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);
@@ -276,7 +276,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public override bool Equals(object? obj)
         {
             EllipticCurveAlgebra? other = obj as EllipticCurveAlgebra;
@@ -288,7 +288,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
         
-        /// <inheritdocs />
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             int hashCode = 55837;

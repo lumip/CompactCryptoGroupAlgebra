@@ -206,7 +206,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         protected override bool ReleaseHandle()
         {
             EC_POINT_clear_free(this.handle);

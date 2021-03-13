@@ -141,7 +141,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             return integer;
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public override bool Equals(object? obj)
         {        
             var other = obj as BigNumber;
@@ -153,13 +153,13 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             return (BigNumberHandle.Compare(this.Handle, other.Handle) == 0);
         }
         
-        /// <inheritdocs />
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             return ToBigInteger().GetHashCode();
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public override string ToString()
         {
             return ToBigInteger().ToString();
@@ -268,7 +268,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(disposing: true);

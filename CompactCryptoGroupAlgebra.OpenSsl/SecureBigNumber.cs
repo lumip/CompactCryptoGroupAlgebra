@@ -91,7 +91,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl
             }
         }
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(disposing: true);

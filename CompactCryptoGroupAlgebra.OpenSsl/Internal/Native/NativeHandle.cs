@@ -21,7 +21,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Internal.Native
         }
 #endif // FEATURE_CORECLR
 
-        /// <inheritdocs />
+        /// <inheritdoc />
         public override bool IsInvalid
         {
             get
