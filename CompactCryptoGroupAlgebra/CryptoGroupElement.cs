@@ -62,7 +62,7 @@ namespace CompactCryptoGroupAlgebra
         {
             Algebra = groupAlgebra;
             
-            if (!Algebra.IsElement(value))
+            if (!Algebra.IsPotentialElement(value))
                 throw new ArgumentException("The provided value is not a valid element of the group.", nameof(value));
             Value = value;
         }
@@ -79,7 +79,7 @@ namespace CompactCryptoGroupAlgebra
             Algebra = groupAlgebra;
 
             TElement value = Algebra.FromBytes(valueBuffer);
-            if (!Algebra.IsElement(value))
+            if (!Algebra.IsPotentialElement(value))
                 throw new ArgumentException("The provided value is not a valid element of the group.", nameof(value));
             Value = value;
         }
@@ -97,6 +97,19 @@ namespace CompactCryptoGroupAlgebra
             Algebra = other.Algebra;
             Value = other.Value;
         }
+
+        /// <summary>
+        /// Whether the element is a safe member of the group.
+        /// 
+        /// To be considered safe, an element must have the same order as
+        /// the group itself.
+        /// </summary>
+        /// <remarks>
+        /// The neutral element is a trivial example of an element that is a group
+        /// member but not safe.
+        /// </remarks>
+        /// <value>True, if the element is safe.</value>
+        public bool IsSafe => Algebra.IsSafeElement(Value);
 
         /// <summary>
         /// Adds a <see cref="CryptoGroupElement{TScalar, TElement}"/> to the current instance following

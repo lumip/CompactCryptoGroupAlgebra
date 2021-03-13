@@ -17,18 +17,20 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         [TestCase(13, 8)]
         [TestCase(18, 3)]
         [TestCase(0, 20)]
-        public void TestIsElementTrueForValidPoint(int rawX, int rawY)
+        public void TestIsElementForValidPoint(int rawX, int rawY)
         {
             var curve = new CurveGroupAlgebra(curveParameters);
             var point = new CurvePoint(rawX, rawY);
-            Assert.IsTrue(curve.IsElement(point));
+            Assert.IsTrue(curve.IsPotentialElement(point), "IsPotentialElement not true for valid element!");
+            Assert.IsTrue(curve.IsSafeElement(point), "IsSafeElement not true for valid element!");
         }
 
         [Test]
-        public void TestIsElementFalseForPointAtInfinity()
+        public void TestIsElementForPointAtInfinity()
         {
             var curve = new CurveGroupAlgebra(curveParameters);
-            Assert.IsFalse(curve.IsElement(CurvePoint.PointAtInfinity));
+            Assert.IsTrue(curve.IsPotentialElement(CurvePoint.PointAtInfinity), "IsPotentialElement not true for point at infinity!");
+            Assert.IsFalse(curve.IsSafeElement(CurvePoint.PointAtInfinity), "IsSafeElement not false for point at infinity!");
         }
 
         [Test]
@@ -38,19 +40,21 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         [TestCase(16, -15)]
         [TestCase(78, 4)]
         [TestCase(4, 78)]
-        public void TestIsElementFalseForPointNotOnCurve(int rawX, int rawY)
+        public void TestIsElementForPointNotOnCurve(int rawX, int rawY)
         {
             var curve = new CurveGroupAlgebra(curveParameters);
             var point = new CurvePoint(rawX, rawY);
-            Assert.IsFalse(curve.IsElement(point));
+            Assert.IsFalse(curve.IsPotentialElement(point), "IsPotentialElement not true for point not on curve!");
+            Assert.IsFalse(curve.IsSafeElement(point), "IsSafeElement not true for point not on curve!");
         }
 
         [Test]
-        public void TestIsElementFalseForLowOrderCurvePoint()
+        public void TestIsElementForLowOrderCurvePoint()
         {
             var curve = new CurveGroupAlgebra(curveParameters);
             var point = new CurvePoint(10, 0);
-            Assert.IsFalse(curve.IsElement(point));
+            Assert.IsTrue(curve.IsPotentialElement(point), "IsPotentialElement not true for low order point!");
+            Assert.IsFalse(curve.IsSafeElement(point), "IsSafeElement not false for low order point!");
         }
 
         [Test]

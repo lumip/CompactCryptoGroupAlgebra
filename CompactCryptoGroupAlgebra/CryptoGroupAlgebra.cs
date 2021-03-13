@@ -189,10 +189,16 @@ namespace CompactCryptoGroupAlgebra
         }
 
         /// <inheritdoc/>
-        public bool IsElement(T element)
+        public bool IsPotentialElement(T element)
         {
             // implementation-specific checks
-            if (!IsElementDerived(element)) return false;
+            return IsElementDerived(element);
+        }
+
+        /// <inheritdoc/>
+        public bool IsSafeElement(T element)
+        {
+            if (!IsPotentialElement(element)) return false;
 
             // verifying that the point is not from a small subgroup of the whole curve (and thus outside
             // of the safe subgroup over which operations are considered)
@@ -212,14 +218,15 @@ namespace CompactCryptoGroupAlgebra
         /// Implementation specific checks for validity of group elements.
         /// 
         /// Must be provided by inheriting classes and is called by
-        /// <see cref="IsElement"/>.
+        /// <see cref="IsPotentialElement"/> to determine whether the given element
+        /// value is an element of the mathematical structure on which
+        /// the group's algebra operates.
         /// </summary>
         /// <param name="element">The group element candidate to be checked for validity.</param>
         /// <returns><c>true</c>, if the candidate is valid, <c>false</c> otherwise.</returns>
         /// <remarks>
-        /// Implementations of <see cref="IsElementDerived(T)"/> do not need to
-        /// check whether the element candidate has too small order, as that
-        /// check is performed in <see cref="IsElement(T)"/>.
+        /// Implementations of <see cref="IsElementDerived(T)"/> must return
+        /// <c>true</c> for the neutral element.
         /// </remarks>
         protected abstract bool IsElementDerived(T element);
 

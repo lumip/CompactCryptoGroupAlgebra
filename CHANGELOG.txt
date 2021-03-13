@@ -1,6 +1,8 @@
 - 2.0.0-alpha
-    - Added GenerateRandomElement to ICryptoGroupAlgebra interface
-    - Introduced generic type parameter for scalar types in major interfaces
+    - Added GenerateRandomElement to ICryptoGroupAlgebra interface.
+    - Introduced generic type parameter for scalar types in major interfaces.
     - MultiplicativeGroupAlgebra.Negate now works correctly for all elements in the prime field, not only the subgroup.
+    - Removed CryptoGroupAlgebra.IsElement in favor of new IsPotentialElement and IsSafeElement methods.
+        -- IsElement was supposed to admit only safe elements, which caused it to reject the neutral element, leading to potential failures during computation.
 
 - 1.0.0 Initial Release

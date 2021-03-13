@@ -76,7 +76,8 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         public void TestIsElementAcceptsValidElements(int elementInt)
         {
             var element = new BigInteger(elementInt);
-            Assert.IsTrue(groupAlgebra!.IsElement(element));
+            Assert.IsTrue(groupAlgebra!.IsPotentialElement(element));
+            Assert.IsTrue(groupAlgebra!.IsSafeElement(element));
         }
 
         [Test]
@@ -87,16 +88,18 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         public void TestIsElementRejectsInvalidElementsOutOfBounds(int elementInt)
         {
             var element = new BigInteger(elementInt);
-            Assert.IsFalse(groupAlgebra!.IsElement(element));
+            Assert.IsFalse(groupAlgebra!.IsPotentialElement(element));
+            Assert.IsFalse(groupAlgebra!.IsSafeElement(element));
         }
 
         [Test]
         [TestCase(1)]
         [TestCase(22)]
-        public void TestIsElementRejectsUnsafeElements(int elementInt)
+        public void TestIsSafeElementRejectsUnsafeElements(int elementInt)
         {
             var element = new BigInteger(elementInt);
-            Assert.IsFalse(groupAlgebra!.IsElement(element));
+            Assert.IsTrue(groupAlgebra!.IsPotentialElement(element));
+            Assert.IsFalse(groupAlgebra!.IsSafeElement(element));
         }
 
         [Test]

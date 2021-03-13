@@ -54,7 +54,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
             Generator = BigNumber.FromRawHandle(generator.Handle);
             Cofactor = (prime - 1) / order;
 
-            if (!IsElement(Generator))
+            if (!IsSafeElement(Generator))
                 throw new ArgumentException("The generator must be an element of the group.", nameof(generator));
         }
 
@@ -98,7 +98,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
         }
 
         /// <inheritdocs />
-        public bool IsElement(BigNumber element)
+        public bool IsPotentialElement(BigNumber element)
         {
             // implementation-specific checks
             if (element.Equals(BigNumber.Zero) ||
@@ -106,7 +106,13 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
             {
                 return false;
             }
+            return true;
+        }
 
+        public bool IsSafeElement(BigNumber element)
+        {
+            if (!IsPotentialElement(element)) return false;
+            
             // verifying that the point is not from a small subgroup of the whole curve (and thus outside
             // of the safe subgroup over which operations are considered)
             if (Cofactor > 1)

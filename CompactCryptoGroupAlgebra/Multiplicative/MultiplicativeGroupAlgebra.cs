@@ -46,7 +46,7 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
             : base(generator, order, (prime - 1) / order, BigInteger.One, NumberLength.GetLength(prime).InBits)
         {
             Prime = prime;
-            if (!IsElement(generator))
+            if (!IsSafeElement(generator))
                 throw new ArgumentException("The generator must be an element of the group.", nameof(generator));
         }
 

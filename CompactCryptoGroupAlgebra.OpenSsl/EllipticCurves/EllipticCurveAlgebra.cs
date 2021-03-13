@@ -179,12 +179,18 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
         }
 
         /// <inheritdocs />
-        public bool IsElement(ECPoint element)
+        public bool IsPotentialElement(ECPoint element)
         {
             using (var ctx = BigNumberContextHandle.Create())
             {
                 return ECPointHandle.IsOnCurve(Handle, element.Handle, ctx);
             }
+        }
+
+        /// <inheritdocs />
+        public bool IsSafeElement(ECPoint element)
+        {
+            return IsPotentialElement(element);
         }
 
         /// <inheritdocs />

@@ -50,7 +50,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             )
         {
             _curveEquation = parameters.Equation;
-            if (!IsElement(Generator))
+            if (!IsSafeElement(Generator))
                 throw new ArgumentException("The point given as generator is " +
                 	"not a valid point on the curve.", nameof(parameters));
         }
@@ -92,7 +92,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 return false;
 
             // verifying that the point satisfies the curve equation
-            return _curveEquation.IsPointOnCurve(point);
+            return point.IsAtInfinity || _curveEquation.IsPointOnCurve(point);
         }
 
         /// <summary>
