@@ -36,6 +36,9 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         private readonly CurveEquation _curveEquation;
         private BigIntegerField Field { get { return _curveEquation.Field; } }
 
+        /// <inheritdoc/>
+        public override int SecurityLevel => OrderBitLength / 2;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CurveGroupAlgebra"/> class.
         /// </summary>

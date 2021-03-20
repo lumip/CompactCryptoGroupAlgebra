@@ -60,6 +60,16 @@ namespace CompactCryptoGroupAlgebra
         public ICryptoGroupAlgebra<TScalar, TElement> Algebra { get; }
 
         /// <summary>
+        /// The security level of the group.
+        ///
+        /// The security level is defined as the value λ such that the expected time it takes
+        /// an adversary's to solve the discrete logarithm, i.e., finding the secret scalar
+        /// that generates a group element with probability at least <c>p</c> is
+        /// is at least <c>p 2^λ</c>.
+        /// </summary>
+        public int SecurityLevel => Algebra.SecurityLevel;
+
+        /// <summary>
         /// Initializes a <see cref="CryptoGroup{TScalar, TElement}"/> instance using a
         /// given <see cref="ICryptoGroupAlgebra{TScalar, TElement}"/> instance
         /// for algebraic operations.

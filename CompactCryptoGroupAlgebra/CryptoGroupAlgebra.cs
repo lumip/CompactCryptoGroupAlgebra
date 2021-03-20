@@ -41,6 +41,9 @@ namespace CompactCryptoGroupAlgebra
         public BigPrime Order { get; }
 
         /// <inheritdoc/>
+        public abstract int SecurityLevel { get; }
+
+        /// <inheritdoc/>
         public T Generator { get; }
 
         /// <inheritdoc/>
@@ -67,6 +70,7 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="cofactor">Cofactor of the group's generator.</param>
         /// <param name="neutralElement">The neutral element of the group.</param>
         /// <param name="elementBitLength">The maximum bit length of any group element.</param>
+
         protected CryptoGroupAlgebra(T generator, BigPrime order, BigInteger cofactor, T neutralElement, int elementBitLength)
         {
             Generator = generator;

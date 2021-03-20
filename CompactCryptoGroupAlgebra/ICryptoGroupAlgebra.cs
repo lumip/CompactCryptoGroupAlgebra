@@ -52,6 +52,16 @@ namespace CompactCryptoGroupAlgebra
         BigPrime Order { get; }
 
         /// <summary>
+        /// The security level of the group.
+        ///
+        /// The security level is defined as the value λ such that the expected time it takes
+        /// an adversary's to solve the discrete logarithm, i.e., finding the secret scalar
+        /// that generates a group element with probability at least <c>p</c> is
+        /// is at least <c>p 2^λ</c>.
+        /// </summary>
+        int SecurityLevel { get; }
+
+        /// <summary>
         /// The generator of the group.
         /// 
         /// The generator is a group element that allows to generate the entire group by scalar multiplication.

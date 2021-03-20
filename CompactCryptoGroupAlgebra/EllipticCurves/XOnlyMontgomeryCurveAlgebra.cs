@@ -59,6 +59,9 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         private readonly BigInteger _aConstant;
         private BigIntegerField Field { get { return _parameters.Equation.Field; } }
 
+        /// <inheritdoc/>
+        public override int SecurityLevel => OrderBitLength / 2;
+
         /// <summary>
         /// Initializes a new instance of <see cref="XOnlyMontgomeryCurveAlgebra"/> 
         /// with given curve parameters.

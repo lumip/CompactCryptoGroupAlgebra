@@ -56,6 +56,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             Assert.AreEqual(curveParameters.Order, algebra.Order);
             Assert.AreEqual(curveParameters.Cofactor, algebra.Cofactor);
             Assert.AreEqual(NumberLength.GetLength(curveParameters.Equation.Field.Modulo).InBits, algebra.ElementBitLength);
+            Assert.AreEqual(algebra.OrderBitLength / 2, algebra.SecurityLevel);
         }
 
         [Test]

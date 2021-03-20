@@ -31,6 +31,37 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         }
 
         [Test]
+        public void TestComputeSecurityLevel()
+        {
+            var mod = BigPrime.CreateWithoutChecks(BigInteger.One << 2047);
+            Assert.AreEqual(115, MultiplicativeGroupAlgebra.ComputeSecurityLevel(mod, mod));
+
+            var smallOrder = BigPrime.CreateWithoutChecks(new BigInteger(4));
+            Assert.AreEqual(2 * NumberLength.GetLength(smallOrder).InBits, MultiplicativeGroupAlgebra.ComputeSecurityLevel(mod, smallOrder));
+        }
+
+        [Test]
+        public void TestComputePrimeLengthForSecurityLevel()
+        {
+            // dominated by NFS
+            var l = MultiplicativeGroupAlgebra.ComputePrimeLengthForSecurityLevel(100);
+            var p = BigPrime.CreateWithoutChecks(BigInteger.One << (l.InBits - 1));
+            var s = MultiplicativeGroupAlgebra.ComputeSecurityLevel(p, p);
+            Assert.AreEqual(100, s);
+
+            // dominated by Pollard Rho
+            l = MultiplicativeGroupAlgebra.ComputePrimeLengthForSecurityLevel(1);
+            Assert.AreEqual(2, l.InBits);
+        }
+
+        [Test]
+        public void TestSecurityLevel()
+        {
+            var expected = MultiplicativeGroupAlgebra.ComputeSecurityLevel(groupAlgebra!.Prime, groupAlgebra!.Order);
+            Assert.AreEqual(expected, groupAlgebra!.SecurityLevel);
+        }
+
+        [Test]
         [TestCase(0, 1)]
         [TestCase(1, 3)]
         [TestCase(2, 9)]

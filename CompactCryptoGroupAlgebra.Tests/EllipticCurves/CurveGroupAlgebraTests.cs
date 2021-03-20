@@ -204,6 +204,13 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         }
         
         [Test]
+        public void TestSecurityLevel()
+        {
+            var curve = new CurveGroupAlgebra(curveParameters);
+            Assert.AreEqual(curve.OrderBitLength / 2, curve.SecurityLevel);
+        }
+
+        [Test]
         public void TestNeutralElement()
         {
             var curve = new CurveGroupAlgebra(curveParameters);
