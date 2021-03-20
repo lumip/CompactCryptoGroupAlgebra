@@ -83,6 +83,14 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
         }
 
         [Test]
+        public void TestSecurityLevel()
+        {
+            var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
+            var expected = algebra.OrderBitLength / 2;
+            Assert.That(expected == algebra.SecurityLevel);
+        }
+
+        [Test]
         public void TestAdd()
         {
             var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);

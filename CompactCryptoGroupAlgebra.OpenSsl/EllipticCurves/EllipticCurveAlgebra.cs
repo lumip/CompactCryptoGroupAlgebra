@@ -150,6 +150,9 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
             }
         }
 
+        /// <inheritdoc/>
+        public int SecurityLevel => OrderBitLength / 2;
+
         /// <inheritdoc />
         public ECPoint Add(ECPoint left, ECPoint right)
         {

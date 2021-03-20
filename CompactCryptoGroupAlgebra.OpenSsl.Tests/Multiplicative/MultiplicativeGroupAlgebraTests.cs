@@ -38,6 +38,14 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
         }
 
         [Test]
+        public void TestSecurityLevel()
+        {
+            var expected = 
+                CompactCryptoGroupAlgebra.Multiplicative.MultiplicativeGroupAlgebra.ComputeSecurityLevel(prime, order);
+            Assert.That(groupAlgebra!.SecurityLevel == expected);
+        }
+
+        [Test]
         public void TestGenerator()
         {
             var expected = new BigNumber(generator);

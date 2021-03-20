@@ -37,6 +37,9 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
         /// <inheritdoc />
         public int OrderBitLength => _order.Length.InBits;
 
+        /// <inheritdoc />
+        public int SecurityLevel { get; }
+
         /// <summary>
         /// Initializes a new instance of the
         /// <see cref="MultiplicativeGroupAlgebra"/>
@@ -56,6 +59,9 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.Multiplicative
 
             if (!IsSafeElement(Generator))
                 throw new ArgumentException("The generator must be an element of the group.", nameof(generator));
+
+            SecurityLevel = 
+                CompactCryptoGroupAlgebra.Multiplicative.MultiplicativeGroupAlgebra.ComputeSecurityLevel(prime, order);
         }
 
         /// <summary>
