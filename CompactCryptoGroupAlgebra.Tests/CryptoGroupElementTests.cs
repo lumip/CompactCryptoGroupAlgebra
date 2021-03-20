@@ -398,5 +398,27 @@ namespace CompactCryptoGroupAlgebra
             var expected = "<CryptoGroupElement: 5>";
             Assert.AreEqual(expected, element.ToString());
         }
+
+        [Test]
+        public void TestIsSafeFalse()
+        {
+            var algebraStub = new Mock<ICryptoGroupAlgebra<int, int>>(MockBehavior.Strict);
+            algebraStub.Setup(alg => alg.IsPotentialElement(It.IsAny<int>())).Returns(true);
+            algebraStub.Setup(alg => alg.IsSafeElement(It.IsAny<int>())).Returns(false);
+
+            var element = new CryptoGroupElement<int, int>(17, algebraStub.Object);
+            Assert.IsFalse(element.IsSafe);
+        }
+
+        [Test]
+        public void TestIsSafeTrue()
+        {
+            var algebraStub = new Mock<ICryptoGroupAlgebra<int, int>>(MockBehavior.Strict);
+            algebraStub.Setup(alg => alg.IsPotentialElement(It.IsAny<int>())).Returns(true);
+            algebraStub.Setup(alg => alg.IsSafeElement(It.IsAny<int>())).Returns(true);
+
+            var element = new CryptoGroupElement<int, int>(17, algebraStub.Object);
+            Assert.IsTrue(element.IsSafe);
+        }
     }
 }

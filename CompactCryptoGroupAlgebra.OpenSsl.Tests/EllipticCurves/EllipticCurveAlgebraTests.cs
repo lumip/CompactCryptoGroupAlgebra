@@ -157,9 +157,7 @@ namespace CompactCryptoGroupAlgebra.OpenSsl.EllipticCurves
         {
             var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
 
-            var generator = algebra.Generator;
-
-            var groupHandle = ECGroupHandle.CreateByCurveNID((int)EllipticCurveID.Prime256v1);
+            var groupHandle = algebra.Handle;
 
             var ctx = BigNumberContextHandle.Create();
             var index = new BigInteger(3);
