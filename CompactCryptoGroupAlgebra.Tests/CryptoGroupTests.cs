@@ -264,6 +264,18 @@ namespace CompactCryptoGroupAlgebra
         }
 
         [Test]
+        public void TestSecurityLevelAccessor()
+        {
+            var expectedRaw = 17;
+            var algebraMock = new Mock<ICryptoGroupAlgebra<int, int>>(MockBehavior.Strict);
+            algebraMock.Setup(alg => alg.SecurityLevel).Returns(expectedRaw);
+
+            var group = new CryptoGroup<int, int>(algebraMock.Object);
+
+            Assert.AreEqual(expectedRaw, group.SecurityLevel);
+        }
+
+        [Test]
         public void TestConstructor()
         {
             var algebraMock = new Mock<ICryptoGroupAlgebra<BigInteger, int>>(MockBehavior.Strict);
