@@ -21,7 +21,7 @@ SPDX-FileType: SOURCE
     <Description>An extension for the CompactCryptoGroupAlgebra library, providing implementations of its CryptoGroup interface that rely on system-native OpenSsl libraries.</Description>
     <Copyright>Copyright © 2021 Lukas Prediger</Copyright>
     <Version>1.0.0-alpha2</Version>
-    <PackageLicenseExpression>GPL-3.0-or-later WITH GPL-3.0-linking-exception</PackageLicenseExpression>
+    <PackageLicenseExpression>GPL-3.0-or-later<!--WITH GPL-3.0-linking-exception--></PackageLicenseExpression>
     <PackageReleaseNotes>https://github.com/lumip/CompactCryptoGroupAlgebra/blob/master/CompactCryptoGroupAlgebra.LibCrypto/CHANGELOG.txt</PackageReleaseNotes>
     <PackageTags>Asymmetric Cryptography; Group Algebra; OpenSSL</PackageTags>
     <ProjectUrl>https://github.com/lumip/CompactCryptoGroupAlgebra</ProjectUrl>
