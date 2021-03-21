@@ -42,8 +42,8 @@ SPDX-FileType: SOURCE
   </PropertyGroup>
 
   <ItemGroup>
-    <!--<ProjectReference Include="../CompactCryptoGroupAlgebra/CompactCryptoGroupAlgebra.csproj" />-->
-    <PackageReference Include="CompactCryptoGroupAlgebra" Version="2.0.0-alpha2" />
+    <ProjectReference Include="../CompactCryptoGroupAlgebra/CompactCryptoGroupAlgebra.csproj" />
+    <!-- <PackageReference Include="CompactCryptoGroupAlgebra" Version="2.0.0-alpha2" /> -->
   </ItemGroup>
 
 </Project>
