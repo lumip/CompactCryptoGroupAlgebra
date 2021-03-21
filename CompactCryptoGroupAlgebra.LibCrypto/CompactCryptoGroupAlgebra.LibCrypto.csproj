@@ -20,10 +20,14 @@ SPDX-FileType: SOURCE
     <Authors>Lukas "lumip" Prediger</Authors>
     <Description>An extension for the CompactCryptoGroupAlgebra library, providing implementations of its CryptoGroup interface that rely on system-native OpenSsl libraries.</Description>
     <Copyright>Copyright © 2021 Lukas Prediger</Copyright>
-    <VersionPrefix>1.0.0-alpha</VersionPrefix>
-    <LicenseId>GPL-3.0-or-later WITH GPL-3.0-linking-exception</LicenseId>
+    <Version>1.0.0-alpha2</Version>
+    <PackageLicenseExpression>GPL-3.0-or-later WITH GPL-3.0-linking-exception</PackageLicenseExpression>
+    <PackageReleaseNotes>https://github.com/lumip/CompactCryptoGroupAlgebra/blob/master/CompactCryptoGroupAlgebra.LibCrypto/CHANGELOG.txt</PackageReleaseNotes>
     <PackageTags>Asymmetric Cryptography; Group Algebra; OpenSSL</PackageTags>
     <ProjectUrl>https://github.com/lumip/CompactCryptoGroupAlgebra</ProjectUrl>
+    <RepositoryUrl>https://github.com/lumip/CompactCryptoGroupAlgebra</RepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -38,7 +42,8 @@ SPDX-FileType: SOURCE
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../CompactCryptoGroupAlgebra/CompactCryptoGroupAlgebra.csproj" />
+    <!--<ProjectReference Include="../CompactCryptoGroupAlgebra/CompactCryptoGroupAlgebra.csproj" />-->
+    <PackageReference Include="CompactCryptoGroupAlgebra" Version="2.0.0-alpha2" />
   </ItemGroup>
 
 </Project>

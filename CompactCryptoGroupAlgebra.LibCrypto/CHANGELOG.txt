@@ -1,4 +1,4 @@
 # SPDX-License-Identifier: CC0-1.0
 # SPDX-FileCopyrightText: Lukas Prediger
 
-- 1.0.0 Initial release of CompactCryptoGroupAlgebra.LibCrypto library
+- 1.0.0-alpha: Initial release of CompactCryptoGroupAlgebra.LibCrypto library
