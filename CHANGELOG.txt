@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: CC0-1.0
+# SPDX-FileCopyrightText: Lukas Prediger
+
 - 2.0.0-alpha
     - Fix: MultiplicativeGroupAlgebra.Negate now works correctly for all elements
         in the prime field, not only the subgroup.

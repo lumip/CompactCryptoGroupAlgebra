@@ -1,3 +1,10 @@
+<!--
+CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
+
+SPDX-FileCopyrightText: 2020-2021 Lukas Prediger <lumip@lumip.de>
+SPDX-License-Identifier: GPL-3.0-or-later
+SPDX-FileType: SOURCE
+-->
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>

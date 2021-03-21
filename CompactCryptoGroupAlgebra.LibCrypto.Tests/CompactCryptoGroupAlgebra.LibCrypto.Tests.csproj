@@ -1,0 +1,42 @@
+<!--
+CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
+
+SPDX-FileCopyrightText: 2020-2021 Lukas Prediger <lumip@lumip.de>
+SPDX-License-Identifier: GPL-3.0-or-later WITH GPL-3.0-linking-exception
+SPDX-FileType: SOURCE
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
+    <AssemblyName>CompactCryptoGroupAlgebra.LibCrypto.Tests</AssemblyName>
+    <RootNamespace>CompactCryptoGroupAlgebra.LibCrypto</RootNamespace>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <WarningsAsErrors>CS8602;CS8603;CS8600;CS8625;CS8610</WarningsAsErrors>
+    <Title>CompactCryptoGroupAlgebra.LibCrypto Unit Tests</Title>
+    <Authors>Lukas "lumip" Prediger</Authors>
+    <Description>Tests for the CompactCryptoGroupAlgebra.LibCrypto Library Extension</Description>
+    <Copyright>Copyright © 2021 Lukas Prediger</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" Version="4.13.1" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="Microsoft.CodeCoverage" Version="16.8.3" />
+    <PackageReference Include="NunitXml.TestLogger" Version="3.0.91" />
+    <PackageReference Include="coverlet.msbuild" Version="3.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../CompactCryptoGroupAlgebra.LibCrypto/CompactCryptoGroupAlgebra.LibCrypto.csproj" />
+    <ProjectReference Include="../CompactCryptoGroupAlgebra.Tests/CompactCryptoGroupAlgebra.Tests.csproj" />
+  </ItemGroup>
+
+</Project>

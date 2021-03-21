@@ -1,5 +1,7 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+SPDX-FileCopyrightText: 2020-2021 Lukas Prediger <lumip@lumip.de>
+SPDX-License-Identifier: GPL-3.0-or-later
+SPDX-FileType: SOURCE
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -9,9 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompactCryptoGroupAlgebra.Tests", "CompactCryptoGroupAlgebra.Tests\CompactCryptoGroupAlgebra.Tests.csproj", "{FAD092CB-98B1-4206-A8BC-77AFDDA6CEBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompactCryptoGroupAlgebra.OpenSsl", "CompactCryptoGroupAlgebra.OpenSsl\CompactCryptoGroupAlgebra.OpenSsl.csproj", "{52E88759-E5B2-4F13-A582-006969BE0F4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompactCryptoGroupAlgebra.LibCrypto", "CompactCryptoGroupAlgebra.LibCrypto\CompactCryptoGroupAlgebra.LibCrypto.csproj", "{52E88759-E5B2-4F13-A582-006969BE0F4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompactCryptoGroupAlgebra.OpenSsl.Tests", "CompactCryptoGroupAlgebra.OpenSsl.Tests\CompactCryptoGroupAlgebra.OpenSsl.Tests.csproj", "{32AF3E40-ADF7-43FB-98FA-A8995A83DA37}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompactCryptoGroupAlgebra.LibCrypto.Tests", "CompactCryptoGroupAlgebra.LibCrypto.Tests\CompactCryptoGroupAlgebra.LibCrypto.Tests.csproj", "{32AF3E40-ADF7-43FB-98FA-A8995A83DA37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

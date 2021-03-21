@@ -8,7 +8,7 @@ These groups are mathematical structures which are characterized by a set of gro
 
 The aim of this project is to provide a basis for this kind of cryptographic algebra that is both, simple to use and easy to extend and customise. It also serves as a simple showcase on how concrete algebraic structures, such as elliptic curves, may be implemented in principle, without obfuscating the fundamentals for purposes of performance and security.
 
-__!Security Advisory!__ Note that due to its focus on simplicity `CompactCryptoGroupAlgebra` is _neither_ a _fully secure_ implementation _nor_ the _most performant_. It is intended for experimental and educational purposes. If you require strict security, please use established cryptography libraries. A secure implementation of `CompactCryptoGroupAlgebra` interfaces using native calls to OpenSSL is made available by the `CompactCryptoGroupAlgebra.OpenSsl` library included in this repository.
+__!Security Advisory!__ Note that due to its focus on simplicity `CompactCryptoGroupAlgebra` is _neither_ a _fully secure_ implementation _nor_ the _most performant_. It is intended for experimental and educational purposes. If you require strict security, please use established cryptography libraries. A secure implementation of `CompactCryptoGroupAlgebra` interfaces using native calls to OpenSSL's libcrypto library is made available by the `CompactCryptoGroupAlgebra.LibCrypto` library that is included in this repository but published separately.
 
 ## Features
 
@@ -134,7 +134,10 @@ but you also have the option of instantiating an instance for your own curve.
 
 ## License
 
-`CompactCryptoGroupAlgebra` is licensed under the [GPLv3 license](/LICENSE.txt) for general use.
+`CompactCryptoGroupAlgebra` is licensed under the [GPLv3 license](/LICENSES/GPL-3.0-or-later.txt) (or any later version)
+for general use. If you would like to use `CompactCryptoGroupAlgebra` under different terms, contact the authors.
+
+`CompactCryptoGroupAlgebra` aims to be [REUSE Software](https://reuse.software/) compliant to facilitate easy reuse.
 
 ## Versioning
 

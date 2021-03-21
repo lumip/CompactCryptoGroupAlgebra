@@ -1,0 +1,44 @@
+<!--
+CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
+
+SPDX-FileCopyrightText: 2020-2021 Lukas Prediger <lumip@lumip.de>
+SPDX-License-Identifier: GPL-3.0-or-later WITH GPL-3.0-linking-exception
+SPDX-FileType: SOURCE
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <AssemblyName>CompactCryptoGroupAlgebra.LibCrypto</AssemblyName>
+    <RootNamespace>CompactCryptoGroupAlgebra.LibCrypto</RootNamespace>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>CS8602;CS8603;CS8600;CS8625;CS8610</WarningsAsErrors>
+    <Title>CompactCryptoGroupAlgebra.LibCrypto</Title>
+    <PackageId>CompactCryptoGroupAlgebra.LibCrypto</PackageId>
+    <Authors>Lukas "lumip" Prediger</Authors>
+    <Description>An extension for the CompactCryptoGroupAlgebra library, providing implementations of its CryptoGroup interface that rely on system-native OpenSsl libraries.</Description>
+    <Copyright>Copyright © 2021 Lukas Prediger</Copyright>
+    <VersionPrefix>1.0.0-alpha</VersionPrefix>
+    <LicenseId>GPL-3.0-or-later WITH GPL-3.0-linking-exception</LicenseId>
+    <PackageTags>Asymmetric Cryptography; Group Algebra; OpenSSL</PackageTags>
+    <ProjectUrl>https://github.com/lumip/CompactCryptoGroupAlgebra</ProjectUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin/$(Configuration)/CompactCryptoGroupAlgebra.LibCrypto.xml</DocumentationFile>
+    <DebugType>full</DebugType>
+    <OutputPath>bin/$(Configuration)/</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin/$(Configuration)/CompactCryptoGroupAlgebra.LibCrypto.xml</DocumentationFile>
+    <OutputPath>bin/$(Configuration)/</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../CompactCryptoGroupAlgebra/CompactCryptoGroupAlgebra.csproj" />
+  </ItemGroup>
+
+</Project>

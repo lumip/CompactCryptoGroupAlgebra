@@ -1,11 +1,16 @@
+# SPDX-License-Identifier: CC0-1.0
+# SPDX-FileCopyrightText: Lukas Prediger
+
 */bin/*
 */obj/*
 *.suo
 /packages/*
 /testPackages/*
-.vs
+.vs*
 project.lock.json
 CoverageReport/
 *coverage*.xml
 __Instrumented/
 *Coverage*/
+small_*curve_check.py
+.reuse*
