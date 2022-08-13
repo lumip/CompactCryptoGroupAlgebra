@@ -166,13 +166,15 @@ namespace CompactCryptoGroupAlgebra
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
+            if (obj is BigInteger)
+                return _value.Equals(obj);
             return obj is BigPrime prime && _value.Equals(prime._value);
         }
 
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            return -1937169414 + _value.GetHashCode();
+            return _value.GetHashCode();
         }
 
         /// <inheritdoc/>

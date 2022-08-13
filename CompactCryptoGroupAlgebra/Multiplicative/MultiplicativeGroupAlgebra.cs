@@ -1,6 +1,6 @@
 // CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
 
-// SPDX-FileCopyrightText: 2020-2021 Lukas Prediger <lumip@lumip.de>
+// SPDX-FileCopyrightText: 2022 Lukas Prediger <lumip@lumip.de>
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileType: SOURCE
 
@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace CompactCryptoGroupAlgebra.Multiplicative
 {
@@ -194,6 +196,39 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
             return new CryptoGroup<BigInteger, BigInteger>(new MultiplicativeGroupAlgebra(
                 prime, order, generator
             ));
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CryptoGroup{BigInteger, BigInteger}" /> instance that satisfies at least a given security level.
+        /// 
+        /// Finds random primes q, p such that p = 2q+1 and the bit length of p satisfies the security level requirements.
+        /// Then finds an element of the q-order subgroup of the multiplicative group defined by p to use as the generator.
+        /// 
+        /// This process may take some time, depending on the security level chosen.
+        /// </summary>
+        /// <param name="securityLevel">The minimal security level for the group to be created.</param>
+        /// <param name="randomNumberGenerator">A random number generator (used for sampling primes).</param>
+        public static CryptoGroup<BigInteger, BigInteger> CreateCryptoGroup(int securityLevel, RandomNumberGenerator randomNumberGenerator)
+        {
+            var primeLength = ComputePrimeLengthForSecurityLevel(securityLevel);
+            var sgPrimeLength = NumberLength.FromBitLength(primeLength.InBits - 1);
+            BigInteger sgCandidate = randomNumberGenerator.GetBigIntegerWithLength(sgPrimeLength);
+            sgCandidate |= BigInteger.One; // ensure sgCandidate is odd
+            BigInteger primeCandidate = 2 * sgCandidate + 1;
+            while ( !PrimalityTest.IsProbablyPrime(sgCandidate, randomNumberGenerator) ||
+                    !PrimalityTest.IsProbablyPrime(primeCandidate, randomNumberGenerator) )
+            {
+                sgCandidate += 2;
+                primeCandidate += 4;
+            }
+            Debug.Assert(NumberLength.GetLength(sgCandidate).InBits == sgPrimeLength.InBits);
+            Debug.Assert(NumberLength.GetLength(primeCandidate).InBits == primeLength.InBits);
+
+            var groupAlgebra = new MultiplicativeGroupAlgebra(
+                BigPrime.CreateWithoutChecks(primeCandidate), BigPrime.CreateWithoutChecks(sgCandidate), new BigInteger(4)
+            );
+
+            return new CryptoGroup<BigInteger, BigInteger>(groupAlgebra);
         }
         
     }

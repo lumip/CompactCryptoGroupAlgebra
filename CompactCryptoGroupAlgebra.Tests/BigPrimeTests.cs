@@ -1,6 +1,6 @@
 ﻿// CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
 
-// SPDX-FileCopyrightText: 2020-2021 Lukas Prediger <lumip@lumip.de>
+// SPDX-FileCopyrightText: 2022 Lukas Prediger <lumip@lumip.de>
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileType: SOURCE
 
@@ -145,6 +145,24 @@ namespace CompactCryptoGroupAlgebra
             var otherPrime = BigPrime.CreateWithoutChecks(13);
 
             Assert.AreNotEqual(prime, otherPrime);
+        }
+
+        [Test]
+        public void TestEqualsIsTrueForEqualBigInteger()
+        {
+            var prime = BigPrime.CreateWithoutChecks(11);
+            var bigint = new BigInteger(11);
+
+            Assert.AreEqual(prime, bigint);
+        }
+
+        [Test]
+        public void TestEqualsIsFalseForUnequalBigInteger()
+        {
+            var prime = BigPrime.CreateWithoutChecks(11);
+            var bigint = new BigInteger(13);
+
+            Assert.AreNotEqual(prime, bigint);
         }
 
         [Test]

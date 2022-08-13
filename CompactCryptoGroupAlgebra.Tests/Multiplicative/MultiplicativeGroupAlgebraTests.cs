@@ -1,6 +1,6 @@
 ﻿// CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
 
-// SPDX-FileCopyrightText: 2020-2021 Lukas Prediger <lumip@lumip.de>
+// SPDX-FileCopyrightText: 2022 Lukas Prediger <lumip@lumip.de>
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileType: SOURCE
 
@@ -19,8 +19,11 @@
 
 using System;
 using System.Numerics;
+using System.Security.Cryptography;
+using System.Diagnostics;
 
 using NUnit.Framework;
+using Moq;
 
 namespace CompactCryptoGroupAlgebra.Multiplicative
 {
@@ -294,6 +297,69 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
                 groupAlgebra!.Prime, groupAlgebra!.Order, groupAlgebra!.Generator
             );
             Assert.AreEqual(groupAlgebra, group.Algebra);
+        }
+
+        [Test]
+        public void TestCreateCryptoGroupForLevelRngReturnsOdd()
+        {
+            int securityLevel = 32;
+            var expectedPrimeLength = MultiplicativeGroupAlgebra.ComputePrimeLengthForSecurityLevel(securityLevel);
+            var expectedOrderLength = NumberLength.FromBitLength(expectedPrimeLength.InBits - 1);
+
+            var primeBeforeOrder = BigInteger.Parse("332306998946228968225951765070101393");
+            var order = BigPrime.CreateWithoutChecks(BigInteger.Parse("166153499473114484112975882535050719"));
+            var prime = BigPrime.CreateWithoutChecks(BigInteger.Parse("332306998946228968225951765070101439"));
+
+            var rngResponse = (primeBeforeOrder - 2).ToByteArray();
+
+            Debug.Assert(expectedPrimeLength.InBits == NumberLength.GetLength(prime).InBits);
+            Debug.Assert(expectedOrderLength.InBits == NumberLength.GetLength(order).InBits);
+
+            var rngMock = new Mock<RandomNumberGenerator>(MockBehavior.Strict);
+            rngMock.Setup(rng => rng.GetBytes(It.IsAny<byte[]>()))
+                   .Callback<byte[]>(buffer => {
+                        Buffer.BlockCopy(buffer, 0, rngResponse, 0, Math.Min(rngResponse.Length, buffer.Length));
+                    });
+
+            var group = MultiplicativeGroupAlgebra.CreateCryptoGroup(securityLevel, rngMock.Object);
+            Assert.IsInstanceOf<MultiplicativeGroupAlgebra>(group.Algebra);
+
+            Assert.That(group.SecurityLevel >= securityLevel, "Created group does not meet security level!");
+            Assert.AreEqual(order, group.Algebra.Order);
+            Assert.AreEqual(prime, ((MultiplicativeGroupAlgebra)group.Algebra).Prime);
+            Assert.That(group.Algebra.IsSafeElement(group.Algebra.Generator));
+        }
+
+
+        [Test]
+        public void TestCreateCryptoGroupForLevelRngReturnsEven()
+        {
+            int securityLevel = 32;
+            var expectedPrimeLength = MultiplicativeGroupAlgebra.ComputePrimeLengthForSecurityLevel(securityLevel);
+            var expectedOrderLength = NumberLength.FromBitLength(expectedPrimeLength.InBits - 1);
+
+            var primeBeforeOrder = BigInteger.Parse("332306998946228968225951765070101393");
+            var order = BigPrime.CreateWithoutChecks(BigInteger.Parse("166153499473114484112975882535050719"));
+            var prime = BigPrime.CreateWithoutChecks(BigInteger.Parse("332306998946228968225951765070101439"));
+
+            var rngResponse = (primeBeforeOrder - 3).ToByteArray();
+
+            Debug.Assert(expectedPrimeLength.InBits == NumberLength.GetLength(prime).InBits);
+            Debug.Assert(expectedOrderLength.InBits == NumberLength.GetLength(order).InBits);
+
+            var rngMock = new Mock<RandomNumberGenerator>(MockBehavior.Strict);
+            rngMock.Setup(rng => rng.GetBytes(It.IsAny<byte[]>()))
+                   .Callback<byte[]>(buffer => {
+                        Buffer.BlockCopy(buffer, 0, rngResponse, 0, Math.Min(rngResponse.Length, buffer.Length));
+                    });
+
+            var group = MultiplicativeGroupAlgebra.CreateCryptoGroup(securityLevel, rngMock.Object);
+            Assert.IsInstanceOf<MultiplicativeGroupAlgebra>(group.Algebra);
+
+            Assert.That(group.SecurityLevel >= securityLevel, "Created group does not meet security level!");
+            Assert.AreEqual(order, group.Algebra.Order);
+            Assert.AreEqual(prime, ((MultiplicativeGroupAlgebra)group.Algebra).Prime);
+            Assert.That(group.Algebra.IsSafeElement(group.Algebra.Generator));
         }
 
     }

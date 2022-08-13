@@ -1,6 +1,6 @@
 ﻿// CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
 
-// SPDX-FileCopyrightText: 2020-2021 Lukas Prediger <lumip@lumip.de>
+// SPDX-FileCopyrightText: 2022 Lukas Prediger <lumip@lumip.de>
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileType: SOURCE
 
@@ -53,6 +53,26 @@ namespace CompactCryptoGroupAlgebra
             delta *= delta.Sign;
             Debug.Assert(delta >= BigInteger.Zero);
             return lower + delta;
+        }
+
+        /// <summary>
+        /// Returns a random positive <see cref="BigInteger"/> with the given bit length.
+        /// </summary>
+        /// <param name="randomNumberGenerator">Random number generator.</param>
+        /// <param name="length">The bit length of the generator number.</param>
+        /// <returns>The random <see cref="BigInteger"/>.</returns>
+        public static BigInteger GetBigIntegerWithLength(
+            this RandomNumberGenerator randomNumberGenerator, NumberLength length
+        )
+        {
+            byte[] buffer = new byte[length.InBytes + 1];
+            randomNumberGenerator.GetBytes(buffer);
+            buffer[buffer.Length - 1] = 0; // ensure that there is an additional zero byte so that BigInteger does not treat it as negative
+
+            var candidate = new BigInteger(buffer);
+            candidate &= (BigInteger.One << length.InBits) - 1; // cut off additional bits generated in the highest-order byte
+            candidate |= BigInteger.One << (length.InBits - 1); // ensure msb is set to achieve desired length
+            return candidate;
         }
     }
 }
