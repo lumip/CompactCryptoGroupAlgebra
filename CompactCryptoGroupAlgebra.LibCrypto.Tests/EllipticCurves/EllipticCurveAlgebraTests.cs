@@ -1,6 +1,6 @@
 // CompactCryptoGroupAlgebra.LibCrypto - OpenSSL libcrypto implementation of CompactCryptoGroupAlgebra interfaces
 
-// SPDX-FileCopyrightText: 2021 Lukas Prediger <lumip@lumip.de>
+// SPDX-FileCopyrightText: 2022 Lukas Prediger <lumip@lumip.de>
 // SPDX-License-Identifier: GPL-3.0-or-later WITH GPL-3.0-linking-exception
 // SPDX-FileType: SOURCE
 
@@ -328,6 +328,27 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
             var group = EllipticCurveAlgebra.CreateCryptoGroup(EllipticCurveID.Prime256v1);
             Assert.That(group.Algebra.Equals(expectedGroupAlgebra));
         }
+
+        [Test]
+        [TestCase(126)]
+        [TestCase(128)]
+        [TestCase(140)]
+        [TestCase(190)]
+        [TestCase(200)]
+        [TestCase(254)]
+        [TestCase(260)]
+        public void TestCreateCryptoGroupWithSecurityLevel(int securityLevel)
+        {
+            var group = EllipticCurveAlgebra.CreateCryptoGroup(securityLevel);
+            Assert.That(group.SecurityLevel >= securityLevel);
+        }
+
+        [Test]
+        public void TestCreateCryptoGroupWithTooHighSecurityLevel()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => EllipticCurveAlgebra.CreateCryptoGroup(261));
+        }
+        
 
     }
 

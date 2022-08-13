@@ -1,6 +1,6 @@
 // CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
 
-// SPDX-FileCopyrightText: 2020-2021 Lukas Prediger <lumip@lumip.de>
+// SPDX-FileCopyrightText: 2022 Lukas Prediger <lumip@lumip.de>
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileType: SOURCE
 
@@ -369,5 +369,26 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var group = CurveGroupAlgebra.CreateCryptoGroup(curveParameters);
             Assert.AreEqual(expectedGroupAlgebra, group.Algebra);
         }
+
+        [Test]
+        [TestCase(126)]
+        [TestCase(128)]
+        [TestCase(140)]
+        [TestCase(190)]
+        [TestCase(200)]
+        [TestCase(254)]
+        [TestCase(260)]
+        public void TestCreateCryptoGroupWithSecurityLevel(int securityLevel)
+        {
+            var group = CurveGroupAlgebra.CreateCryptoGroup(securityLevel);
+            Assert.That(group.SecurityLevel >= securityLevel);
+        }
+
+        [Test]
+        public void TestCreateCryptoGroupWithTooHighSecurityLevel()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => CurveGroupAlgebra.CreateCryptoGroup(261));
+        }
+
     }
 }

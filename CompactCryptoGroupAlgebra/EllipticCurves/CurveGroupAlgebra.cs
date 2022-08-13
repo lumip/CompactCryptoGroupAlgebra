@@ -1,6 +1,6 @@
 // CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
 
-// SPDX-FileCopyrightText: 2020-2021 Lukas Prediger <lumip@lumip.de>
+// SPDX-FileCopyrightText: 2022 Lukas Prediger <lumip@lumip.de>
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileType: SOURCE
 
@@ -163,5 +163,43 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         {
             return new CryptoGroup<BigInteger, CurvePoint>(new CurveGroupAlgebra(parameters));
         }
+
+        /// <summary>
+        /// Creates a <see cref="CryptoGroup{BigInteger, CurvePoint}" /> instance at least satisfying a given security level.
+        /// </summary>
+        /// <param name="securityLevel">The minimal security level for the curve to be created.</param>
+        public static CryptoGroup<BigInteger, CurvePoint> CreateCryptoGroup(int securityLevel)
+        {
+            CurveParameters parameters;
+            if (securityLevel <= 126)
+            {
+                parameters = CurveParameters.Curve25519;
+            }
+            else if (securityLevel <= 128)
+            {
+                parameters = CurveParameters.NISTP256;
+            }
+            else if (securityLevel <= 190)
+            {
+                parameters = CurveParameters.M383;
+            }
+            else if (securityLevel <= 254)
+            {
+                parameters = CurveParameters.M511;
+            }
+            else if (securityLevel <= 260)
+            {
+                parameters = CurveParameters.NISTP521;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(
+                    $"There are no pre-configured curves that satisfy a security level of {securityLevel}.", nameof(securityLevel)
+                );
+            }
+
+            return CreateCryptoGroup(parameters);
+        }
+
     }
 }

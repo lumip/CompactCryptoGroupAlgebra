@@ -1,6 +1,6 @@
 // CompactCryptoGroupAlgebra.LibCrypto - OpenSSL libcrypto implementation of CompactCryptoGroupAlgebra interfaces
 
-// SPDX-FileCopyrightText: 2021 Lukas Prediger <lumip@lumip.de>
+// SPDX-FileCopyrightText: 2022 Lukas Prediger <lumip@lumip.de>
 // SPDX-License-Identifier: GPL-3.0-or-later WITH GPL-3.0-linking-exception
 // SPDX-FileType: SOURCE
 
@@ -334,6 +334,34 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
         public static CryptoGroup<SecureBigNumber, ECPoint> CreateCryptoGroup(EllipticCurveID curveId)
         {
             return new CryptoGroup<SecureBigNumber, ECPoint>(new EllipticCurveAlgebra(curveId));
+        }
+
+        /// <summary>
+        /// Creates a <see cref="CryptoGroup{SecureBigNumber, ECPoint}" /> instance at least satisfying the given security level.
+        /// </summary>
+        /// <param name="securityLevel">The minimal security level for the curve to be created.</param>
+        public static CryptoGroup<SecureBigNumber, ECPoint> CreateCryptoGroup(int securityLevel)
+        {
+            EllipticCurveID curveId;
+            if (securityLevel <= 128)
+            {
+                curveId = EllipticCurveID.Prime256v1; // == Secp256r1
+            }
+            else if (securityLevel <= 192)
+            {
+                curveId = EllipticCurveID.Secp384r1;
+            }
+            else if (securityLevel <= 260)
+            {
+                curveId = EllipticCurveID.Secp521r1;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(
+                    $"There are no curves that satisfy a security level of {securityLevel}.", nameof(securityLevel)
+                );
+            }
+            return CreateCryptoGroup(curveId);
         }
 
     }
