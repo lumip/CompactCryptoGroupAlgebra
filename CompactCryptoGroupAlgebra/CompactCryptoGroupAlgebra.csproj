@@ -19,8 +19,8 @@ SPDX-FileType: SOURCE
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <PackageReleaseNotes>https://github.com/lumip/CompactCryptoGroupAlgebra/blob/master/CHANGELOG.txt</PackageReleaseNotes>
     <Authors>Lukas "lumip" Prediger</Authors>
-    <Version>2.0.0-alpha2</Version>
-    <Copyright>Copyright © 2020, 2021 Lukas Prediger</Copyright>
+    <Version>2.1.0</Version>
+    <Copyright>Copyright © 2022 Lukas Prediger</Copyright>
     <PackageTags>Asymmetric Cryptography; Group Algebra</PackageTags>
     <Description>A compact library for abelian group algebra commonly used in asymmetric cryptography, fully written in C#.</Description>
     <ProjectUrl>https://github.com/lumip/CompactCryptoGroupAlgebra</ProjectUrl>
