@@ -2,6 +2,4 @@
 # SPDX-FileCopyrightText: Lukas Prediger
 
 - 2.1.0: Integrated upstream changes of base project.
-- 1.1.0: Added more elliptic curve parameters and convenience functions
-    to obtain groups for a specified security level.
 - 1.0.0-alpha: Initial release of CompactCryptoGroupAlgebra.LibCrypto library

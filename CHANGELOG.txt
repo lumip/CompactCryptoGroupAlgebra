@@ -3,7 +3,7 @@
 
 - 2.1.0: Added more elliptic curve parameters and convenience functions
     to obtain groups for a specified security level.
-- 2.0.0-alpha
+- 2.0.0:
     - Fix: MultiplicativeGroupAlgebra.Negate now works correctly for all elements
         in the prime field, not only the subgroup.
     - Fix/Change: Removed CryptoGroupAlgebra.IsElement in favor of new IsPotentialElement
