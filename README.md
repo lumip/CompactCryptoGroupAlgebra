@@ -15,13 +15,13 @@ __!Security Advisory!__ Note that due to its focus on simplicity `CompactCryptoG
 - Generic classes `CryptoGroup` and `CryptoGroupElement` that user code interfaces with for group operations
 - Available implementations of `CryptoGroup`:
   - Multiplicative groups of a field with prime characteristic
-  - Elliptic curves in Weierstrass form, specifically the NIST-P256 curve
-  - Elliptic curves in Montgomery form, specifically Curve25519
+  - Elliptic curves in Weierstrass form, e.g., the NIST-P256 curve
+  - Elliptic curves in Montgomery form, e.g., Curve25519
   - The x-coordinate-only variant of Montgomery curves
 
 ## Installing
 
-`CompactCryptoGroupAlgebra` can be installed from [nuget](https://www.nuget.org/packages/CompactCryptoGroupAlgebra/1.0.0).
+`CompactCryptoGroupAlgebra` can be installed from [nuget](https://www.nuget.org/packages/CompactCryptoGroupAlgebra/).
 Follow the link for instructions on how to install using your preferred method (package manager, .net cli, etc).
 
 ## Usage
@@ -123,11 +123,15 @@ EllipticCurves.CurveGroupAlgebra.CreateCryptoGroup(curveParameters);
 
 with a `CurveParameters` instance.
 
-`CurveParameters` provides preconfigured instances for two standardized elliptic curves
+`CurveParameters` provides preconfigured instances for the following standardized elliptic curves
 
 ```c#
 CurveParameters.NISTP256
+CurveParameters.NISTP384
+CurveParameters.NISTP521
 CurveParameters.Curve25519
+CurveParameters.M383
+CurveParameters.M511
 ```
 
 but you also have the option of instantiating an instance for your own curve.
