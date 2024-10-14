@@ -38,7 +38,7 @@ namespace CompactCryptoGroupAlgebra
     /// <typeparam name="TElement">
     /// The data type used for raw group elements the algebraic operations operate on.
     /// </typeparam>
-    public class CryptoGroupElement<TScalar, TElement> where TScalar : notnull where TElement: notnull
+    public class CryptoGroupElement<TScalar, TElement> where TScalar : notnull where TElement : notnull
     {
         /// <summary>
         /// Accessor to the <see cref="ICryptoGroupAlgebra{TScalar, TElement}"/> that provides
@@ -64,7 +64,7 @@ namespace CompactCryptoGroupAlgebra
         protected internal CryptoGroupElement(TElement value, ICryptoGroupAlgebra<TScalar, TElement> groupAlgebra)
         {
             Algebra = groupAlgebra;
-            
+
             if (!Algebra.IsPotentialElement(value))
                 throw new ArgumentException("The provided value is not a valid element of the group.", nameof(value));
             Value = value;

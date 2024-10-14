@@ -49,7 +49,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             BigInteger lambda;
             if (left.Equals(right))
             {
-                lambda = Field.Mod((3 * Field.Square(x1) + A) * Field.InvertMult(2 * y1));;
+                lambda = Field.Mod((3 * Field.Square(x1) + A) * Field.InvertMult(2 * y1));
             }
             else
             {

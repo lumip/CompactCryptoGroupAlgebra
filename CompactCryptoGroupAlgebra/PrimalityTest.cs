@@ -65,7 +65,7 @@ namespace CompactCryptoGroupAlgebra
 
         /// <summary>
         /// Checks whether a given <paramref name="n"/> is a prime number.
-        /// 
+        ///
         /// Implements the Miller-Rabin primality test, which is a probabilistic
         /// algorithm. If the given <paramref name="n"/> is a prime,
         /// <see cref="IsProbablyPrime(BigInteger, RandomNumberGenerator, double)"/>
@@ -73,11 +73,10 @@ namespace CompactCryptoGroupAlgebra
         /// a composite number, the algorithm may return <c>true</c> with probability
         /// less than <paramref name="errorProbability"/>.
         /// </summary>
-        /// <returns><c>true</c>, if probably prime was ???, <c>false</c> otherwise.</returns>
         /// <param name="n">The number to check for primality.</param>
         /// <param name="randomNumberGenerator">Random number generator instance.</param>
-        /// <param name="errorProbability">Acceptable probability of <c>true</c>
-        ///     being returns if <paramref name="n"/> is composite.</param>
+        /// <param name="errorProbability">Acceptable probability of <c>true</c> being returned when <paramref name="n"/> is actually not a prime.</param>
+        /// <returns><c>true</c>, if <paramref name="n"/> is prime with probability 1 - <paramref name="errorProbability"/>, <c>false</c> otherwise.</returns>
         public static bool IsProbablyPrime(
             this BigInteger n, RandomNumberGenerator randomNumberGenerator, double errorProbability = 1e-10
         )

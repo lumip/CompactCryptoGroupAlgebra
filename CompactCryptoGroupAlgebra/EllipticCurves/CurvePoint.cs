@@ -89,7 +89,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         {
             return new CurvePoint(X, Y, IsAtInfinity);
         }
-        
+
         /// <summary>
         /// Creates a string representation of this point for displaying.
         /// </summary>
