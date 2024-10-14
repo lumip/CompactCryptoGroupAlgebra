@@ -1,14 +1,14 @@
 <!--
 CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
 
-SPDX-FileCopyrightText: 2020-2021 Lukas Prediger <lumip@lumip.de>
+SPDX-FileCopyrightText: 2020-2024 Lukas Prediger <lumip@lumip.de>
 SPDX-License-Identifier: GPL-3.0-or-later WITH GPL-3.0-linking-exception
 SPDX-FileType: SOURCE
 -->
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net8</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <AssemblyName>CompactCryptoGroupAlgebra.LibCrypto.Tests</AssemblyName>
     <RootNamespace>CompactCryptoGroupAlgebra.LibCrypto</RootNamespace>
@@ -19,6 +19,15 @@ SPDX-FileType: SOURCE
     <Authors>Lukas "lumip" Prediger</Authors>
     <Description>Tests for the CompactCryptoGroupAlgebra.LibCrypto Library Extension</Description>
     <Copyright>Copyright © 2021 Lukas Prediger</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+    <OutputPath>bin/$(Configuration)/</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>bin/$(Configuration)/</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

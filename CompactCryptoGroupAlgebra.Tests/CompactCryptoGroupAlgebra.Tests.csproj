@@ -1,14 +1,14 @@
 <!--
 CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
 
-SPDX-FileCopyrightText: 2020-2021 Lukas Prediger <lumip@lumip.de>
+SPDX-FileCopyrightText: 2020-2024 Lukas Prediger <lumip@lumip.de>
 SPDX-License-Identifier: GPL-3.0-or-later
 SPDX-FileType: SOURCE
 -->
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net8</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <AssemblyName>CompactCryptoGroupAlgebra.Tests</AssemblyName>
     <RootNamespace>CompactCryptoGroupAlgebra</RootNamespace>
