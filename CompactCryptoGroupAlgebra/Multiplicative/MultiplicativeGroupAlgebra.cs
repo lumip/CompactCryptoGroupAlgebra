@@ -66,8 +66,8 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
                                         // (cf.L. Grémy, Sieve Algorithms for the Discrete Logarithm in Medium Characteristic Finite Fields,
                                         //               https://tel.archives-ouvertes.fr/tel-01647623/document )
 
-            double natLogSieveLevel = sieveConstant * Math.Pow(natLogPrime, 1.0/3.0) * Math.Pow(Math.Log(natLogPrime), 2.0/3.0);
-            int sieveLevel = (int)(natLogSieveLevel/Math.Log(2));
+            double natLogSieveLevel = sieveConstant * Math.Pow(natLogPrime, 1.0 / 3.0) * Math.Pow(Math.Log(natLogPrime), 2.0 / 3.0);
+            int sieveLevel = (int)(natLogSieveLevel / Math.Log(2));
 
             // pollard rho strength
             int rhoLevel = NumberLength.GetLength(order).InBits * 2;
@@ -88,18 +88,18 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         {
             // find minimum bit length l for Number field sieve
             // 1. solve number field sieve for z = ln ln (2^l) via Newton method
-            double c = Math.Log(2)*securityLevel/1.9;
+            double c = Math.Log(2) * securityLevel / 1.9;
             Func<double, double> f = (double z) =>
-                c - Math.Exp((1.0/3.0) * z) * Math.Pow(z, 2.0/3.0);
-            Func<double, double> df1 = (double z) => 
-                -Math.Exp((1.0/3.0) * z) * ((1.0/3.0) * Math.Pow(z, 2.0/3.0) + 2.0/(3.0 * Math.Pow(z, 1.0/3.0)));
+                c - Math.Exp((1.0 / 3.0) * z) * Math.Pow(z, 2.0 / 3.0);
+            Func<double, double> df1 = (double z) =>
+                -Math.Exp((1.0 / 3.0) * z) * ((1.0 / 3.0) * Math.Pow(z, 2.0 / 3.0) + 2.0 / (3.0 * Math.Pow(z, 1.0 / 3.0)));
 
             double[] z = new double[] { Math.Log(20 * securityLevel), double.PositiveInfinity };
             int i = 0;
-            while (Math.Abs(z[1-i] - z[i]) > 1e-7)
+            while (Math.Abs(z[1 - i] - z[i]) > 1e-7)
             {
-                z[1 - i] =  z[i] - f(z[i]) / df1(z[i]);
-                i = 1-i;
+                z[1 - i] = z[i] - f(z[i]) / df1(z[i]);
+                i = 1 - i;
             }
             // 2. compute l from z
             int l = (int)Math.Ceiling(Math.Exp(z[i]) / Math.Log(2));
@@ -230,6 +230,6 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
 
             return new CryptoGroup<BigInteger, BigInteger>(groupAlgebra);
         }
-        
+
     }
 }

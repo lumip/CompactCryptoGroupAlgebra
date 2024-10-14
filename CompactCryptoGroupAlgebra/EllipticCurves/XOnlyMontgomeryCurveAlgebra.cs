@@ -23,7 +23,7 @@ using System.Diagnostics;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
-    
+
     /// <summary>
     /// Cryptographic group based on point addition in elliptic curves in Montgomery form
     /// using x-coordinate-only arithmetics on projected coordinates.
@@ -162,8 +162,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public override BigInteger Add(BigInteger left, BigInteger right)
         {
             throw new NotSupportedException("An x-only Montgomery curve " +
-            	"has no definition for the standard addition. Use the " +
-            	"standard Montgomery curve implementation instead.");
+                "has no definition for the standard addition. Use the " +
+                "standard Montgomery curve implementation instead.");
         }
 
         /// <inheritdoc/>
@@ -182,15 +182,15 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public override BigInteger Negate(BigInteger point)
         {
             throw new NotSupportedException("An x-only Montgomery curve " +
-            	"has no definition for the standard negation. Use the " +
-            	"standard Montgomery curve implementation instead.");
+                "has no definition for the standard negation. Use the " +
+                "standard Montgomery curve implementation instead.");
         }
 
         /// <inheritdoc/>
         protected override bool IsElementDerived(BigInteger point)
         {
             return Field.IsElement(point);
-            
+
             // In Montgomery form, every x coordinate corresponds to a valid
             // point either on the curve or on its twist, i.e., another valid
             // curve. We do not really care about which of these two we compute

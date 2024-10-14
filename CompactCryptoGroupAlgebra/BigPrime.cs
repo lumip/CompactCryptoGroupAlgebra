@@ -88,7 +88,7 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="p">The first <see cref="BigPrime"/> to add.</param>
         /// <param name="x">The second <see cref="BigInteger"/> to add.</param>
         /// <returns>The <see cref="BigInteger"/> that is the sum of the values of <c>p</c> and <c>x</c>.</returns>
-        public static BigInteger operator+(BigPrime p, BigInteger x)
+        public static BigInteger operator +(BigPrime p, BigInteger x)
         {
             return p._value + x;
         }
@@ -100,7 +100,7 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="x">The first <see cref="BigInteger"/> to add.</param>
         /// <param name="p">The second <see cref="BigPrime"/> to add.</param>
         /// <returns>The <see cref="BigInteger"/> that is the sum of the values of <c>x</c> and <c>p</c>.</returns>
-        public static BigInteger operator+(BigInteger x, BigPrime p)
+        public static BigInteger operator +(BigInteger x, BigPrime p)
         {
             return p + x;
         }
@@ -112,7 +112,7 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="p">The <see cref="CompactCryptoGroupAlgebra.BigPrime"/> to subtract from (the minuend).</param>
         /// <param name="x">The <see cref="System.Numerics.BigInteger"/> to subtract (the subtrahend).</param>
         /// <returns>The <see cref="System.Numerics.BigInteger"/> that is <c>p</c> minus <c>x</c>.</returns>
-        public static BigInteger operator-(BigPrime p, BigInteger x)
+        public static BigInteger operator -(BigPrime p, BigInteger x)
         {
             return p._value - x;
         }
@@ -124,7 +124,7 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="x">The <see cref="System.Numerics.BigInteger"/> to subtract from (the minuend).</param>
         /// <param name="p">The <see cref="CompactCryptoGroupAlgebra.BigPrime"/> to subtract (the subtrahend).</param>
         /// <returns>The <see cref="System.Numerics.BigInteger"/> that is <c>x</c> minus <c>p</c>.</returns>
-        public static BigInteger operator-(BigInteger x, BigPrime p)
+        public static BigInteger operator -(BigInteger x, BigPrime p)
         {
             return x - p._value;
         }
@@ -134,7 +134,7 @@ namespace CompactCryptoGroupAlgebra
         /// </summary>
         /// <param name="p">The <see cref="BigPrime"/> to negate.</param>
         /// <returns>The <see cref="BigInteger"/> that is the negation of <c>p</c></returns>.
-        public static BigInteger operator-(BigPrime p)
+        public static BigInteger operator -(BigPrime p)
         {
             return -p._value;
         }
@@ -146,7 +146,7 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="x">The <see cref="System.Numerics.BigInteger"/> to multiply.</param>
         /// <param name="p">The <see cref="CompactCryptoGroupAlgebra.BigPrime"/> to multiply.</param>
         /// <returns>The <see cref="System.Numerics.BigInteger"/> that is <c>x</c> * <c>p</c>.</returns>
-        public static BigInteger operator*(BigInteger x, BigPrime p)
+        public static BigInteger operator *(BigInteger x, BigPrime p)
         {
             return x * p._value;
         }
@@ -158,7 +158,7 @@ namespace CompactCryptoGroupAlgebra
         /// <param name="p">The <see cref="CompactCryptoGroupAlgebra.BigPrime"/> to multiply.</param>
         /// <param name="x">The <see cref="System.Numerics.BigInteger"/> to multiply.</param>
         /// <returns>The <see cref="System.Numerics.BigInteger"/> that is <c>p</c> * <c>x</c>.</returns>
-        public static BigInteger operator*(BigPrime p, BigInteger x)
+        public static BigInteger operator *(BigPrime p, BigInteger x)
         {
             return x * p._value;
         }

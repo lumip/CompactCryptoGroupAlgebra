@@ -91,8 +91,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                     0x01, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff,
                     0x00 // extra 0 to ensure positivity
                 })), // 115792089210356248762697446949407573530086143415290314195533631308867097853951
-                a:  new BigInteger(-3),
-                b:  new BigInteger(new byte[] {
+                a: new BigInteger(-3),
+                b: new BigInteger(new byte[] {
                     0x4b, 0x60, 0xd2, 0x27, 0x3e, 0x3c, 0xce, 0x3b,
                     0xf6, 0xb0, 0x53, 0xcc, 0xb0, 0x06, 0x1d, 0x65,
                     0xbc, 0x86, 0x98, 0x76, 0x55, 0xbd, 0xeb, 0xb3,
@@ -276,8 +276,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                     0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x7f,
                     0x00 // extra 0 to ensure positivity
                 })), // 2^255 - 19
-            a:  new BigInteger(486662),
-                b:  BigInteger.One
+            a: new BigInteger(486662),
+                b: BigInteger.One
             ),
             generator: new CurvePoint(
                 new BigInteger(9),
@@ -373,7 +373,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             generator: new CurvePoint(
                 new BigInteger(5),
                 new BigInteger(new byte[] {
-                    0xa5, 0x6f, 0x05, 0xaf, 0x64, 0x0a, 0xe3, 0x95, 
+                    0xa5, 0x6f, 0x05, 0xaf, 0x64, 0x0a, 0xe3, 0x95,
                     0xa8, 0x93, 0x20, 0x54, 0xca, 0xdb, 0xf1, 0xe9,
                     0xab, 0x40, 0x59, 0x45, 0xc4, 0x8a, 0x30, 0x49,
                     0xbf, 0x3d, 0xa4, 0xe8, 0x29, 0x94, 0x2b, 0x42,

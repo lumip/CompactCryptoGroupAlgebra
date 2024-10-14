@@ -23,7 +23,7 @@ using System.Diagnostics;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
-    
+
     /// <summary>
     /// Cryptographic group based on point addition in elliptic curves.
     /// 
@@ -35,7 +35,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
     /// </summary>
     public sealed class CurveGroupAlgebra : CryptoGroupAlgebra<CurvePoint>
     {
-        
+
         private readonly CurveEquation _curveEquation;
         private BigIntegerField Field { get { return _curveEquation.Field; } }
 
@@ -58,7 +58,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             _curveEquation = parameters.Equation;
             if (!IsSafeElement(Generator))
                 throw new ArgumentException("The point given as generator is " +
-                	"not a valid point on the curve.", nameof(parameters));
+                    "not a valid point on the curve.", nameof(parameters));
         }
 
         /// <summary>
