@@ -1,6 +1,6 @@
 // CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
 
-// SPDX-FileCopyrightText: 2022 Lukas Prediger <lumip@lumip.de>
+// SPDX-FileCopyrightText: 2022-2024 Lukas Prediger <lumip@lumip.de>
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileType: SOURCE
 
@@ -213,18 +213,26 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
             var primeLength = ComputePrimeLengthForSecurityLevel(securityLevel);
             var sgPrimeLength = NumberLength.FromBitLength(primeLength.InBits - 1);
             BigInteger sgCandidate = randomNumberGenerator.GetBigIntegerWithLength(sgPrimeLength);
-            sgCandidate |= BigInteger.One; // ensure sgCandidate is odd
+
+            // Ensure sgCandidate mod 6 == 5. Any prime p can only have p mod 6 == 1 or p mod 6 == 5.
+            // If sgCandidate mod 6 == 1, then below primeCandidate mod 6 == 3, which makes it divisable by 3.
+            // If sgCandidate mod 6 == 5, then below primeCandidate mod 6 == 5 as well, meaning it could be prime.
+            var factorOfSix = sgCandidate / 6;
+            sgCandidate = factorOfSix * 6 + 5;
+
             BigInteger primeCandidate = 2 * sgCandidate + 1;
             while (
                 !PrimalityTest.IsProbablyPrime(sgCandidate, randomNumberGenerator) ||
                 !PrimalityTest.IsProbablyPrime(primeCandidate, randomNumberGenerator)
             )
             {
-                sgCandidate += 2;
-                primeCandidate += 4;
+                sgCandidate += 6;
+                primeCandidate += 12;
             }
+
             Debug.Assert(NumberLength.GetLength(sgCandidate).InBits == sgPrimeLength.InBits);
             Debug.Assert(NumberLength.GetLength(primeCandidate).InBits == primeLength.InBits);
+            Debug.Assert(2 * sgCandidate + 1 == primeCandidate);
 
             var groupAlgebra = new MultiplicativeGroupAlgebra(
                 BigPrime.CreateWithoutChecks(primeCandidate), BigPrime.CreateWithoutChecks(sgCandidate), new BigInteger(4)
