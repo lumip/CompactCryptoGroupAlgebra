@@ -1,6 +1,6 @@
 // CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
 
-// SPDX-FileCopyrightText: 2022 Lukas Prediger <lumip@lumip.de>
+// SPDX-FileCopyrightText: 2022-2024 Lukas Prediger <lumip@lumip.de>
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileType: SOURCE
 
@@ -27,7 +27,7 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
 {
     /// <summary>
     /// Algebraic group operations based on multiplications in the finite field of a prime number <c>P</c>.
-    /// 
+    ///
     /// Through the <see cref="CryptoGroup{BigInteger, BigInteger}"/> interface, the addition
     /// represents multiplication of two integers modulo <c>P</c>, while scalar multiplication
     /// is exponentiation of an integer modulo <c>P</c>.
@@ -52,7 +52,7 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         /// for discrete logarithms [2].
         ///
         /// [1]: D. Gordon: Discrete Logarithms in GF(P) Using the Number Field Sieve, https://doi.org/10.1137/0406010
-        /// [2]: J. Pollard: Monte Carlo Methods For Index Computation (mod p), https://doi.org/10.1090/S0025-5718-1978-0491431-9 
+        /// [2]: J. Pollard: Monte Carlo Methods For Index Computation (mod p), https://doi.org/10.1090/S0025-5718-1978-0491431-9
         /// </summary>
         /// <param name="prime">The prime modulo of the group.</param>
         /// <param name="order">The order of the group.</param>
@@ -79,7 +79,7 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         /// Computes the required bit length for prime modulus to achieve a desired security level.
         ///
         /// The required bit length for the modulus is found by solving the equation for expected
-        /// runtime of the number field sieve algorithm [1] for the security parameter. 
+        /// runtime of the number field sieve algorithm [1] for the security parameter.
         ///
         /// /// [1]: D. Gordon: Discrete Logarithms in GF(P) Using the Number Field Sieve, https://doi.org/10.1137/0406010
         /// </summary>
@@ -200,10 +200,10 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
 
         /// <summary>
         /// Creates a <see cref="CryptoGroup{BigInteger, BigInteger}" /> instance that satisfies at least a given security level.
-        /// 
+        ///
         /// Finds random primes q, p such that p = 2q+1 and the bit length of p satisfies the security level requirements.
         /// Then finds an element of the q-order subgroup of the multiplicative group defined by p to use as the generator.
-        /// 
+        ///
         /// This process may take some time, depending on the security level chosen.
         /// </summary>
         /// <param name="securityLevel">The minimal security level for the group to be created.</param>
@@ -213,16 +213,24 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
             var primeLength = ComputePrimeLengthForSecurityLevel(securityLevel);
             var sgPrimeLength = NumberLength.FromBitLength(primeLength.InBits - 1);
             BigInteger sgCandidate = randomNumberGenerator.GetBigIntegerWithLength(sgPrimeLength);
-            sgCandidate |= BigInteger.One; // ensure sgCandidate is odd
+
+            // Ensure sgCandidate mod 6 == 5. Any prime p can only have p mod 6 == 1 or p mod 6 == 5.
+            // If sgCandidate mod 6 == 1, then below primeCandidate mod 6 == 3, which makes it divisable by 3.
+            // If sgCandidate mod 6 == 5, then below primeCandidate mod 6 == 5 as well, meaning it could be prime.
+            var factorOfSix = sgCandidate / 6;
+            sgCandidate = factorOfSix * 6 + 5;
+
             BigInteger primeCandidate = 2 * sgCandidate + 1;
             while ( !PrimalityTest.IsProbablyPrime(sgCandidate, randomNumberGenerator) ||
                     !PrimalityTest.IsProbablyPrime(primeCandidate, randomNumberGenerator) )
             {
-                sgCandidate += 2;
-                primeCandidate += 4;
+                sgCandidate += 6;
+                primeCandidate += 12;
             }
+
             Debug.Assert(NumberLength.GetLength(sgCandidate).InBits == sgPrimeLength.InBits);
             Debug.Assert(NumberLength.GetLength(primeCandidate).InBits == primeLength.InBits);
+            Debug.Assert(2 * sgCandidate + 1 == primeCandidate);
 
             var groupAlgebra = new MultiplicativeGroupAlgebra(
                 BigPrime.CreateWithoutChecks(primeCandidate), BigPrime.CreateWithoutChecks(sgCandidate), new BigInteger(4)
