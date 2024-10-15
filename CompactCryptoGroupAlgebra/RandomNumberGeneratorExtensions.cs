@@ -1,6 +1,6 @@
 ﻿// CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
 
-// SPDX-FileCopyrightText: 2022 Lukas Prediger <lumip@lumip.de>
+// SPDX-FileCopyrightText: 2022-2024 Lukas Prediger <lumip@lumip.de>
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileType: SOURCE
 
@@ -59,7 +59,7 @@ namespace CompactCryptoGroupAlgebra
         /// Returns a random positive <see cref="BigInteger"/> with the given bit length.
         /// </summary>
         /// <param name="randomNumberGenerator">Random number generator.</param>
-        /// <param name="length">The bit length of the generator number.</param>
+        /// <param name="length">The bit length of the generated number.</param>
         /// <returns>The random <see cref="BigInteger"/>.</returns>
         public static BigInteger GetBigIntegerWithLength(
             this RandomNumberGenerator randomNumberGenerator, NumberLength length
@@ -73,6 +73,41 @@ namespace CompactCryptoGroupAlgebra
             candidate &= (BigInteger.One << length.InBits) - 1; // cut off additional bits generated in the highest-order byte
             candidate |= BigInteger.One << (length.InBits - 1); // ensure msb is set to achieve desired length
             return candidate;
+        }
+
+        /// <summary>
+        /// Returns a random <see cref="BigPrime"/> with the given bit length.
+        /// </summary>
+        /// <param name="randomNumberGenerator">Random number generator.</param>
+        /// <param name="length">The bit length of the generated prime number.</param>
+        /// <returns>The random <see cref="BigPrime"/>.</returns>
+        public static BigPrime GetBigPrime(
+            this RandomNumberGenerator randomNumberGenerator, NumberLength length
+        )
+        {
+            BigInteger primeCandidate = randomNumberGenerator.GetBigIntegerWithLength(length);
+
+            // Ensure primeCandidate is odd.
+            primeCandidate |= 1;
+
+            // Ensure primeCandidate mod 6 == 1 or 5. Any prime p can only have p mod 6 == 1 or p mod 6 == 5.
+            // Relying on bit operations to avoid any branching statements.
+            var residue = primeCandidate % 6;
+            primeCandidate += residue & 2;  // <-> primeCandidate += (residue == 3) ? 2 : 0;
+            residue += residue & 2; // <-> residue += (residue == 3) ? 2 : 0;
+            int step = 2 << (int)((residue ^ (residue >> 2)) & 1); // <-> step = (residue == 1) ? 4 : 2;
+            int shiftDir = -1 + (step & 2); // <-> shiftDir = (step == 2) ? 1 : -1;
+
+            while (!PrimalityTest.IsProbablyPrime(primeCandidate, randomNumberGenerator))
+            {
+                primeCandidate += step;
+
+                // Below is equivalent to step = (step == 2) ? 4 : 2;
+                step = (step << shiftDir) | (step >> -shiftDir);
+                shiftDir = -shiftDir;
+            }
+
+            return BigPrime.CreateWithoutChecks(primeCandidate);
         }
     }
 }
