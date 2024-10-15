@@ -1,6 +1,6 @@
 ﻿// CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
 
-// SPDX-FileCopyrightText: 2022 Lukas Prediger <lumip@lumip.de>
+// SPDX-FileCopyrightText: 2022-2024 Lukas Prediger <lumip@lumip.de>
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileType: SOURCE
 
@@ -85,9 +85,9 @@ namespace CompactCryptoGroupAlgebra
             var length = NumberLength.FromBitLength(17);
 
             var leadingOneRngBuffer = ((BigInteger.One << (3 * 8)) - 1).ToByteArray(); // 3 bytes of ones
-            var leadingZeroRngBuffer = ((BigInteger.One << (length.InBits - 2))).ToByteArray(); // only bit 16 set
+            var leadingZeroRngBuffer = (BigInteger.One << (length.InBits - 2)).ToByteArray(); // only bit 16 set
             var expectedFirst = (BigInteger.One << length.InBits) - 1;
-            var expectedSecond = ((BigInteger.One << (length.InBits - 2)) ^ (BigInteger.One << (length.InBits - 1)));
+            var expectedSecond = (BigInteger.One << (length.InBits - 2)) ^ (BigInteger.One << (length.InBits - 1));
 
             bool firstCall = true;
             var rngMock = new Mock<RandomNumberGenerator>(MockBehavior.Strict);
@@ -151,5 +151,36 @@ namespace CompactCryptoGroupAlgebra
 
             rngMock.Verify(rng => rng.GetBytes(It.IsAny<byte[]>()), Times.Exactly(2));
         }
+
+        [Test]
+        [TestCase(3)]  // ((prime - 3) | 1) mod 6 == ((prime - 2) | 1) == 5
+        [TestCase(4)]  // ((prime - 4) | 1) mod 6 == 3
+        [TestCase(6)]  // ((prime - 6) | 1) mod 6 == 1
+        public void TestRandomBigPrime(int subtrahend)
+        {
+            var length = NumberLength.FromBitLength(128);
+            var prime = BigPrime.CreateWithoutChecks(BigInteger.Parse("340282366920938463463374607431768211297"));
+
+            var rngResponse = (prime - subtrahend).ToByteArray();
+
+            Random random = new Random(0);
+            bool firstCall = true;
+
+            var rngMock = new Mock<RandomNumberGenerator>(MockBehavior.Strict);
+            rngMock.Setup(rng => rng.GetBytes(It.IsAny<byte[]>()))
+                   .Callback<byte[]>(buffer =>
+                   {
+                       if (firstCall)
+                           Buffer.BlockCopy(rngResponse, 0, buffer, 0, Math.Min(rngResponse.Length, buffer.Length));
+                       else
+                           random.NextBytes(buffer);
+                       firstCall = false;
+                   });
+
+            var result = rngMock.Object.GetBigPrime(length);
+
+            Assert.AreEqual(prime, result);
+        }
+
     }
 }
