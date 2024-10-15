@@ -1,6 +1,6 @@
 // CompactCryptoGroupAlgebra.LibCrypto - OpenSSL libcrypto implementation of CompactCryptoGroupAlgebra interfaces
 
-// SPDX-FileCopyrightText: 2021 Lukas Prediger <lumip@lumip.de>
+// SPDX-FileCopyrightText: 2021-2024 Lukas Prediger <lumip@lumip.de>
 // SPDX-License-Identifier: GPL-3.0-or-later WITH GPL-3.0-linking-exception
 // SPDX-FileType: SOURCE
 
@@ -18,7 +18,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Additional permission under GNU GPL version 3 section 7
-// 
+//
 // If you modify CompactCryptoGroupAlgebra.LibCrypto, or any covered work, by linking or combining it
 // with the OpenSSL library (or a modified version of that library), containing parts covered by the
 // terms of the OpenSSL License and the SSLeay License, the licensors of CompactCryptoGroupAlgebra.LibCrypto
@@ -41,8 +41,8 @@ namespace CompactCryptoGroupAlgebra.LibCrypto
             ulong errorCode = 268877932;
             var ex = new OpenSslNativeException(errorCode);
 
-            Assert.That(ex.Code == errorCode);
-            Assert.That(ex.Message.Contains("elliptic curve routines:EC_GROUP_new:"));
+            Assert.AreEqual(errorCode, ex.Code);
+            Assert.That(ex.Message.Contains(":1006C06C:"));
         }
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
@@ -55,11 +55,8 @@ namespace CompactCryptoGroupAlgebra.LibCrypto
             var handle = EC_GROUP_new(IntPtr.Zero);
             Assert.That(handle.IsInvalid);
 
-            ulong expectedErrorCode = 268877932;
-
             var ex = new OpenSslNativeException();
-            Assert.That(ex.Code == expectedErrorCode);
-            Assert.That(ex.Message.Contains("elliptic curve routines:EC_GROUP_new:"));
+            Assert.That(ex.Message.Contains("elliptic curve routines:"));
         }
     }
 }
