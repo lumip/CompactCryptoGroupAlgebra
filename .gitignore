@@ -14,3 +14,4 @@ __Instrumented/
 *Coverage*/
 small_*curve_check.py
 .reuse*
+*TestResults*

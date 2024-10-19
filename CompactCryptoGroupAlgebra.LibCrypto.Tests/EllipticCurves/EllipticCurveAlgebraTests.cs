@@ -18,18 +18,17 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Additional permission under GNU GPL version 3 section 7
-// 
+//
 // If you modify CompactCryptoGroupAlgebra.LibCrypto, or any covered work, by linking or combining it
 // with the OpenSSL library (or a modified version of that library), containing parts covered by the
 // terms of the OpenSSL License and the SSLeay License, the licensors of CompactCryptoGroupAlgebra.LibCrypto
 // grant you additional permission to convey the resulting work.
 
-using NUnit.Framework;
 using System;
 using System.Numerics;
 using System.Security.Cryptography;
-
 using CompactCryptoGroupAlgebra.LibCrypto.Internal.Native;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
 {
@@ -66,7 +65,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
             var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
 
             var neutralElement = algebra.NeutralElement;
-            
+
             var result = algebra.Add(neutralElement, neutralElement);
 
             Assert.That(result.Equals(neutralElement));
@@ -121,8 +120,6 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
         {
             var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
 
-            var generator = algebra.Generator;
-
             var groupHandle = ECGroupHandle.CreateByCurveNID((int)EllipticCurveID.Prime256v1);
             var ctx = BigNumberContextHandle.Create();
 
@@ -134,7 +131,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
             ECPointHandle.Multiply(groupHandle, pointB.Handle, new BigNumber(kB).Handle, ECPointHandle.Null, BigNumberHandle.Null, ctx);
             var expected = new ECPoint(groupHandle);
             ECPointHandle.Multiply(groupHandle, expected.Handle, new BigNumber(kA + kB).Handle, ECPointHandle.Null, BigNumberHandle.Null, ctx);
-            
+
             var result = algebra.Add(pointA, pointB);
 
             Assert.That(result.Equals(expected));
@@ -144,8 +141,6 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
         public void TestMultipy()
         {
             var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
-
-            var generator = algebra.Generator;
 
             var groupHandle = ECGroupHandle.CreateByCurveNID((int)EllipticCurveID.Prime256v1);
             var ctx = BigNumberContextHandle.Create();
@@ -158,7 +153,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
 
             var expected = new ECPoint(groupHandle);
             ECPointHandle.Multiply(groupHandle, expected.Handle, BigNumberHandle.Null, point.Handle, factor.Handle, ctx);
-            
+
             var result = algebra.MultiplyScalar(point, factor);
 
             Assert.That(result.Equals(expected));
@@ -169,8 +164,6 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
         {
             var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
 
-            var generator = algebra.Generator;
-
             var groupHandle = ECGroupHandle.CreateByCurveNID((int)EllipticCurveID.Prime256v1);
 
             var ctx = BigNumberContextHandle.Create();
@@ -180,7 +173,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
 
             var expected = new ECPoint(groupHandle);
             ECPointHandle.Multiply(groupHandle, expected.Handle, index.Handle, ECPointHandle.Null, BigNumberHandle.Null, ctx);
-            
+
             var result = algebra.GenerateElement(index);
 
             Assert.That(result.Equals(expected));
@@ -198,7 +191,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
 
             var point = new ECPoint(groupHandle);
             ECPointHandle.Multiply(groupHandle, point.Handle, new BigNumber(index).Handle, ECPointHandle.Null, BigNumberHandle.Null, ctx);
-            
+
             Assert.That(algebra.IsPotentialElement(point), "valid point not accepted by IsPotentialElement!");
             Assert.That(algebra.IsSafeElement(point), "valid point not accepted by IsSafeElement!");
         }
@@ -216,8 +209,6 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
         public void TestNegate()
         {
             var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
-
-            var generator = algebra.Generator;
 
             var groupHandle = ECGroupHandle.CreateByCurveNID((int)EllipticCurveID.Prime256v1);
 
@@ -238,8 +229,6 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
         {
             var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
 
-            var generator = algebra.Generator;
-
             (var index, var point) = algebra.GenerateRandomElement(RandomNumberGenerator.Create());
 
             var expected = algebra.GenerateElement(index);
@@ -251,15 +240,13 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
         {
             var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
 
-            var generator = algebra.Generator;
-
             var groupHandle = ECGroupHandle.CreateByCurveNID((int)EllipticCurveID.Prime256v1);
 
             var ctx = BigNumberContextHandle.Create();
             var index = new BigInteger(3);
             var point = new ECPoint(groupHandle);
             ECPointHandle.Multiply(groupHandle, point.Handle, new BigNumber(index).Handle, ECPointHandle.Null, BigNumberHandle.Null, ctx);
-            
+
             byte[] buffer = algebra.ToBytes(point);
             var result = algebra.FromBytes(buffer);
 
@@ -308,7 +295,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
         {
             var algebra = new EllipticCurveAlgebra(EllipticCurveID.Prime256v1);
             var otherAlgebra = new EllipticCurveAlgebra(EllipticCurveID.Prime239v3);
-            
+
             Assert.That(!algebra.Equals(otherAlgebra));
         }
 
@@ -348,7 +335,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => EllipticCurveAlgebra.CreateCryptoGroup(261));
         }
-        
+
 
     }
 

@@ -25,8 +25,8 @@
 // grant you additional permission to convey the resulting work.
 
 using System;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
 {
@@ -37,8 +37,8 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
     sealed class ECKeyHandle : NativeHandle
     {
 
-#region Native Methods Imports
-        [DllImport("libcrypto", CallingConvention=CallingConvention.Cdecl)]
+        #region Native Methods Imports
+        [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static int EC_KEY_set_private_key(ECKeyHandle key, BigNumberHandle prv);
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
@@ -52,9 +52,9 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static int EC_KEY_generate_key(ECKeyHandle key);
-#endregion
+        #endregion
 
-#region Checked Native Methods
+        #region Checked Native Methods
         public static void SetPrivateKey(ECKeyHandle key, BigNumberHandle privateKey)
         {
             Debug.Assert(!key.IsInvalid, $"Accessed an invalid ECKeyHandle! <{nameof(key)}>");
@@ -86,15 +86,15 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
             Debug.Assert(!key.IsInvalid, $"Accessed an invalid ECKeyHandle! <{nameof(key)}>");
             if (EC_KEY_generate_key(key) == 0) throw new OpenSslNativeException();
         }
-#endregion
+        #endregion
 
-#region Memory Handling Methods
+        #region Memory Handling Methods
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static IntPtr EC_KEY_new();
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static void EC_KEY_free(IntPtr key);
-#endregion
+        #endregion
 
         /// <summary>
         /// Allocates a new OpenSSL <c>EC_KEY</c> structure and

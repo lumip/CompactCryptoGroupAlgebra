@@ -18,9 +18,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Numerics;
-
-using NUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
@@ -35,7 +34,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var equation = new Mock<CurveEquation>(
                 BigPrime.CreateWithoutChecks(23),
                 BigInteger.Zero, BigInteger.One
-            ) { CallBase = true };
+            )
+            { CallBase = true };
 
             var testElement = new CurvePoint(5, 5);
             var expected = new CurvePoint(5, 18);
@@ -50,7 +50,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var equation = new Mock<CurveEquation>(
                 BigPrime.CreateWithoutChecks(23),
                 BigInteger.Zero, BigInteger.One
-            ) { CallBase = true };
+            )
+            { CallBase = true };
 
             var testElement = CurvePoint.PointAtInfinity;
             var expected = CurvePoint.PointAtInfinity;
@@ -65,7 +66,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var equation = new Mock<CurveEquation>(
                 BigPrime.CreateWithoutChecks(23),
                 BigInteger.Zero, BigInteger.One
-            ) { CallBase = true };
+            )
+            { CallBase = true };
 
             var testElement = new CurvePoint(5, 5);
             var otherElement = testElement.Clone();
@@ -79,7 +81,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var equation = new Mock<CurveEquation>(
                 BigPrime.CreateWithoutChecks(23),
                 BigInteger.Zero, BigInteger.One
-            ) { CallBase = true };
+            )
+            { CallBase = true };
 
             var testElement = new CurvePoint(5, 5);
             var otherElement = equation.Object.Negate(testElement);
@@ -93,7 +96,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var equation = new Mock<CurveEquation>(
                 BigPrime.CreateWithoutChecks(23),
                 BigInteger.Zero, BigInteger.One
-            ) { CallBase = true };
+            )
+            { CallBase = true };
 
             var testElement = new CurvePoint(11, 0);
             var otherElement = testElement.Clone();
@@ -107,7 +111,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var equation = new Mock<CurveEquation>(
                 BigPrime.CreateWithoutChecks(23),
                 BigInteger.Zero, BigInteger.One
-            ) { CallBase = true };
+            )
+            { CallBase = true };
 
             var testElement = CurvePoint.PointAtInfinity;
             var otherElement = testElement.Clone();
@@ -121,12 +126,14 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var equationMock = new Mock<CurveEquation>(
                 BigPrime.CreateWithoutChecks(23),
                 BigInteger.Zero, BigInteger.One
-            ) { CallBase = true };
+            )
+            { CallBase = true };
 
             var otherMock = new Mock<CurveEquation>(
                 BigPrime.CreateWithoutChecks(23),
                 BigInteger.Zero, BigInteger.One
-            ) { CallBase = true };
+            )
+            { CallBase = true };
 
             Assert.IsTrue(equationMock.Object.Equals(otherMock.Object));
         }
@@ -137,7 +144,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var equationMock = new Mock<CurveEquation>(
                 BigPrime.CreateWithoutChecks(23),
                 BigInteger.Zero, BigInteger.One
-            ) { CallBase = true };
+            )
+            { CallBase = true };
 
             Assert.IsFalse(equationMock.Object.Equals(null));
         }
@@ -148,7 +156,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var equationMock = new Mock<CurveEquation>(
                 BigPrime.CreateWithoutChecks(23),
                 BigInteger.Zero, BigInteger.One
-            ) { CallBase = true };
+            )
+            { CallBase = true };
 
             Assert.IsFalse(equationMock.Object.Equals(new object()));
         }
@@ -159,24 +168,28 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var equationMock = new Mock<CurveEquation>(
                 BigPrime.CreateWithoutChecks(23),
                 BigInteger.Zero, BigInteger.One
-            ) { CallBase = true };
+            )
+            { CallBase = true };
 
             var otherMock = new Mock<CurveEquation>(
                 BigPrime.CreateWithoutChecks(11),
                 BigInteger.Zero, BigInteger.One
-            ) { CallBase = true };
+            )
+            { CallBase = true };
             Assert.IsFalse(equationMock.Object.Equals(otherMock.Object));
 
             otherMock = new Mock<CurveEquation>(
                 BigPrime.CreateWithoutChecks(23),
                 BigInteger.One, BigInteger.One
-            ) { CallBase = true };
+            )
+            { CallBase = true };
             Assert.IsFalse(equationMock.Object.Equals(otherMock.Object));
 
             otherMock = new Mock<CurveEquation>(
                 BigPrime.CreateWithoutChecks(23),
                 BigInteger.Zero, BigInteger.Zero
-            ) { CallBase = true };
+            )
+            { CallBase = true };
             Assert.IsFalse(equationMock.Object.Equals(otherMock.Object));
         }
     }

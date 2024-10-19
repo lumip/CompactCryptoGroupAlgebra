@@ -101,7 +101,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
 
             Assert.AreEqual(expected, result);
         }
-        
+
 
         [Test]
         public void TestAddAffine()

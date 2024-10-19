@@ -58,7 +58,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
 
             var expected = point;
             var result = curve.Add(point, otherPoint);
-            
+
             Assert.AreEqual(expected, result);
         }
 
@@ -71,7 +71,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
 
             var expected = point;
             var result = curve.Add(otherPoint, point);
-            
+
             Assert.AreEqual(expected, result);
         }
 
@@ -84,7 +84,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
 
             var expected = CurvePoint.PointAtInfinity;
             var result = curve.Add(otherPoint, point);
-            
+
             Assert.AreEqual(expected, result);
         }
 
@@ -97,7 +97,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
 
             var expected = CurvePoint.PointAtInfinity;
             var result = curve.Add(otherPoint, point);
-            
+
             Assert.AreEqual(expected, result);
         }
 

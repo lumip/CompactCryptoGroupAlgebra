@@ -19,15 +19,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 using System.Security.Cryptography;
-using System.Diagnostics;
 
 namespace CompactCryptoGroupAlgebra.Multiplicative
 {
     /// <summary>
     /// Algebraic group operations based on multiplications in the finite field of a prime number <c>P</c>.
-    /// 
+    ///
     /// Through the <see cref="CryptoGroup{BigInteger, BigInteger}"/> interface, the addition
     /// represents multiplication of two integers modulo <c>P</c>, while scalar multiplication
     /// is exponentiation of an integer modulo <c>P</c>.
@@ -52,7 +52,7 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         /// for discrete logarithms [2].
         ///
         /// [1]: D. Gordon: Discrete Logarithms in GF(P) Using the Number Field Sieve, https://doi.org/10.1137/0406010
-        /// [2]: J. Pollard: Monte Carlo Methods For Index Computation (mod p), https://doi.org/10.1090/S0025-5718-1978-0491431-9 
+        /// [2]: J. Pollard: Monte Carlo Methods For Index Computation (mod p), https://doi.org/10.1090/S0025-5718-1978-0491431-9
         /// </summary>
         /// <param name="prime">The prime modulo of the group.</param>
         /// <param name="order">The order of the group.</param>
@@ -79,7 +79,7 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
         /// Computes the required bit length for prime modulus to achieve a desired security level.
         ///
         /// The required bit length for the modulus is found by solving the equation for expected
-        /// runtime of the number field sieve algorithm [1] for the security parameter. 
+        /// runtime of the number field sieve algorithm [1] for the security parameter.
         ///
         /// /// [1]: D. Gordon: Discrete Logarithms in GF(P) Using the Number Field Sieve, https://doi.org/10.1137/0406010
         /// </summary>
@@ -200,10 +200,10 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
 
         /// <summary>
         /// Creates a <see cref="CryptoGroup{BigInteger, BigInteger}" /> instance that satisfies at least a given security level.
-        /// 
+        ///
         /// Finds random primes q, p such that p = 2q+1 and the bit length of p satisfies the security level requirements.
         /// Then finds an element of the q-order subgroup of the multiplicative group defined by p to use as the generator.
-        /// 
+        ///
         /// This process may take some time, depending on the security level chosen.
         /// </summary>
         /// <param name="securityLevel">The minimal security level for the group to be created.</param>
@@ -215,8 +215,10 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
             BigInteger sgCandidate = randomNumberGenerator.GetBigIntegerWithLength(sgPrimeLength);
             sgCandidate |= BigInteger.One; // ensure sgCandidate is odd
             BigInteger primeCandidate = 2 * sgCandidate + 1;
-            while ( !PrimalityTest.IsProbablyPrime(sgCandidate, randomNumberGenerator) ||
-                    !PrimalityTest.IsProbablyPrime(primeCandidate, randomNumberGenerator) )
+            while (
+                !PrimalityTest.IsProbablyPrime(sgCandidate, randomNumberGenerator) ||
+                !PrimalityTest.IsProbablyPrime(primeCandidate, randomNumberGenerator)
+            )
             {
                 sgCandidate += 2;
                 primeCandidate += 4;

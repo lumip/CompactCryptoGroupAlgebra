@@ -25,8 +25,8 @@
 // grant you additional permission to convey the resulting work.
 
 using System;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
 {
@@ -37,18 +37,18 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
     sealed class ECGroupHandle : NativeHandle
     {
 
-#region Native Methods Imports
-        [DllImport("libcrypto", CallingConvention=CallingConvention.Cdecl)]
+        #region Native Methods Imports
+        [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static int EC_GROUP_order_bits(ECGroupHandle group);
 
-        [DllImport("libcrypto", CallingConvention=CallingConvention.Cdecl)]
+        [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static int EC_GROUP_get_order(ECGroupHandle group, BigNumberHandle order, BigNumberContextHandle ctx);
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static int EC_GROUP_get_cofactor(ECGroupHandle group, BigNumberHandle cofactor, BigNumberContextHandle ctx);
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
-        private extern static  ECPointHandle EC_GROUP_get0_generator(ECGroupHandle group);
+        private extern static ECPointHandle EC_GROUP_get0_generator(ECGroupHandle group);
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static int EC_GROUP_precompute_mult(ECGroupHandle group, BigNumberContextHandle ctx);
@@ -61,9 +61,9 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static int EC_GROUP_cmp(ECGroupHandle a, ECGroupHandle b, BigNumberContextHandle ctx);
-#endregion
+        #endregion
 
-#region Checked Native Methods
+        #region Checked Native Methods
         public static void GetOrder(ECGroupHandle group, BigNumberHandle order, BigNumberContextHandle ctx)
         {
             Debug.Assert(!group.IsInvalid, $"Accessed an invalid ECGroupHandle! <{nameof(group)}>");
@@ -125,18 +125,18 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
             else if (result == 0) return true;
             return false;
         }
-#endregion
+        #endregion
 
-#region Memory Handling Methods
+        #region Memory Handling Methods
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static IntPtr EC_GROUP_new_by_curve_name(int nid);
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
-        private extern static IntPtr EC_GROUP_new(); 
+        private extern static IntPtr EC_GROUP_new();
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static void EC_GROUP_clear_free(IntPtr curve);
-#endregion
+        #endregion
 
         /// <summary>
         /// Allocates a new OpenSSL <c>EC_GROUP</c> structure for

@@ -25,8 +25,8 @@
 // grant you additional permission to convey the resulting work.
 
 using System;
-using System.Numerics;
 using System.Diagnostics;
+using System.Numerics;
 using CompactCryptoGroupAlgebra.LibCrypto.Internal.Native;
 
 namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
@@ -122,7 +122,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
                 return ECPointHandle.Compare(_ecGroup, this.Handle, other.Handle, ctx);
             }
         }
-        
+
         /// <inheritdoc />
         public override int GetHashCode()
         {
@@ -137,7 +137,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
         public byte[] ToBytes(PointEncoding encoding = PointEncoding.Compressed)
         {
             using (var ctx = BigNumberContextHandle.Create())
-            { 
+            {
                 int requiredBufferLength = ECPointHandle.ToByteBuffer(_ecGroup, Handle, encoding, null, ctx);
                 byte[] buffer = new byte[requiredBufferLength];
                 int writtenBytes = ECPointHandle.ToByteBuffer(_ecGroup, Handle, encoding, buffer, ctx);

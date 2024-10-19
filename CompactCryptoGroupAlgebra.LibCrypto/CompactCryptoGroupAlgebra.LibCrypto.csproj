@@ -1,7 +1,7 @@
 <!--
 CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
 
-SPDX-FileCopyrightText: 2020-2021 Lukas Prediger <lumip@lumip.de>
+SPDX-FileCopyrightText: 2020-2024 Lukas Prediger <lumip@lumip.de>
 SPDX-License-Identifier: GPL-3.0-or-later WITH GPL-3.0-linking-exception
 SPDX-FileType: SOURCE
 -->
@@ -41,9 +41,12 @@ SPDX-FileType: SOURCE
     <OutputPath>bin/$(Configuration)/</OutputPath>
   </PropertyGroup>
 
-  <ItemGroup>
-    <!-- <ProjectReference Include="../CompactCryptoGroupAlgebra/CompactCryptoGroupAlgebra.csproj" /> -->
-    <PackageReference Include="CompactCryptoGroupAlgebra" Version="2.*" />
+  <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <ProjectReference Include="../CompactCryptoGroupAlgebra/CompactCryptoGroupAlgebra.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PackageReference Include="CompactCryptoGroupAlgebra" Version="2.1" />
   </ItemGroup>
 
 </Project>

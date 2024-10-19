@@ -112,7 +112,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 order: curveParameters.Order,
                 cofactor: curveParameters.Cofactor
             );
-                
+
             Assert.Throws<ArgumentException>(
                 () => new CurveGroupAlgebra(invalidParameters)
             );

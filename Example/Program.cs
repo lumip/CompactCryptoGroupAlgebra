@@ -18,10 +18,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Diagnostics;
 using System.Numerics;
 using System.Security.Cryptography;
-using System.Diagnostics;
-
 using CompactCryptoGroupAlgebra;
 using CompactCryptoGroupAlgebra.Multiplicative;
 
@@ -50,7 +49,7 @@ namespace Example
         ) where TScalar : notnull where TElement : notnull
         {
             // Generating DH secret and public key for Alice
-            (TScalar dhSecretAlice, CryptoGroupElement<TScalar, TElement> dhPublicAlice) = 
+            (TScalar dhSecretAlice, CryptoGroupElement<TScalar, TElement> dhPublicAlice) =
                 group.GenerateRandom(randomNumberGenerator);
 
             // Generating DH secret and public key for Bob

@@ -24,10 +24,9 @@
 // terms of the OpenSSL License and the SSLeay License, the licensors of CompactCryptoGroupAlgebra.LibCrypto
 // grant you additional permission to convey the resulting work.
 
-using NUnit.Framework;
-
 using System;
 using System.Security.Cryptography;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra.LibCrypto.Multiplicative
 {
@@ -41,7 +40,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Multiplicative
         BigPrime order = BigPrime.CreateWithoutChecks(11);
         int generator = 2;
 
-        
+
 
         [SetUp]
         public void SetUp()
@@ -66,7 +65,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Multiplicative
         [Test]
         public void TestSecurityLevel()
         {
-            var expected = 
+            var expected =
                 CompactCryptoGroupAlgebra.Multiplicative.MultiplicativeGroupAlgebra.ComputeSecurityLevel(prime, order);
             Assert.That(groupAlgebra!.SecurityLevel == expected);
         }

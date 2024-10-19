@@ -161,7 +161,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         {
             var curve = new XOnlyMontgomeryCurveAlgebra(curveParameters);
             var p = new BigInteger(0);
-            
+
             Assert.IsTrue(curve.IsPotentialElement(p));
             Assert.IsFalse(curve.IsSafeElement(p));
         }
@@ -207,7 +207,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var expectedGroupAlgebra = new XOnlyMontgomeryCurveAlgebra(curveParameters);
             var group = XOnlyMontgomeryCurveAlgebra.CreateCryptoGroup(curveParameters);
             Assert.AreEqual(expectedGroupAlgebra, group.Algebra);
-        }        
+        }
 
     }
 }

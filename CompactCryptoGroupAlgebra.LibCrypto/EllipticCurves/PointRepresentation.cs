@@ -40,7 +40,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
         /// which solution of the quadratic equation <c>y</c> is.
         /// </summary>
         Compressed = 2,
-        
+
         /// <summary>
         /// The point is encoded as <c>z||x||y</c>, where <c>z</c> is the octet <c>0x04</c>.
         /// </summary>

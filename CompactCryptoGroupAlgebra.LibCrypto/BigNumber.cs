@@ -25,13 +25,12 @@
 // grant you additional permission to convey the resulting work.
 
 using System;
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Numerics;
-
+using System.Runtime.CompilerServices;
 using CompactCryptoGroupAlgebra.LibCrypto.Internal.Native;
 
-[assembly:InternalsVisibleTo("CompactCryptoGroupAlgebra.LibCrypto.Tests")]
+[assembly: InternalsVisibleTo("CompactCryptoGroupAlgebra.LibCrypto.Tests")]
 namespace CompactCryptoGroupAlgebra.LibCrypto
 {
 
@@ -169,7 +168,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto
 
         /// <inheritdoc />
         public override bool Equals(object? obj)
-        {        
+        {
             var other = obj as BigNumber;
             if (other == null)
             {
@@ -178,7 +177,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto
 
             return (BigNumberHandle.Compare(this.Handle, other.Handle) == 0);
         }
-        
+
         /// <inheritdoc />
         public override int GetHashCode()
         {

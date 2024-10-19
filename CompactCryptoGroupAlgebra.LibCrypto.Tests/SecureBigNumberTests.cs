@@ -18,17 +18,15 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Additional permission under GNU GPL version 3 section 7
-// 
+//
 // If you modify CompactCryptoGroupAlgebra.LibCrypto, or any covered work, by linking or combining it
 // with the OpenSSL library (or a modified version of that library), containing parts covered by the
 // terms of the OpenSSL License and the SSLeay License, the licensors of CompactCryptoGroupAlgebra.LibCrypto
 // grant you additional permission to convey the resulting work.
 
-using NUnit.Framework;
-
 using System;
-
 using CompactCryptoGroupAlgebra.LibCrypto.Internal.Native;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra.LibCrypto
 {
@@ -101,7 +99,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto
         public void TestLength()
         {
             var number = SecureBigNumber.FromBigNumber(new BigNumber(0x548f07));
-            var expected = NumberLength.FromBitLength(23);;
+            var expected = NumberLength.FromBitLength(23);
 
             Assert.That(number.Length.Equals(expected));
         }
@@ -123,7 +121,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto
                     );
                     Assert.That(BigNumberHandle.Compare(number.Handle, range.Handle) < 0);
                 }
-            }            
+            }
         }
 
     }

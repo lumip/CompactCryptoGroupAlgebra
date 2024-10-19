@@ -79,7 +79,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var result = field.InvertMult(5);
             var expected = new BigInteger(9);
             Assert.AreEqual(expected, result);
-            Assert.AreEqual(BigInteger.One, field.Mod(result*5));
+            Assert.AreEqual(BigInteger.One, field.Mod(result * 5));
         }
 
         [Test]

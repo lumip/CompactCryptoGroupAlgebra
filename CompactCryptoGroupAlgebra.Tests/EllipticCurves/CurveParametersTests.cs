@@ -19,11 +19,9 @@
 
 using System.Numerics;
 using System.Security.Cryptography;
-
-using NUnit.Framework;
-using Moq;
-
 using CompactCryptoGroupAlgebra.TestUtils;
+using Moq;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
@@ -162,7 +160,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 "modulo wrong"
             );
             Assert.DoesNotThrow(() => BigPrime.Create(parameters.Equation.Field.Modulo, randomNumberGenerator), "modulo not prime");
-            
+
             Assert.AreEqual(
                 new BigInteger(-3),
                 parameters.Equation.A,
@@ -173,7 +171,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 parameters.Equation.B,
                 "B wrong"
             );
-            
+
             Assert.AreEqual(
                 new CurvePoint(
                     BigInteger.Parse("48439561293906451759052585252797914202762949526041747995844080717082404635286"),
@@ -212,7 +210,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 "modulo wrong"
             );
             Assert.DoesNotThrow(() => BigPrime.Create(parameters.Equation.Field.Modulo, randomNumberGenerator), "modulo not prime");
-            
+
             Assert.AreEqual(
                 new BigInteger(-3),
                 parameters.Equation.A,
@@ -223,7 +221,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 parameters.Equation.B,
                 "B wrong"
             );
-            
+
             Assert.AreEqual(
                 new CurvePoint(
                     BigInteger.Parse("26247035095799689268623156744566981891852923491109213387815615900925518854738050089022388053975719786650872476732087"),
@@ -262,7 +260,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 "modulo wrong"
             );
             Assert.DoesNotThrow(() => BigPrime.Create(parameters.Equation.Field.Modulo, randomNumberGenerator), "modulo not prime");
-            
+
             Assert.AreEqual(
                 new BigInteger(-3),
                 parameters.Equation.A,
@@ -273,7 +271,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 parameters.Equation.B,
                 "B wrong"
             );
-            
+
             Assert.AreEqual(
                 new CurvePoint(
                     BigIntegerUtils.ParseHex("00c6858e06b70404e9cd9e3ecb662395b4429c648139053fb521f828af606b4d3dbaa14b5e77efe75928fe1dc127a2ffa8de3348b3c1856a429bf97e7e31c2e5bd66"),
@@ -312,7 +310,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 "modulo wrong"
             );
             Assert.DoesNotThrow(() => BigPrime.Create(parameters.Equation.Field.Modulo, randomNumberGenerator), "modulo not prime");
-            
+
             Assert.AreEqual(
                 BigInteger.Parse("486662"),
                 parameters.Equation.A,
@@ -323,7 +321,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 parameters.Equation.B,
                 "B wrong"
             );
-            
+
             Assert.AreEqual(
                 new CurvePoint(
                     BigInteger.Parse("9"),
@@ -362,7 +360,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 "module wrong"
             );
             Assert.DoesNotThrow(() => BigPrime.Create(parameters.Equation.Field.Modulo, randomNumberGenerator), "module not prime");
-            
+
             Assert.AreEqual(
                 BigInteger.Parse("2065150"),
                 parameters.Equation.A,
@@ -373,7 +371,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 parameters.Equation.B,
                 "B wrong"
             );
-            
+
             Assert.AreEqual(
                 new CurvePoint(
                     BigInteger.Parse("12"),
@@ -412,7 +410,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 "modulo wrong"
             );
             Assert.DoesNotThrow(() => BigPrime.Create(parameters.Equation.Field.Modulo, randomNumberGenerator), "modulo not prime");
-            
+
             Assert.AreEqual(
                 BigInteger.Parse("530438"),
                 parameters.Equation.A,
@@ -423,7 +421,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 parameters.Equation.B,
                 "B wrong"
             );
-            
+
             Assert.AreEqual(
                 new CurvePoint(
                     BigInteger.Parse("5"),

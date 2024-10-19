@@ -25,8 +25,8 @@
 // grant you additional permission to convey the resulting work.
 
 using System;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
 {
@@ -37,7 +37,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
     sealed class BigNumberContextHandle : NativeHandle
     {
 
-#region MemoryHandling
+        #region MemoryHandling
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static IntPtr BN_CTX_new();
 
@@ -46,7 +46,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static void BN_CTX_free(IntPtr c);
-#endregion
+        #endregion
 
         /// <summary>
         /// Allocates a new OpenSSL <c>BN_CTX</c> structure

@@ -1,6 +1,6 @@
 # CompactCryptoGroupAlgebra
 
-[![Build Status](https://travis-ci.com/lumip/CompactCryptoGroupAlgebra.svg?branch=master)](https://travis-ci.com/lumip/CompactCryptoGroupAlgebra) [![Coverage Status](https://coveralls.io/repos/github/lumip/CompactCryptoGroupAlgebra/badge.svg?branch=master)](https://coveralls.io/github/lumip/CompactCryptoGroupAlgebra?branch=master)
+![Build Status](https://github.com/lumip/CompactCryptoGroupAlgebra/actions/workflows/main.yml/badge.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/lumip/CompactCryptoGroupAlgebra/badge.svg?branch=master)](https://coveralls.io/github/lumip/CompactCryptoGroupAlgebra?branch=master)
 
 A compact API and implementation of abelian group algebra commonly used in asymmetric cryptography, fully written in C#.
 
@@ -51,7 +51,7 @@ namespace Example
             RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
 
             // Choosing parameters for multiplicative group
-            // order 11 subgroup with generator 4 of characteristic 23 multiplicative group 
+            // order 11 subgroup with generator 4 of characteristic 23 multiplicative group
             BigPrime prime = BigPrime.Create(23, randomNumberGenerator);
             BigPrime order = BigPrime.Create(11, randomNumberGenerator);
             BigInteger generator = 4;
@@ -66,7 +66,7 @@ namespace Example
         ) where TScalar : notnull where TElement : notnull
         {
             // Generating DH secret and public key for Alice
-            (TScalar dhSecretAlice, CryptoGroupElement<TScalar, TElement> dhPublicAlice) = 
+            (TScalar dhSecretAlice, CryptoGroupElement<TScalar, TElement> dhPublicAlice) =
                 group.GenerateRandom(randomNumberGenerator);
 
             // Generating DH secret and public key for Bob
