@@ -86,7 +86,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Multiplicative
             if (!IsSafeElement(Generator))
                 throw new ArgumentException("The generator must be an element of the group.", nameof(generator));
 
-            SecurityLevel = 
+            SecurityLevel =
                 CompactCryptoGroupAlgebra.Multiplicative.MultiplicativeGroupAlgebra.ComputeSecurityLevel(prime, order);
         }
 
@@ -200,7 +200,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Multiplicative
 
             return _modulo.Equals(other._modulo) && Generator.Equals(other.Generator);
         }
-        
+
         /// <inheritdoc />
         public override int GetHashCode()
         {

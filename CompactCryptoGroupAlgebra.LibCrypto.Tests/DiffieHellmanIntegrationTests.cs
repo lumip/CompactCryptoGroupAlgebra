@@ -24,14 +24,12 @@
 // terms of the OpenSSL License and the SSLeay License, the licensors of CompactCryptoGroupAlgebra.LibCrypto
 // grant you additional permission to convey the resulting work.
 
-using NUnit.Framework;
-
+using System.Globalization;
 using System.Numerics;
 using System.Text.RegularExpressions;
-using System.Globalization;
-
 using CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves;
 using CompactCryptoGroupAlgebra.LibCrypto.Multiplicative;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra.LibCrypto
 {
@@ -54,7 +52,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto
                 29024E08 8A67CC74 020BBEA6 3B139B22 514A0879 8E3404DD
                 EF9519B3 CD3A431B 302B0A6D F25F1437 4FE1356D 6D51C245
                 E485B576 625E7EC6 F44C42E9 A63A3620 FFFFFFFF FFFFFFFF";
-                
+
             BigPrime prime = BigPrime.CreateWithoutChecks(
                 BigInteger.Parse(Regex.Replace(primeHex, @"\s+", ""), NumberStyles.AllowHexSpecifier)
             );
@@ -63,7 +61,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto
 
             var algebra = new MultiplicativeGroupAlgebra(prime, order, generator);
             var group = new CryptoGroup<SecureBigNumber, BigNumber>(algebra);
-            
+
             CompactCryptoGroupAlgebra.DiffieHellmanIntegrationTests.DoDiffieHellman(group);
         }
 

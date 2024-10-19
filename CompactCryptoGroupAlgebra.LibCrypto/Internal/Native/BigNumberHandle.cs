@@ -25,8 +25,8 @@
 // grant you additional permission to convey the resulting work.
 
 using System;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
 {
@@ -36,7 +36,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
     sealed class BigNumberHandle : NativeHandle
     {
 
-#region Native Methods Imports
+        #region Native Methods Imports
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static int BN_num_bits(BigNumberHandle a);
@@ -77,9 +77,9 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static BigNumberHandle BN_mod_inverse(BigNumberHandle r, BigNumberHandle a, BigNumberHandle m, BigNumberContextHandle ctx);
-#endregion
+        #endregion
 
-#region Checked Native Methods
+        #region Checked Native Methods
         public static int GetNumberOfBits(BigNumberHandle x)
         {
             Debug.Assert(!x.IsInvalid, "Accessed an invalid BigNumberHandle");
@@ -184,9 +184,9 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
             var result = BN_mod_inverse(r, a, m, ctx);
             if (result.IsInvalid) throw new OpenSslNativeException();
         }
-#endregion
+        #endregion
 
-#region Native Memory Handling
+        #region Native Memory Handling
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static IntPtr BN_new();
 
@@ -195,7 +195,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static void BN_clear_free(IntPtr val);
-#endregion
+        #endregion
 
         /// <summary>
         /// Allocates a new OpenSSL <c>BIGNUM</c> structure
@@ -270,6 +270,6 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
             return true;
         }
 
-        
+
     }
 }

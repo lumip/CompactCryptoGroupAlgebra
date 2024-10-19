@@ -17,15 +17,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using NUnit.Framework;
-
 using System.Numerics;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra.Multiplicative
 {
     class ExtendedEuclideanAlgorithmTests
     {
-        
+
         [Test]
         [TestCase(17, 7, -2, 5)]
         [TestCase(7, 17, 5, -2)]

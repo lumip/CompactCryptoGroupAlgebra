@@ -19,9 +19,8 @@
 
 using System;
 using System.Numerics;
-
-using NUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {
@@ -41,7 +40,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 BigPrime.CreateWithoutChecks(23),
                 BigInteger.Zero,
                 BigInteger.One
-            ) { CallBase = true };
+            )
+            { CallBase = true };
             curveParameters = new CurveParameters(
                 curveEquation: curveEquationMock.Object,
                 generator: TestCurveParameters.WeierstrassParameters.Generator,
@@ -53,7 +53,8 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
                 BigPrime.CreateWithoutChecks(18392027),
                 BigInteger.Zero,
                 BigInteger.One
-            ) { CallBase = true };  // 25 bits prime
+            )
+            { CallBase = true };  // 25 bits prime
             largeParameters = new CurveParameters(
                 curveEquation: largeCurveEquationMock.Object,
                 generator: new CurvePoint(),
@@ -186,7 +187,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public void TestMultiplyScalar()
         {
             var k = new BigInteger(5);
-            
+
             var curve = new CurveGroupAlgebra(curveParameters);
             var point = new CurvePoint(5, 5);
 
@@ -198,14 +199,14 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var otherPoint = curve.MultiplyScalar(point, k);
 
             Assert.AreEqual(expectedQ, otherPoint);
-            curveEquationMock.Verify(eq => eq.Add(It.IsAny<CurvePoint>(), It.IsAny<CurvePoint>()), Times.Exactly(2*4)); // 2 * Order bit length
+            curveEquationMock.Verify(eq => eq.Add(It.IsAny<CurvePoint>(), It.IsAny<CurvePoint>()), Times.Exactly(2 * 4)); // 2 * Order bit length
         }
 
         [Test]
         public void TestGroupElementBitLength()
         {
             var curve = new CurveGroupAlgebra(curveParameters);
-            Assert.AreEqual(2*5, curve.ElementBitLength);
+            Assert.AreEqual(2 * 5, curve.ElementBitLength);
         }
 
         [Test]
@@ -221,7 +222,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             var curve = new CurveGroupAlgebra(curveParameters);
             Assert.AreEqual(4, curve.OrderBitLength);
         }
-        
+
         [Test]
         public void TestSecurityLevel()
         {
@@ -308,7 +309,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
         public void TestInvalidElementRejectedAsGenerator()
         {
             curveEquationMock.Setup(eq => eq.IsPointOnCurve(It.IsAny<CurvePoint>())).Returns(false);
-                
+
             Assert.Throws<ArgumentException>(
                 () => new CurveGroupAlgebra(curveParameters)
             );

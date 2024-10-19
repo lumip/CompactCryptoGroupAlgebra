@@ -17,11 +17,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+using System.Globalization;
 using System.Numerics;
 using System.Security.Cryptography;
-using System.Globalization;
 using System.Text.RegularExpressions;
-
 using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra
@@ -37,7 +36,7 @@ namespace CompactCryptoGroupAlgebra
                 29024E08 8A67CC74 020BBEA6 3B139B22 514A0879 8E3404DD
                 EF9519B3 CD3A431B 302B0A6D F25F1437 4FE1356D 6D51C245
                 E485B576 625E7EC6 F44C42E9 A63A3620 FFFFFFFF FFFFFFFF";
-                
+
             BigPrime prime = BigPrime.CreateWithoutChecks(
                 BigInteger.Parse(Regex.Replace(primeHex, @"\s+", ""), NumberStyles.AllowHexSpecifier)
             );
@@ -47,7 +46,7 @@ namespace CompactCryptoGroupAlgebra
             var group = Multiplicative.MultiplicativeGroupAlgebra.CreateCryptoGroup(
                 prime, order, generator
             );
-            
+
             DoDiffieHellman(group);
         }
 
@@ -77,7 +76,7 @@ namespace CompactCryptoGroupAlgebra
             var group = EllipticCurves.XOnlyMontgomeryCurveAlgebra.CreateCryptoGroup(
                 EllipticCurves.CurveParameters.Curve25519
             );
-            
+
             DoDiffieHellman(group);
         }
 
@@ -88,7 +87,7 @@ namespace CompactCryptoGroupAlgebra
             RandomNumberGenerator randomNumberGenerator = RandomNumberGenerator.Create();
 
             // Generating DH secret and public key for Alice
-            (var dhSecretAlice, var dhPublicAlice) = 
+            (var dhSecretAlice, var dhPublicAlice) =
                 group.GenerateRandom(randomNumberGenerator);
 
             // Generating DH secret and public key for Bob

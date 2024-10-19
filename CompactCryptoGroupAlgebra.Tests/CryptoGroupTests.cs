@@ -20,9 +20,8 @@
 using System;
 using System.Numerics;
 using System.Security.Cryptography;
-
-using NUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra
 {

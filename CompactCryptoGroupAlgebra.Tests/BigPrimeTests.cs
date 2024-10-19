@@ -19,9 +19,8 @@
 
 using System;
 using System.Numerics;
-using NUnit.Framework;
-
 using CompactCryptoGroupAlgebra.TestUtils;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra
 {

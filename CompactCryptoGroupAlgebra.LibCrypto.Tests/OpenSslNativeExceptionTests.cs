@@ -24,11 +24,10 @@
 // terms of the OpenSSL License and the SSLeay License, the licensors of CompactCryptoGroupAlgebra.LibCrypto
 // grant you additional permission to convey the resulting work.
 
-using NUnit.Framework;
 using System;
-
-using CompactCryptoGroupAlgebra.LibCrypto.Internal.Native;
 using System.Runtime.InteropServices;
+using CompactCryptoGroupAlgebra.LibCrypto.Internal.Native;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra.LibCrypto
 {

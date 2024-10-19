@@ -19,9 +19,8 @@
 
 using System;
 using System.Numerics;
-
-using NUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra
 {
@@ -36,7 +35,7 @@ namespace CompactCryptoGroupAlgebra
 
             var algebraMock = new Mock<ICryptoGroupAlgebra<BigInteger, int>>(MockBehavior.Strict);
             algebraMock.Setup(alg => alg.IsPotentialElement(It.IsAny<int>())).Returns(false);
-            
+
             Assert.Throws<ArgumentException>(
                 () => new CryptoGroupElement<BigInteger, int>(element, algebraMock.Object)
             );
@@ -322,7 +321,7 @@ namespace CompactCryptoGroupAlgebra
             algebraMock.Verify(alg => alg.Negate(It.Is<int>(x => x == value)), Times.Once());
             algebraMock.Verify(alg => alg.Add(It.Is<int>(x => x == otherValue), It.Is<int>(x => x == -value)), Times.Once());
         }
-        
+
         [Test]
         public void TestOperatorMultiplyLeft()
         {

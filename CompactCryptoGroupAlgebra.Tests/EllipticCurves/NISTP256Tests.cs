@@ -18,9 +18,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System.Numerics;
-
-using NUnit.Framework;
 using CompactCryptoGroupAlgebra.TestUtils;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra.EllipticCurves
 {

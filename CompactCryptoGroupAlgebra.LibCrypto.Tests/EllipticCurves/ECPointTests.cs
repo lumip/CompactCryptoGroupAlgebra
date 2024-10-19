@@ -24,10 +24,9 @@
 // terms of the OpenSSL License and the SSLeay License, the licensors of CompactCryptoGroupAlgebra.LibCrypto
 // grant you additional permission to convey the resulting work.
 
-using NUnit.Framework;
 using System;
-
 using CompactCryptoGroupAlgebra.LibCrypto.Internal.Native;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
 {
@@ -67,7 +66,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
         public void TestToBytesAndBack()
         {
             var point = new ECPoint(groupHandle, rawPointHandle);
-            
+
             byte[] buffer = point.ToBytes();
             var newPoint = ECPoint.CreateFromBytes(groupHandle, buffer);
 
@@ -87,18 +86,18 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
             var unequalPoint = new ECPoint(groupHandle);
             ECPointHandle.Add(groupHandle, unequalPoint.Handle, rawPointHandle, rawPointHandle, ctx);
             Assert.That(!point.Equals(unequalPoint), "Unequal points are seen as equal!");
-            
-            Assert.That(!point.Equals(new {}), "Point equal to anonymous object!");
+
+            Assert.That(!point.Equals(new { }), "Point equal to anonymous object!");
         }
 
         [Test]
         public void TestGetCoordinates()
         {
             var point = new ECPoint(groupHandle, rawPointHandle);
-            
+
             var expectedXNum = new BigNumber(NISTP256Reference.generatorX);
             var expectedYNum = new BigNumber(NISTP256Reference.generatorY);
-            
+
             (var x, var y) = point.GetCoordinates();
 
             Assert.That(x.Equals(expectedXNum));
@@ -131,7 +130,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
         {
             var validPoint = new ECPoint(groupHandle, rawPointHandle);
             Assert.That(!validPoint.IsAtInfinity);
-            
+
             var pointAtInf = new ECPoint(groupHandle);
             ECPointHandle.SetToInfinity(groupHandle, pointAtInf.Handle);
             Assert.That(pointAtInf.IsAtInfinity);

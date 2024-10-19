@@ -42,7 +42,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             Assert.AreNotSame(p, q);
             Assert.AreEqual(p, q);
         }
-        
+
         [Test]
         public void TestEquals()
         {
@@ -56,7 +56,7 @@ namespace CompactCryptoGroupAlgebra.EllipticCurves
             Assert.AreNotEqual(p, q, "not equal");
             Assert.AreNotEqual(q, p, "not equal reversed");
         }
-        
+
         [Test]
         public void TestPointEquality()
         {

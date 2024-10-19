@@ -37,13 +37,13 @@ namespace CompactCryptoGroupAlgebra.LibCrypto
 
         private static object NativeExceptionLock = new object();
 
-#region Native Methods
+        #region Native Methods
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static ulong ERR_get_error();
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static IntPtr ERR_error_string(ulong e, byte[]? buf);
-#endregion
+        #endregion
 
         /// <summary>
         /// Thread-safe wrapper around <see cref="ERR_get_error()" />.
@@ -70,7 +70,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto
         /// </returns>
         private static string GetErrorMessage(ulong errorCode)
         {
-            return Marshal.PtrToStringAnsi(ERR_error_string(errorCode, null)); 
+            return Marshal.PtrToStringAnsi(ERR_error_string(errorCode, null));
         }
 
         /// <summary>

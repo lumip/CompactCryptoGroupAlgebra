@@ -25,9 +25,8 @@
 // grant you additional permission to convey the resulting work.
 
 using System;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
-
+using System.Runtime.InteropServices;
 using CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves;
 
 namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
@@ -39,7 +38,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
     sealed class ECPointHandle : NativeHandle
     {
 
-#region Native Methods Imports
+        #region Native Methods Imports
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static int EC_POINT_copy(ECPointHandle dst, ECPointHandle src);
 
@@ -72,9 +71,9 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static int EC_POINT_is_at_infinity(ECGroupHandle group, ECPointHandle p);
-#endregion
+        #endregion
 
-#region Checked Native Methods
+        #region Checked Native Methods
         public static void Copy(ECPointHandle to, ECPointHandle from)
         {
             Debug.Assert(!to.IsInvalid, $"Accessed an invalid ECPointHandle! <{nameof(to)}>");
@@ -176,15 +175,15 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.Internal.Native
             var result = EC_POINT_is_at_infinity(group, p);
             return (result == 1);
         }
-#endregion
+        #endregion
 
-#region Memory Handling Methods
+        #region Memory Handling Methods
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static IntPtr EC_POINT_new(ECGroupHandle group);
 
         [DllImport("libcrypto", CallingConvention = CallingConvention.Cdecl)]
         private extern static void EC_POINT_clear_free(IntPtr point);
-#endregion
+        #endregion
 
         /// <summary>
         /// Allocates a new OpenSSL <c>EC_POINT</c> structure and

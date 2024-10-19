@@ -20,10 +20,9 @@
 using System;
 using System.Numerics;
 using System.Security.Cryptography;
-
-using NUnit.Framework;
 using Moq;
 using Moq.Protected;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra
 {
@@ -69,7 +68,7 @@ namespace CompactCryptoGroupAlgebra
             Assert.AreEqual(neutralElement, algebraMock.Object.NeutralElement);
             Assert.AreEqual(elementBitLength, algebraMock.Object.ElementBitLength);
         }
-        
+
         [Test]
         [TestCase(0)]
         [TestCase(1)]
@@ -307,7 +306,7 @@ namespace CompactCryptoGroupAlgebra
             algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
                 .Setup(alg => alg.MultiplyScalarUnchecked(It.IsAny<int>(), It.IsAny<BigInteger>(), It.IsAny<int>())
             ).Returns(expected);
-            
+
             var index = new BigInteger(301);
             byte[] rngResponse = (index - 1).ToByteArray();
 
@@ -323,10 +322,10 @@ namespace CompactCryptoGroupAlgebra
             var result = algebraMock.Object.GenerateRandomElement(rngMock.Object);
             var resultIndex = result.Item1;
             var resultElement = result.Item2;
-            
+
             Assert.AreEqual(index, resultIndex);
             Assert.AreEqual(expected, resultElement);
-            
+
             algebraMock.Protected().As<ICryptoGroupAlgebraProtectedMembers>()
                 .Verify(
                     alg => alg.MultiplyScalarUnchecked(

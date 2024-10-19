@@ -25,10 +25,9 @@
 // grant you additional permission to convey the resulting work.
 
 using System;
-using System.Numerics;
 using System.Diagnostics;
+using System.Numerics;
 using System.Security.Cryptography;
-
 using CompactCryptoGroupAlgebra.LibCrypto.Internal.Native;
 
 namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
@@ -159,7 +158,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
         }
 
         /// <inheritdoc />
-        public int ElementBitLength 
+        public int ElementBitLength
         {
             get
             {
@@ -316,7 +315,7 @@ namespace CompactCryptoGroupAlgebra.LibCrypto.EllipticCurves
                 return ECGroupHandle.Compare(this.Handle, other.Handle, ctx);
             }
         }
-        
+
         /// <inheritdoc />
         public override int GetHashCode()
         {

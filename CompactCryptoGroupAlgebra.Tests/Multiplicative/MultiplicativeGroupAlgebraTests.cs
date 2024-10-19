@@ -18,12 +18,11 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Diagnostics;
 using System.Numerics;
 using System.Security.Cryptography;
-using System.Diagnostics;
-
-using NUnit.Framework;
 using Moq;
+using NUnit.Framework;
 
 namespace CompactCryptoGroupAlgebra.Multiplicative
 {
@@ -317,9 +316,11 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
 
             var rngMock = new Mock<RandomNumberGenerator>(MockBehavior.Strict);
             rngMock.Setup(rng => rng.GetBytes(It.IsAny<byte[]>()))
-                   .Callback<byte[]>(buffer => {
-                        Buffer.BlockCopy(buffer, 0, rngResponse, 0, Math.Min(rngResponse.Length, buffer.Length));
-                    });
+                   .Callback<byte[]>(buffer =>
+                        {
+                            Buffer.BlockCopy(buffer, 0, rngResponse, 0, Math.Min(rngResponse.Length, buffer.Length));
+                        }
+                   );
 
             var group = MultiplicativeGroupAlgebra.CreateCryptoGroup(securityLevel, rngMock.Object);
             Assert.IsInstanceOf<MultiplicativeGroupAlgebra>(group.Algebra);
@@ -349,9 +350,11 @@ namespace CompactCryptoGroupAlgebra.Multiplicative
 
             var rngMock = new Mock<RandomNumberGenerator>(MockBehavior.Strict);
             rngMock.Setup(rng => rng.GetBytes(It.IsAny<byte[]>()))
-                   .Callback<byte[]>(buffer => {
-                        Buffer.BlockCopy(buffer, 0, rngResponse, 0, Math.Min(rngResponse.Length, buffer.Length));
-                    });
+                   .Callback<byte[]>(buffer =>
+                        {
+                            Buffer.BlockCopy(buffer, 0, rngResponse, 0, Math.Min(rngResponse.Length, buffer.Length));
+                        }
+                   );
 
             var group = MultiplicativeGroupAlgebra.CreateCryptoGroup(securityLevel, rngMock.Object);
             Assert.IsInstanceOf<MultiplicativeGroupAlgebra>(group.Algebra);

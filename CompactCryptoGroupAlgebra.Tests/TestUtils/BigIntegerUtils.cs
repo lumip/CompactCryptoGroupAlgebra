@@ -17,8 +17,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-using System.Numerics;
 using System.Globalization;
+using System.Numerics;
 
 namespace CompactCryptoGroupAlgebra.TestUtils
 {
@@ -32,6 +32,6 @@ namespace CompactCryptoGroupAlgebra.TestUtils
         public static BigInteger ParseHex(string hexEncodedInteger)
         {
             return BigInteger.Parse(hexEncodedInteger, NumberStyles.AllowHexSpecifier);
-        } 
+        }
     }
 }
