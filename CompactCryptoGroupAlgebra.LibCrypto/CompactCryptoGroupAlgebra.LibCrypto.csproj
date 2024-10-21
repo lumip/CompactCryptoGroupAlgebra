@@ -19,7 +19,7 @@ SPDX-FileType: SOURCE
     <PackageId>CompactCryptoGroupAlgebra.LibCrypto</PackageId>
     <Authors>Lukas "lumip" Prediger</Authors>
     <Description>An extension for the CompactCryptoGroupAlgebra library, providing implementations of its CryptoGroup interface that rely on system-native OpenSsl libraries.</Description>
-    <Copyright>Copyright © 2023 Lukas Prediger</Copyright>
+    <Copyright>Copyright © 2024 Lukas Prediger</Copyright>
     <Version>2.1.0</Version>
     <PackageLicenseExpression>GPL-3.0-or-later<!--WITH GPL-3.0-linking-exception--></PackageLicenseExpression>
     <PackageReleaseNotes>https://github.com/lumip/CompactCryptoGroupAlgebra/blob/master/CompactCryptoGroupAlgebra.LibCrypto/CHANGELOG.txt</PackageReleaseNotes>
@@ -28,6 +28,7 @@ SPDX-FileType: SOURCE
     <RepositoryUrl>https://github.com/lumip/CompactCryptoGroupAlgebra</RepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -47,6 +48,10 @@ SPDX-FileType: SOURCE
 
   <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <PackageReference Include="CompactCryptoGroupAlgebra" Version="2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

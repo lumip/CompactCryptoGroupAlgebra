@@ -1,7 +1,7 @@
 <!--
 CompactCryptoGroupAlgebra - C# implementation of abelian group algebra for experimental cryptography
 
-SPDX-FileCopyrightText: 2020-2021 Lukas Prediger <lumip@lumip.de>
+SPDX-FileCopyrightText: 2020-2024 Lukas Prediger <lumip@lumip.de>
 SPDX-License-Identifier: GPL-3.0-or-later
 SPDX-FileType: SOURCE
 -->
@@ -19,14 +19,15 @@ SPDX-FileType: SOURCE
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <PackageReleaseNotes>https://github.com/lumip/CompactCryptoGroupAlgebra/blob/master/CHANGELOG.txt</PackageReleaseNotes>
     <Authors>Lukas "lumip" Prediger</Authors>
-    <Version>2.1.0</Version>
-    <Copyright>Copyright © 2023 Lukas Prediger</Copyright>
+    <Version>2.2.0.2</Version>
+    <Copyright>Copyright © 2024 Lukas Prediger</Copyright>
     <PackageTags>Asymmetric Cryptography; Group Algebra</PackageTags>
     <Description>A compact library for abelian group algebra commonly used in asymmetric cryptography, fully written in C#.</Description>
     <ProjectUrl>https://github.com/lumip/CompactCryptoGroupAlgebra</ProjectUrl>
     <RepositoryUrl>https://github.com/lumip/CompactCryptoGroupAlgebra</RepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -43,6 +44,7 @@ SPDX-FileType: SOURCE
   <ItemGroup>
     <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <None Include="../README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
